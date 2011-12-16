@@ -1,0 +1,11 @@
+- Clean up default Socket.io handlers to be more generalized examples (currently just grabbed from a game project)
+- Ensure that partials are working properly (they're not yet)
+- Write some better more descriptive routes
+    - including GET and POST handling
+
+- Prettify error messages? and 404, 500 etc
+- Add launch instructions - how to 'go live'
+- Add a little more demo on how sessions work
+- Consider adding in database component
+- Consider adding in caching component
+- Consider adding in Fusker
