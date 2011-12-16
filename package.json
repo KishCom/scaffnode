@@ -1,0 +1,13 @@
+{
+    "name": "Scaffnode"
+    , "version": "0.1.0"
+    , "private": true
+    , "dependencies": {
+        "express": "2.5.1",
+        "stache": ">= 0.1.0",
+        "less": "1.1.5",
+        "socket.io": "0.8.7",
+        "connect": "1.8.2",
+        "underscore": "1.2.3"
+    }
+}

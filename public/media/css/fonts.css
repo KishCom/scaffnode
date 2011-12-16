@@ -1,0 +1,8 @@
+@media screen {
+    @font-face {
+      font-family: 'Arvo';
+      font-style: normal;
+      font-weight: normal;
+      src: local('Arvo'), url('http://themes.googleusercontent.com/static/fonts/arvo/v4/WJ6D195CfbTRlIs49IbkFw.woff') format('woff');
+    }
+}
