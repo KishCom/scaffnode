@@ -9,8 +9,6 @@
 var express = require('express');
 var routes = require('./routes');
 var site = module.exports = express.createServer();
-//Cookie/session parser from Connect
-var parseCookie = require('connect').utils.parseCookie;
 
 
 /**  Configuration  **/
@@ -63,7 +61,6 @@ site.dynamicHelpers({
 
 /**  Routes/Views  **/
 site.get('/', routes.index);
-//site.get('/play', routes.play);
 
 
 /**  Start Server  **/

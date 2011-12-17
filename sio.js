@@ -65,45 +65,38 @@ site.dynamicHelpers({
 
 /**  Routes/Views  **/
 site.get('/', routes.sio_index);
-//site.get('/play', routes.play);
 
 
 /** Socket.io Session Support - Thanks http://www.danielbaulig.de/socket-ioexpress/ **/
 io.set('authorization', function (data, accept) {
     if (data.headers.cookie) {
-        // parse the cookie
         data.cookie = parseCookie(data.headers.cookie);
-        // note that you will need to use the same key to grad the session id, as you specified in the Express setup.
+        // To grab the session id you will need to use the same key you specified in the Express setup
         data.sessionID = data.cookie['express.sid'];
     } else {
-       // if there isn't, turn down the connection with a message and leave the function.
+       // If there is no cookie, turn down the connection with a message
        return accept('No cookie transmitted.', false);
     }
-    // accept the incoming connection
+    // Accept the incoming connection
     accept(null, true);
 });
 
 
 /**  Socket interations  **/
 io.sockets.on('connection', function(client){
-
+    //On connect notify everyone a the new player
     client.broadcast.emit('message', {"spawn": client.id, "sessionId": client.handshake.sessionID});
     
     // This is what we do when we receive a message from the client
     client.on('message', function(messageFromClient){
-       //logger(messageFromClient, messageFromClient.entity.sessionId);
        client.broadcast.emit('message', messageFromClient);
     });
 
-    // This is what we do when a client disconnects
+    // When a client disconnects isssue the message to remove the player
     client.on('disconnect', function(){
         client.broadcast.emit({remove: client.sessionId});
     });
 });
-
-function logger(message,sessionId) {
-  console.log("BROADCAST FROM:", sessionId, message);
-}
 
 /**  Start Server  **/
 site.listen(8080);

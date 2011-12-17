@@ -1,4 +1,4 @@
-- Clean up default Socket.io handlers to be more generalized examples (currently just grabbed from a game project)
+- Do more clean up on Socket.io handlers, write client side basics
 - Ensure that partials are working properly (they're not yet)
 - Write some better more descriptive routes
     - including GET and POST handling
