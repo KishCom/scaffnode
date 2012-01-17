@@ -5,12 +5,12 @@
 */
 
 /**  Depends  **/
-var express = require('express');
-var routes = require('./routes');
-var io = require('socket.io');
-//Create express frame and attach socket.io
-var site = module.exports = express.createServer();
-io = io.listen(site);
+var express = require('express'),
+    routes = require('./routes'),
+    io = require('socket.io'),
+    swig = require('swig'),
+    site = module.exports = express.createServer(); //Start our expressJs sever
+io = io.listen(site); //Attach socket.io
 //Cookie/session parser from Connect
 var parseCookie = require('connect').utils.parseCookie;
 
@@ -19,13 +19,16 @@ var parseCookie = require('connect').utils.parseCookie;
 site.configure(function(){
     var PUBLIC_FOLDER = __dirname + '/public';
 
-    //Setup views
+    //Setup views and swig templates
+    swig.init({root: __dirname + '/views', allowErrors: true});
     site.set('views', __dirname + '/views');
-    site.set('partials', __dirname + '/views/partials');
-    site.set('view engine', 'mustache');
+    site.set('view engine', 'html');
+    site.register(".html", require('swig'));
+    site.set('view cache', true);
+    site.set('view options', {layout: false});
+    
     site.use(express.cookieParser());
-    site.use(express.session({secret: 'iamasecretkeydonttellanyone', key: 'express.sid'}));
-    site.register(".mustache", require('stache'));
+    site.use(express.session({secret: 'iamasecretkeydonttellanyone', key: 'express.sid'})); //Make sure you update your secret key here
     //LESS compiler
     site.use(express.compiler({ src: PUBLIC_FOLDER, enable: ['less']}));
     //The rest of our static-served files
@@ -41,27 +44,13 @@ site.configure(function(){
 //Developer mode specific
 site.configure('dev', function(){
     //Show errors
-    site.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
+    site.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 //Live mode specific
 site.configure('live', function(){
     //Hide errors
-    site.use(express.errorHandler()); 
+    site.use(express.errorHandler());
 });
-
-
-/** mustache helpers **/
-site.helpers({
-  helloworld: function(req, res){
-    return 'hello world';
-  }
-});
-site.dynamicHelpers({
-  hellopage: function(req, res){
-    return req.url;
-  }
-});
-
 
 /**  Routes/Views  **/
 site.get('/', routes.sio_index);
@@ -99,5 +88,5 @@ io.sockets.on('connection', function(client){
 });
 
 /**  Start Server  **/
-site.listen(8080);
+site.listen(8888);
 console.log("Express server listening on port %d in %s mode", site.address().port, site.settings.env);
