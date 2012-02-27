@@ -1,0 +1,10 @@
+- Do more clean up on Socket.io handlers, write client side basics
+- Write some better more descriptive routes (GET and POST handling demo)
+- Add launch instructions - how to 'go live'
+- Add a little more demo on how sessions work
+- Add a test suite (Vows?)
+- Consider adding in client side JS libs using Ender
+- Consider adding in database component (MongoDB?)
+- Consider adding in caching component (redis?)
+- Consider adding in Fusker
+- Prettify error messages? and 404, 500 etc

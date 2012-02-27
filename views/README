@@ -1,0 +1,38 @@
+____ ____ ____ ____ ____ _  _ ____ ___  ____ 
+[__  |    |__| |___ |___ |\ | |  | |  \ |___ 
+___] |___ |  | |    |    | \| |__| |__/ |___ 
+                                             
+An ever changing personal preference Node.js web-app scaffolding.
+
+Use this if you're looking to hit the ground running with a project using Node.js, ExpressJS and some other fairly popular Node.js modules.
+
+To install, make sure you have Node.js (>0.6.3) installed on your system as well as NPM. Make sure your node_modules folder, or the NODE_PATH environment variable are setup properly as well.
+
+There are 3 flavours of Node.js scaffolding:
+    
+    app.js - The standard setup using: ExpressJS, Swig, Less and Underscore
+    
+    lite.js - Ultra light weight, all default options accepted. Uses only ExpressJs and optionally underscore
+
+    sio.js - All the bells and whistles version using: ExpressJS, Socket.io (with session support), Swig, Less and Underscore
+
+If your Node.js and NPM are already configured, setup and installation is a breeze:
+
+    # Get dependencies
+    sudo npm install -d
+    # Start the server
+    node app.js
+    # Or
+    #node lite.js
+    # Or
+    #node sio.js
+
+
+OTHER GOOD TO KNOW STUFF:
+    - Routes/views are in 'routes' folder - however this isn't used in the lite.js version
+    - Quick'n'dirty HTTPS support can be found inside of lite.js
+    - There is no client-side Socket.io code included yet (coming soon... hopefully... if I remember)
+    - Underscore is optional. I always end up adding it in eventually so I put it in the start here.
+    - There is a high chance I'll be adding redis and/or MongoDB support in the near future (feel free to add it yourself and issue a pull request)
+    - The TODO file has things I plan on adding eventually
+    - Yes I use 4 space indents not 2. Get over it.
