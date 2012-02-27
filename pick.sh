@@ -8,4 +8,5 @@ if [ -e $1 ] ; then
 echo `mv $1 app.js`
 echo "" > README
 echo "" > TODO
+rm pick.sh #removes itself
 fi
