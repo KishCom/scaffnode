@@ -19,7 +19,7 @@ function runBuild(){
     ams.build.create(ROOT_DIR)
     .add(
      [CSS_DIR + '/style.css',
-     JS_DIR + '/ender.min.js',
+     JS_DIR + '/ender.min.js']
 //     JS_DIR + '/your_app.js']
 )
     .process({
