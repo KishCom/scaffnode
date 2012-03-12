@@ -29,10 +29,8 @@ If your Node.js and NPM are already configured, setup and installation is a bree
 
 
 OTHER GOOD TO KNOW STUFF:
-    - Routes/views are in 'routes' folder - however this isn't used in the lite.js version
+    - Routes/views are in routes.js - however this isn't even used  in the lite.js version
     - Quick'n'dirty HTTPS support can be found inside of lite.js
     - There is no client-side Socket.io code included yet (coming soon... hopefully... if I remember)
-    - Underscore is optional. I always end up adding it in eventually so I put it in the start here.
-    - There is a high chance I'll be adding redis and/or MongoDB support in the near future (feel free to add it yourself and issue a pull request)
     - The TODO file has things I plan on adding eventually
     - Yes I use 4 space indents not 2. Get over it.

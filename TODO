@@ -1,7 +1,8 @@
 - Do more clean up on Socket.io handlers, write client side basics
 - Write some better more descriptive routes (GET and POST handling demo)
 - Add a little more demo on how sessions work
-- Add a test suite (Vows?)
+- Testing scaffolding
+- Build automation scaffolding
 - Consider adding in database component (MongoDB?)
 - Consider adding in caching component (redis?)
 - Consider adding in Fusker

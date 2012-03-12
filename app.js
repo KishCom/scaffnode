@@ -1,8 +1,6 @@
 /*
-*   Scaffnode:
-*    Primary setup:
-*        ExpressJS, Socket.io (w/ Express Session), Moustache Templates
-*    Andrew Kish, Dec 2011
+*   Scaffnode
+*	TODO: Your project info here
 */
 
 /**  Depends  **/
@@ -67,10 +65,13 @@ site.configure('live', function(){
 /**  Routes/Views  **/
 site.get('/', routes.index);
 //site.post('/user/login', routes.index);
+
 //Anything else anyone tries should be a 404, keep this last:
+/*
 site.all('*', function(){
     throw new Error('404 Not Found');
-});
+});*/
+
 //Custom error handling function, setup to use our error view
 site.use(function(err, req, res, next){
     var stackTrace = Error.captureStackTrace(this, arguments.callee);
@@ -85,7 +86,7 @@ site.use(function(err, req, res, next){
 **  Server startup
 *
 */
-//Forman will set the proper port for live mode, otherwise use port 8888
+//Foreman will set the proper port for live mode, otherwise use port 8888
 var port = process.env.PORT || 8888;
 site.listen(port);
 console.log("Server listening to http://" + site.set('domain') + " on port %d in %s mode", site.address().port, site.settings.env);
