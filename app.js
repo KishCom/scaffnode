@@ -36,7 +36,7 @@ site.configure(function(){
     
     site.use(express.bodyParser()); //Make use of x-www-form-erlencoded and json app-types
     site.use(express.methodOverride()); //Connect alias
-    //Simple throttle to prevent API abuse, TODO, make this way better or disable it
+    //Simple throttle to prevent API abuse
     //site.use(extras.throttle({urlCount: 5,urlSec: 1,holdTime: 5,whitelist: {'127.0.0.1': true}}));
 
     site.use(site.router);
