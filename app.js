@@ -24,18 +24,21 @@ site.configure(function(){
     //The rest of our static-served files
     site.use(express.static(__dirname + '/public'));
 
-    //Middlewares
+    /*******************/
+    /** Middlewares! **/
+    /*******************/
     site.use(extras.fixIP()); //Normalize various IP address sources to be more accurate
-    site.use(extras.throttle({ //Simple throttle to prevent API abuse
-        urlCount: 5,
-        urlSec: 1,
-        holdTime: 5,
-        whitelist: {
-        '127.0.0.1': true
-        }
-    }));
+    site.use(express.cookieParser());
+    //Express sessions. Storage doesn't have to be Mongo, there's native support for lots of other dbs
+    /*site.use(express.session({secret: nifcee.SESS_SALT,
+                              maxAge: new Date(Date.now() + 604800*1000),
+                              store: new mongoStore({ url: "mongodb://localhost/scaffnode"}) }));  */
+    
     site.use(express.bodyParser()); //Make use of x-www-form-erlencoded and json app-types
     site.use(express.methodOverride()); //Connect alias
+    //Simple throttle to prevent API abuse, TODO, make this way better or disable it
+    //site.use(extras.throttle({urlCount: 5,urlSec: 1,holdTime: 5,whitelist: {'127.0.0.1': true}}));
+
     site.use(site.router);
 });
 
@@ -52,13 +55,11 @@ site.configure('dev', function(){
     site.use(express.compiler({ src: __dirname + '/public', enable: ['less']}));
     site.use(express.logger('dev'));
     console.log("Running in dev mode");
-    //Maybe you want to use expressJS error handling:
-    //site.use(express.errorHandler({ dumpExceptions: true, showStack: true}));
 });
 //Live deployed mode
 site.configure('live', function(){
     //Set your live domain name here
-    site.set('domain', 'kishcom.com');
+    //site.set('domain', 'example.com');
 });
 
 
@@ -66,19 +67,61 @@ site.configure('live', function(){
 site.get('/', routes.index);
 //site.post('/user/login', routes.index);
 
-//Anything else anyone tries should be a 404, keep this last:
-/*
-site.all('*', function(){
-    throw new Error('404 Not Found');
-});*/
+//Catch all other attempted routes and throw them a 404!
+site.all('*', function(req, resp, next){
+    next({name: "NotFound", "message": "Oops! The page you requested doesn't exist","status": 404});
+});
 
 //Custom error handling function, setup to use our error view
-site.use(function(err, req, res, next){
-    var stackTrace = Error.captureStackTrace(this, arguments.callee);
-    var now = new Date();
-    var errorTime = now.getDate() + "/" + (now.getMonth()+1) + "/" + now.getFullYear() + " - " + now.getHours() + ":" + now.getMinutes();
-    console.log(errorTime + " :: '" + req.url + "'' " + err );
-    res.render('error', { 'errorBlock': err, 'stackTrace': stackTrace });
+/*******************/
+/* Error handler */
+/*******************/
+site.error(function(err, req, res, next){
+    if (err.status == 404){
+        console.error(new Date().toLocaleString(), '>> 404 :', req.params[0], ' UA: ', req.headers['user-agent'], 'IP: ', req.ip);
+    }
+
+    if(!err.name || err.name == 'Error'){
+        console.error(new Date().toLocaleString(), '>>', err);
+        console.log(err.stack);
+
+        if(req.xhr){
+            return res.send({ error: 'Internal error' }, 500);
+        }else{
+            return res.render('errors/500.html', {
+                status: 500,
+                error: err,
+                showStack: site.settings.showStackError,
+                title: 'Oops! Something went wrong!',
+                devmode: req.app.settings.env,
+                domain: req.app.set('domain')
+            });
+        }
+    }
+
+    if(req.xhr){
+        return res.json({ error: err.message, stack: err.stack}, err.status);
+    }
+
+    if (err.status === undefined){
+        res.render('errors/500.html', {
+            status: err.name,
+            error: err,
+            showStack: err.stack,
+            title: err.message,
+            devmode: req.app.settings.env,
+            domain: req.app.set('domain')
+        });
+    }else{
+        res.render('errors/' + err.status + '.html', {
+            status: err.status,
+            error: err,
+            showStack: site.settings.showStackError,
+            title: err.message,
+            devmode: req.app.settings.env,
+            domain: req.app.set('domain')
+        });
+    }
 });
 
 /*
