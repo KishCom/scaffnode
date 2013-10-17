@@ -43,6 +43,9 @@ site.configure(function(){
     }*/
     ]});
 
+    // Initalize routes
+    routes = new Routes(site, log);
+
     /*******************/
     /** Middlewares! **/
     /*******************/
@@ -59,6 +62,7 @@ site.configure(function(){
     //site.use(extras.throttle({urlCount: 5,urlSec: 1,holdTime: 5,whitelist: {"127.0.0.1": true}}));
 
     site.use(site.router);
+    site.use(routes.errorHandler);
 });
 
 /*
@@ -79,13 +83,9 @@ site.configure("live", function(){
     //site.set("domain", "example.com");
 });
 
-// Initalize routes
-routes = new Routes(site, log);
-
 /**  Routes/Views  **/
 site.get("/", routes.index);
 //site.post("/user/login", routes.index);
-
 //Catch all other attempted routes and throw them a 404!
 site.all("*", function(req, resp, next){
     next({name: "NotFound", "message": "Oops! The page you requested doesn't exist","status": 404});

@@ -15,6 +15,14 @@ Routes.prototype.index = function (req, res){
 Routes.prototype.errorHandler = function(err, req, res, next){
     if (err.status == 404){
         log.info('404 :', req.params[0], ' UA: ', req.headers['user-agent'], 'IP: ', req.ip);
+        res.render('errors/404.html', {
+            http_status: err.status,
+            error: err.name,
+            title: err.message,
+            showStack: err.stack,
+            env: req.app.settings.env,
+            domain: req.app.get('domain')
+        });
     }
 
     if(!err.name || err.name == 'Error'){
@@ -22,7 +30,7 @@ Routes.prototype.errorHandler = function(err, req, res, next){
         if(req.xhr){
             return res.send({ error: 'Internal error' }, 500);
         }else{
-            return res.jsonp({
+            return res.render('errors/500.html', {
                 status: 500,
                 error: err,
                 title: 'Oops! Something went wrong!',
@@ -30,10 +38,6 @@ Routes.prototype.errorHandler = function(err, req, res, next){
                 domain: req.app.get('domain')
             });
         }
-    }
-
-    if(req.xhr){
-        return res.json({ error: err.message, stack: err.stack, allError: err}, 500);
     }
 
     if (typeof err === "object"){
@@ -47,7 +51,7 @@ Routes.prototype.errorHandler = function(err, req, res, next){
     log.error(err);
 
     if (err.status === undefined){
-        res.json({
+        res.render('errors/500.html', {
             http_status: 500,
             error: err.name,
             showStack: err.stack,
@@ -56,7 +60,7 @@ Routes.prototype.errorHandler = function(err, req, res, next){
             domain: req.app.get('domain')
         });
     }else{
-        res.json({
+        res.render('errors/generic.html', {
             http_status: err.status,
             error: err.name,
             title: err.message,
