@@ -18,8 +18,6 @@ If your Node.js and NPM are already configured, setup and installation is a bree
     npm install
     # Start the server
     NODE_ENV=dev nodemon app.js | bunyan
-    # Or
-    #NODE_ENV=dev nodemon lite.js | bunyan
 
 ##Live Deploy Helper
 
