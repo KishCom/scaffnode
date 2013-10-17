@@ -5,10 +5,10 @@
 
 /**  Depends  **/
 var express = require("express"),
-    cons = require('consolidate'),
-    bunyan = require('bunyan'), log,
+    cons = require("consolidate"),
+    bunyan = require("bunyan"), log,
     extras = require("express-extras"),
-    lessMiddleware = require('less-middleware'),
+    lessMiddleware = require("less-middleware"),
     Routes = require("./routes"), routes,
     site = module.exports = express();
 
@@ -17,25 +17,25 @@ var express = require("express"),
 site.configure(function(){
     //LESS compiler middleware, if style.css is requested it will automatically compile and return style.less
     site.use(lessMiddleware({
-        src: __dirname + '/public',
+        src: __dirname + "/public",
         compress: true
     }));
 
     //Setup views and swig templates
     // assign the swig engine to .html files
-    site.engine('html', cons.swig);
+    site.engine("html", cons.swig);
     // set .html as the default extension 
-    site.set('view engine', 'html');
-    site.set('views', __dirname + '/views');
+    site.set("view engine", "html");
+    site.set("views", __dirname + "/views");
 
     //The rest of our static-served files
-    site.use(express.static(__dirname + '/public'));
+    site.use(express.static(__dirname + "/public"));
 
     // Configure logging
     log = bunyan.createLogger({ name: "My Node.js App",
     streams: [
     {
-        level: 'trace', // Priority of levels looks like this: Trace -> Debug -> Info -> Warn -> Error -> Fatal
+        level: "trace", // Priority of levels looks like this: Trace -> Debug -> Info -> Warn -> Error -> Fatal
         stream: process.stdout, // Developers will want to see this piped to their consoles
     }/*,{
         level: 'warn',
