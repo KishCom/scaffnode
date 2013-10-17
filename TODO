@@ -1,9 +1,6 @@
-- Do more clean up on Socket.io handlers, write client side basics
-- Write some better more descriptive routes (GET and POST handling demo)
 - Add a little more demo on how sessions work
-- Testing scaffolding
-- Build automation scaffolding
-- Consider adding in database component (MongoDB?)
-- Consider adding in caching component (redis?)
-- Consider adding in Fusker
-- Prettify error messages? and 404, 500 etc
+- Test framework scaffolding
+- Build automation scaffolding with grunt
+- Consider adding in database component (MongoDB? C*?)
+- Consider adding in caching component (redis? memcached?)
+- Prettify error messages: 404, 500 etc
