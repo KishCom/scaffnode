@@ -23,4 +23,4 @@ If your Node.js and NPM are already configured, setup and installation is a bree
 
 ##Live Deploy Helper
 
-You'll also find an app.upstart file that allows you to install this app as an upstart service for Linix systems that support (upstart)[http://upstart.ubuntu.com/]. Modify the contents of that file and copy it to `/etc/init` - you'll be able to start and stop your server with `sudo service appname start`
+You'll also find an app.upstart file that allows you to install this app as an upstart service for Linix systems that support [upstart](http://upstart.ubuntu.com/). Modify the contents of that file and copy it to `/etc/init` - you'll be able to start and stop your server with `sudo service appname start`
