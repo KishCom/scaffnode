@@ -10,14 +10,13 @@ To install, make sure you have Node.js (>0.10.x) installed on your system as wel
 
 If your Node.js and NPM are already configured, setup and installation is a breeze:
 
-    # Install nodemon
+    # Install nodemon and bunyan globally
     sudo npm install nodemon -g
-    # Install bunyan logging tool
     sudo npm install bunyan -g
     # Get other dependencies
     npm install
     # Start the server
-    NODE_ENV=dev nodemon app.js | bunyan
+    npm start
 
 ##Live Deploy Helper
 

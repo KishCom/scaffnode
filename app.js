@@ -7,7 +7,6 @@
 var express = require("express"),
     cons = require("consolidate"),
     bunyan = require("bunyan"), log,
-    extras = require("express-extras"),
     lessMiddleware = require("less-middleware"),
     Routes = require("./routes"), routes,
     site = module.exports = express();
@@ -22,53 +21,47 @@ site.configure(function(){
     }));
 
     //Setup views and swig templates
-    // assign the swig engine to .html files
     site.engine("html", cons.swig);
-    // set .html as the default extension 
     site.set("view engine", "html");
     site.set("views", __dirname + "/views");
 
     //The rest of our static-served files
     site.use(express.static(__dirname + "/public"));
 
+    // Grab the name and version from our package.json
+    var packagejson = require('./package');
     // Configure logging
-    log = bunyan.createLogger({ name: "My Node.js App",
-    streams: [
-    {
-        level: "trace", // Priority of levels looks like this: Trace -> Debug -> Info -> Warn -> Error -> Fatal
-        stream: process.stdout, // Developers will want to see this piped to their consoles
-    }/*,{
-        level: 'warn',
-        stream: new utils(), // looks for 'write' method. https://github.com/trentm/node-bunyan
-    }*/
-    ]});
+    log = bunyan.createLogger(
+        { name: packagejson.name + " " + packagejson.version,
+            streams:
+            [{
+                level: "trace", // Priority of levels looks like this: Trace -> Debug -> Info -> Warn -> Error -> Fatal
+                stream: process.stdout, // Developers will want to see this piped to their consoles
+            }/*,{
+                level: 'warn',
+                stream: new utils(), // looks for 'write' method. https://github.com/trentm/node-bunyan
+            }*/
+            ]}
+        );
 
     // Initalize routes
     routes = new Routes(site, log);
 
-    /*******************/
     /** Middlewares! **/
-    /*******************/
-    site.use(extras.fixIP()); //Normalize various IP address sources to be more accurate
     site.use(express.cookieParser());
     //Express sessions. Storage doesn't have to be Mongo, there's native support for lots of other dbs
     /*site.use(express.session({secret: nifcee.SESS_SALT,
                               maxAge: new Date(Date.now() + 604800*1000),
                               store: new mongoStore({ url: "mongodb://localhost/scaffnode"}) }));  */
-    
-    site.use(express.bodyParser()); //Make use of x-www-form-erlencoded and json app-types
-    site.use(express.methodOverride()); //Connect alias
-    //Simple throttle to prevent API abuse
-    //site.use(extras.throttle({urlCount: 5,urlSec: 1,holdTime: 5,whitelist: {"127.0.0.1": true}}));
-
+    site.use(express.json());
+    site.use(express.urlencoded());
+    site.use(express.methodOverride());
     site.use(site.router);
     site.use(routes.errorHandler);
 });
 
 /*
-*
 **  Sever specific configuration
-*
 */
 //Dev mode
 site.configure("dev", function(){
@@ -93,11 +86,14 @@ site.all("*", function(req, resp, next){
 
 
 /*
-*
 **  Server startup
-*
 */
-//Foreman will set the proper port for live mode, otherwise use port 8888
+// Get proper from from ENV variable for live mode, otherwise use port 8888
 var port = process.env.PORT || 8888;
-site.listen(port);
-console.log("Server listening on http://" + site.get("domain") + ":" + port + " in " + process.env.NODE_ENV + " mode");
+if (!process.env.NODE_ENV){
+    log.error("You need to set a NODE_ENV environment variable ('live' or 'dev' for example).");
+    process.exit();
+}else{
+    site.listen(port);
+    log.info("Server listening on http://" + site.get("domain") + ":" + port + " in " + process.env.NODE_ENV + " mode");
+}

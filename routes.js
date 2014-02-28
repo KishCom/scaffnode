@@ -15,7 +15,7 @@ Routes.prototype.index = function (req, res){
 Routes.prototype.errorHandler = function(err, req, res, next){
     if (err.status == 404){
         log.info("404 :", req.params[0], " UA: ", req.headers["user-agent"], "IP: ", req.ip);
-        res.render("errors/404.html", {
+        return res.render("errors/404.html", {
             http_status: err.status,
             error: err.name,
             title: err.message,
@@ -23,6 +23,8 @@ Routes.prototype.errorHandler = function(err, req, res, next){
             env: req.app.settings.env,
             domain: req.app.get("domain")
         });
+    }else{
+        log.error(err);
     }
 
     if(!err.name || err.name == "Error"){
@@ -47,11 +49,9 @@ Routes.prototype.errorHandler = function(err, req, res, next){
     }else{
         err = err + " on " + req.params[0];
     }
-    
-    log.error(err);
 
     if (err.status === undefined){
-        res.render("errors/500.html", {
+        return res.render("errors/500.html", {
             http_status: 500,
             error: err.name,
             showStack: err.stack,
@@ -60,7 +60,7 @@ Routes.prototype.errorHandler = function(err, req, res, next){
             domain: req.app.get("domain")
         });
     }else{
-        res.render("errors/generic.html", {
+        return res.render("errors/500.html", {
             http_status: err.status,
             error: err.name,
             title: err.message,
