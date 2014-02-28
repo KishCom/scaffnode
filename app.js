@@ -68,7 +68,6 @@ site.configure("dev", function(){
     //Set your domain name for your development environment
     site.set("domain", "localhost");
     site.use(express.logger("dev"));
-    console.log("Running in dev mode");
 });
 //Live deployed mode
 site.configure("live", function(){
