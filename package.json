@@ -11,9 +11,10 @@
     "swig": "latest",
     "consolidate": "latest",
     "less": "latest",
-    "less-middleware": "latest",
+    "less-middleware": "~0.1.15",
     "validator": "latest",
     "nodeunit": "latest",
-    "bunyan": "latest"
+    "bunyan": "latest",
+    "nodemon": "latest"
   }
 }
