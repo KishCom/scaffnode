@@ -16,11 +16,12 @@ var express = require("express"),
     site = module.exports = express();
 
 /* Optional redis stuff
-    // Install:
-        //"hiredis": "~0.1.x",
-        //"redis": "~0.10.x",
-        //"connect-redis": "~2.0.x",
-    // Uncomment:
+    // Add to package.json
+        "hiredis": "~0.1.x",
+        "redis": "~0.10.x",
+        "connect-redis": "~2.0.x",
+    // Uncomment this stuff (and down where expressSession is initiated too!):
+    var redis = require("redis");
     var redisStore = require('connect-redis')(expressSession),
         redis_client = redis.createClient(null, null, {detect_buffers: true}); // Assumes redis is running on localhost on default port
     site.set('redis', redis_client);
