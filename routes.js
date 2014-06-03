@@ -14,7 +14,7 @@ Routes.prototype.index = function (req, res){
 /*******************/
 Routes.prototype.errorHandler = function(err, req, res, next){
     if (err.status == 404){
-        log.info("404 :", req.params[0], " UA: ", req.headers["user-agent"], "IP: ", req.ip);
+        log.info("404 :", req.url, " UA: ", req.headers["user-agent"], "IP: ", req.ip);
         return res.render("errors/404.html", {
             http_status: err.status,
             error: err.name,
@@ -28,7 +28,7 @@ Routes.prototype.errorHandler = function(err, req, res, next){
     }
 
     if(!err.name || err.name == "Error"){
-        log.error(JSON.stringify(err) + " on " + req.params[0]);
+        log.error(JSON.stringify(err) + " on " + req.url);
         if(req.xhr){
             return res.send({ error: "Internal error" }, 500);
         }else{
@@ -47,7 +47,7 @@ Routes.prototype.errorHandler = function(err, req, res, next){
         err.ip = req.ip;
         err.user_agent = req.headers["user-agent"];
     }else{
-        err = err + " on " + req.params[0];
+        err = err + " on " + req.url;
     }
 
     if (err.status === undefined){
