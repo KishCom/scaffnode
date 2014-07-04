@@ -30,10 +30,7 @@ var express = require("express"),
 //** General Configuration  **/
 
 //LESS compiler middleware, if style.css is requested it will automatically compile and return style.less
-site.use(lessMiddleware({
-    src: __dirname + "/public",
-    compress: true
-}));
+site.use(lessMiddleware(__dirname + '/public'));
 
 //Setup views and swig templates
 site.engine("html", cons.swig);
@@ -69,10 +66,13 @@ site.use(multer({
         return filename.replace(/\W+/g, '-').toLowerCase();
     }
 }));
-site.use(bodyParser());
+site.use(bodyParser.urlencoded({extended: true}));
+site.use(bodyParser.json());
 site.use(cookieParser());
 site.use(expressSession({   secret: "somereallysecretstring",
                             key: "app.sid",
+                            saveUninitialized: false,
+                            resave: false,
                             //store: new redisStore({ client: redis_client }),
                             cookie: {maxAge: new Date(Date.now() + 604800*1000), path: '/', httpOnly: true, secure: false}
                         }));
