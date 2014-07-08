@@ -1,4 +1,6 @@
 var log, self;
+var accepts = require('accepts');
+var escapeHtml = require('escape-html');
 var Routes = function(app, bunyan){
     self = app;
     log = bunyan;
@@ -9,65 +11,67 @@ Routes.prototype.index = function (req, res){
     res.render("index", { title: "Welcome!" });
 };
 
-/*******************/
 /* Error handler */
-/*******************/
 Routes.prototype.errorHandler = function(err, req, res, next){
-    if (err.status == 404){
-        log.info("404 :", req.url, " UA: ", req.headers["user-agent"], "IP: ", req.ip);
-        return res.render("errors/404.html", {
-            http_status: err.status,
-            error: err.name,
-            title: err.message,
-            showStack: err.stack,
-            env: req.app.settings.env,
-            domain: req.app.get("domain")
-        });
-    }else{
-        log.error(err);
+    var env = process.env.NODE_ENV;
+    // respect err.status
+    if (err.status) {
+        res.statusCode = err.status;
+    }
+    // default status code to 500
+    if (res.statusCode < 400) {
+        res.statusCode = 500;
     }
 
-    if(!err.name || err.name == "Error"){
-        log.error(JSON.stringify(err) + " on " + req.url);
-        if(req.xhr){
-            return res.send({ error: "Internal error" }, 500);
-        }else{
-            return res.render("errors/500.html", {
-                status: 500,
-                error: err,
-                title: "Oops! Something went wrong!",
-                env: req.app.settings.env,
-                domain: req.app.get("domain")
-            });
+    // write error to console
+    if (env !== 'test') {
+        if (res.statusCode !== 404){
+            log.error(err.stack || JSON.stringify(err));
         }
     }
 
-    if (typeof err === "object"){
-        err.path = req.params ? JSON.stringify(req.params) : "";
-        err.ip = req.ip;
-        err.user_agent = req.headers["user-agent"];
-    }else{
-        err = err + " on " + req.url;
+    // cannot actually respond
+    if (res._header) {
+        return req.socket.destroy();
     }
 
-    if (err.status === undefined){
-        return res.render("errors/500.html", {
-            http_status: 500,
-            error: err.name,
-            showStack: err.stack,
-            title: err.message,
-            env: req.app.settings.env,
-            domain: req.app.get("domain")
-        });
-    }else{
-        return res.render("errors/500.html", {
-            http_status: err.status,
-            error: err.name,
-            title: err.message,
-            showStack: err.stack,
-            env: req.app.settings.env,
-            domain: req.app.get("domain")
-        });
+    // negotiate
+    var accept = accepts(req);
+    var type = accept.types('html', 'json', 'text');
+
+    // Security header for content sniffing
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+
+    // html
+    if (type === 'html') {
+        if (res.statusCode == 404){
+            log.info("404 :", req.url, " UA: ", req.headers["user-agent"], "IP: ", req.ip);
+            return res.render("errors/404.html", {
+                http_status: res.statusCode,
+                "env": env
+            });
+        }else{
+            var stack = (err.stack || '').split('\n').slice(1).map(function(v){ return '<li>' + escapeHtml(v).replace(/  /g, ' &nbsp;') + '</li>'; }).join('');
+            res.render('errors/500.html',{
+                http_status: res.statusCode,
+                error: String(err).replace(/  /g, ' &nbsp;').replace(/\n/g, '<br>'),
+                showStack: stack,
+                "env": env
+            });
+        }
+    // json
+    } else if (type === 'json') {
+        var error = { error: true, message: err.message, stack: err.stack };
+        for (var prop in err){
+            error[prop] = err[prop];
+        }
+        var json = JSON.stringify(error);
+        res.setHeader('Content-Type', 'application/json');
+        res.end(json);
+    // plain text
+    } else {
+        res.setHeader('Content-Type', 'text/plain');
+        res.end(err.stack || String(err));
     }
 };
 
