@@ -18,7 +18,7 @@ var express = require("express"),
 /* Optional redis stuff
     // Add to package.json
         "hiredis": "~0.1.x",
-        "redis": "~0.10.x",
+        "redis": "~0.12.x",
         "connect-redis": "~2.0.x",
     // Uncomment this stuff (and down where expressSession is initiated too!):
     var redis = require("redis");

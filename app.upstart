@@ -24,16 +24,16 @@ start on (net-device-up
 # Stop in runlevels 0,1 and 6
 stop on runlevel [016]
 
-# automatically respawn, but if its respwaning too fast (5 times in 60 seconds, don't do that)
+# automatically respawn, but if its respwaning too fast (5 times in 15 seconds, don't do that)
 respawn
-respawn limit 5 60
+respawn limit 5 15
 
 # make sure node is there, the code directory is there
 pre-start script
     test -x $NODE_PATH || { stop; exit 0; }
     test -e $APP_HOME/app.js || { stop; exit 0; }
 end script
- 
+
 # cd to code path and run node, with the right switches
 script
     chdir $APP_HOME
