@@ -15,7 +15,9 @@ If your Node.js and NPM are already configured, setup and installation is a bree
     sudo npm install bunyan -g
     # Get other dependencies
     npm install
-    # Start the server
+    # Configure server details
+    cp config.sample.js config.js
+    # Edit config.js with your details then start the server:
     npm start
 
 ##Live Deploy Helpers
