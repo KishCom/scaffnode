@@ -1,7 +1,7 @@
 {
   "name": "Scaffnode",
   "author": "Andrew Kish",
-  "version": "0.6.7",
+  "version": "0.7.1",
   "private": true,
   "scripts": {
     "start": "clear; NODE_ENV=dev nodemon app.js | bunyan"
