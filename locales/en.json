@@ -1,0 +1,14 @@
+{
+	"html_locale": "en-CA",
+	"Hello World": "Hello World",
+	"Hello %s, how are you today?": "Hello %s, how are you today?",
+	"%s cat": {
+		"one": "%s cat",
+		"other": "%s cats"
+	},
+	"Choose language": "Choose language",
+	"English": "English",
+	"French": "French",
+	"Pirate": "Pirate",
+	"Welcome!": "Welcome!"
+}

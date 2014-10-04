@@ -8,7 +8,7 @@ var Routes = function(app, bunyan){
 
 /* Landing page */
 Routes.prototype.index = function (req, res){
-    res.render("index", { title: "Welcome!" });
+    res.render("index", { title: req.__("Welcome!") });
 };
 
 /* Error handler */

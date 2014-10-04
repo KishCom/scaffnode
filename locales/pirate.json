@@ -1,0 +1,14 @@
+{
+	"html_locale": "en-US",
+	"Hello World": "Ahoy salty dogs",
+	"Hello %s, how are you today?": "Ahoy %s, how goes the fight?",
+	"%s cat": {
+		"one": "%s mangy fur ball",
+		"other": "%s mangy fur balls"
+	},
+	"Choose language": "oy! what's yer native tounge",
+	"English": "Englishmen",
+	"French": "Frenchies",
+	"Pirate": "Pirate",
+	"Welcome!": "Howdy!"
+}

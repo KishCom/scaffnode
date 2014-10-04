@@ -12,6 +12,7 @@ var express = require("express"),
     bodyParser = require("body-parser"),
     expressSession = require("express-session"),
     multer = require('multer'),
+    i18n = require('i18n'),
     Routes = require("./routes"), routes,
     site = module.exports = express();
 
@@ -38,8 +39,6 @@ var packagejson = require('./package');
         redis_client = redis.createClient(config.redisPort, config.redisHost, {detect_buffers: true}); // Assumes redis is running on localhost on default port
     site.set('redis', redis_client);
 */
-
-//** General Configuration  **/
 
 //LESS compiler middleware, if style.css is requested it will automatically compile and return style.less
 site.use(lessMiddleware(__dirname + '/public'));
@@ -88,6 +87,44 @@ site.use(expressSession({   secret: config.sessionSecret,
                             //store: new redisStore({ client: redis_client }),
                             cookie: {maxAge: new Date(Date.now() + 604800*1000), path: '/', httpOnly: true, secure: false}
                         }));
+
+
+// Setup i18n for use with swig templates
+i18n.configure({
+  locales: config.supportedLocales,
+  cookie: packagejson.name + "_lang.sid",
+  directory: __dirname + '/locales'
+});
+site.use(i18n.init);
+// Set language based on a users preference and middleware to handle changes
+// via a ?lang= query variable
+site.use(function(req, res, next){
+    // We default to en, so we don't need to do anything
+    if (!req.session.lang || req.session.lang === "en"){
+        req.session.lang = "en"
+    }else{
+        // Ensure the language is one we support before setting the locale
+        for (var i in config.supportedLocales){
+            if (config.supportedLocales[i] === req.session.lang){
+                req.setLocale(req.session.lang);
+                break;
+            }
+        }        
+    }
+    // Handle the user changing language
+    if (req.query.lang){
+        for (var i in config.supportedLocales){
+            if (config.supportedLocales[i] === req.query.lang){
+                //log.debug("User switching language to", req.query.lang);
+                req.session.lang = req.query.lang;
+                req.setLocale(req.query.lang);
+                break;
+            }
+        }
+    }
+    res.header("Content-Language", req.session.lang);
+    next();
+});
 
 /**  Routes/Views  **/
 site.get("/", routes.index);
