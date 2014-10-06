@@ -1,16 +1,44 @@
 var log, self;
-var Routes = function(app, bunyan){
+var accepts = require('accepts');
+var escapeHtml = require('escape-html');
+var Utils = function(app, bunyan){
     self = app;
     log = bunyan;
 };
 
-/* Landing page */
-Routes.prototype.index = function (req, res){
-    res.render("index", { title: req.__("Welcome!") });
+/* i18n Helper
+*  Set language based on a users preference and middleware to handle changes via a ?lang= query variable
+*/
+Utils.prototype.i18nHelper = function(req, res, next){
+    // We default to en, so we don't need to do anything
+    if (!req.session.lang || req.session.lang === "en"){
+        req.session.lang = "en";
+    }else{
+        // Ensure the language is one we support before setting the locale
+        for (var i in config.supportedLocales){
+            if (config.supportedLocales[i] === req.session.lang){
+                req.setLocale(req.session.lang);
+                break;
+            }
+        }
+    }
+    // Handle the user changing language
+    if (req.query.lang){
+        for (var ii in config.supportedLocales){
+            if (config.supportedLocales[ii] === req.query.lang){
+                //log.debug("User switching language to", req.query.lang);
+                req.session.lang = req.query.lang;
+                req.setLocale(req.query.lang);
+                break;
+            }
+        }
+    }
+    res.header("Content-Language", req.session.lang);
+    next();
 };
 
 /* Error handler */
-Routes.prototype.errorHandler = function(err, req, res, next){
+Utils.prototype.errorHandler = function(err, req, res, next){
     var env = process.env.NODE_ENV;
     // respect err.status
     if (err.status) {
@@ -73,4 +101,4 @@ Routes.prototype.errorHandler = function(err, req, res, next){
     }
 };
 
-module.exports = Routes;
+module.exports = Utils;

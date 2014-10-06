@@ -14,6 +14,7 @@ var express = require("express"),
     multer = require('multer'),
     i18n = require('i18n'),
     Routes = require("./routes"), routes,
+    Utils = require("./utils"), utils,
     site = module.exports = express();
 
 // Load configuration details based on your environment
@@ -67,8 +68,9 @@ log = bunyan.createLogger(
         ]}
     );
 
-// Initalize routes
+// Initalize routes and a few utilities helpers
 routes = new Routes(site, log);
+utils = new Utils(site, log);
 
 /** Middlewares! **/
 site.use(multer({
@@ -95,36 +97,10 @@ i18n.configure({
   cookie: packagejson.name + "_lang.sid",
   directory: __dirname + '/locales'
 });
+// Express helper (makes '__' functions available in templates)
 site.use(i18n.init);
-// Set language based on a users preference and middleware to handle changes
-// via a ?lang= query variable
-site.use(function(req, res, next){
-    // We default to en, so we don't need to do anything
-    if (!req.session.lang || req.session.lang === "en"){
-        req.session.lang = "en"
-    }else{
-        // Ensure the language is one we support before setting the locale
-        for (var i in config.supportedLocales){
-            if (config.supportedLocales[i] === req.session.lang){
-                req.setLocale(req.session.lang);
-                break;
-            }
-        }        
-    }
-    // Handle the user changing language
-    if (req.query.lang){
-        for (var i in config.supportedLocales){
-            if (config.supportedLocales[i] === req.query.lang){
-                //log.debug("User switching language to", req.query.lang);
-                req.session.lang = req.query.lang;
-                req.setLocale(req.query.lang);
-                break;
-            }
-        }
-    }
-    res.header("Content-Language", req.session.lang);
-    next();
-});
+// Middleware helper, makes user language preferences sticky and watches for "lang" query variable
+site.use(Utils.i18nHelper);
 
 /**  Routes/Views  **/
 site.get("/", routes.index);
@@ -134,7 +110,7 @@ site.all("*", function(req, resp, next){
     next({name: "NotFound", "message": "Oops! The page you requested doesn't exist","status": 404});
 });
 // Finally, user our errorHandler
-site.use(routes.errorHandler);
+site.use(Utils.errorHandler);
 
 /*
 **  Server startup
