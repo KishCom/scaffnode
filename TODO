@@ -1,6 +1,3 @@
-- Add a little more demo on how sessions work
 - Test framework scaffolding
 - Build automation scaffolding with grunt
 - Consider adding in database component (MongoDB? C*?)
-- Consider adding in caching component (redis? memcached?)
-- Prettify error messages: 404, 500 etc
