@@ -1,7 +1,8 @@
-var log, self;
+var log, self, config;
 var accepts = require('accepts');
 var escapeHtml = require('escape-html');
-var Utils = function(app, bunyan){
+var Utils = function(app, bunyan, appConfig){
+    config = appConfig;
     self = app;
     log = bunyan;
 };

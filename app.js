@@ -70,7 +70,7 @@ log = bunyan.createLogger(
 
 // Initalize routes and a few utilities helpers
 routes = new Routes(site, log);
-utils = new Utils(site, log);
+utils = new Utils(site, log, config);
 
 /** Middlewares! **/
 site.use(multer({
@@ -100,7 +100,7 @@ i18n.configure({
 // Express helper (makes '__' functions available in templates)
 site.use(i18n.init);
 // Middleware helper, makes user language preferences sticky and watches for "lang" query variable
-site.use(Utils.i18nHelper);
+site.use(utils.i18nHelper);
 
 /**  Routes/Views  **/
 site.get("/", routes.index);
@@ -110,7 +110,7 @@ site.all("*", function(req, resp, next){
     next({name: "NotFound", "message": "Oops! The page you requested doesn't exist","status": 404});
 });
 // Finally, user our errorHandler
-site.use(Utils.errorHandler);
+site.use(utils.errorHandler);
 
 /*
 **  Server startup
