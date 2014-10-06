@@ -1,0 +1,14 @@
+{
+	"html_locale": "fr-CA",
+	"Hello World": "bonjour tout le monde",
+	"Hello %s, how are you today?": "Bonjour %s, comment allez-vous aujourd'hui?",
+	"%s cat": {
+		"one": "%s chat",
+		"other": "%s chats"
+	},
+	"Choose language": "Choisissez la langue",
+	"English": "anglais",
+	"French": "Français",
+	"Pirate": "pirate",
+	"Welcome!": "accueil."
+}

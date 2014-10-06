@@ -1,6 +1,7 @@
 exports.config = {
     "dev":{
         domain: "localhost",
+        supportedLocales: ['en', 'fr', 'pirate'],
         redisHost: "localhost",
         redisPort: 6379,
         logLevel: "trace",
@@ -8,6 +9,7 @@ exports.config = {
     },
     "live":{
         domain: "productionurl.com",
+        supportedLocales: ['en', 'fr'],
         redisHost: "redis.productionurl.com",
         redisPort: 6379,
         logLevel: "info",
