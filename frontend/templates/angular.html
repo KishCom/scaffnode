@@ -1,0 +1,13 @@
+{% block angularContent %}
+    {% if config.NODE_ENV == "dev" %}
+    <script src="/media/js/scaffnode.js"></script>
+    {% else %}
+    <script src="/media/js/scaffnode.min.js"></script>
+    {% endif %}
+    {# Your angular app will render here#}
+    <div id="ContentPane" data-ng-view=""></div>
+{% endblock %}
+<script>
+    // {# Populated by swig on the backend. If you can read this comment rendered in your HTML ... you're looking at a static copy, not one served via the Node.js app #}
+    var appname = "{{ config.appName }}";
+</script>

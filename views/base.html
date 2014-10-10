@@ -1,15 +1,66 @@
-<!DOCTYPE HTML>
-<html lang="{{ __('html_locale') }}">
+<!doctype html>
+ <!--
+scaffnode - 686814b-dirty
+My angular.js based frontend
+Templates compiled on Friday, October 10th, 2014, 12:46:04 AM
+-->
+<html lang="en" data-ng-app="{{ config.appName }}">
 <head>
     <meta charset="UTF-8">
-    <title>{% if title %}{{ title }}{% endif %}</title>
-    <link rel="stylesheet" type="text/css" href="/media/css/style.css" media="all">
-    <script type="text/javascript" src="/media/js/jquery.min.js"></script>
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+    <title>{{ config.appname }}</title>
+    <meta name="description" content="{{ config.appName }} app!">
+    {% if config.NODE_ENV == "dev" %}
+    <link rel="stylesheet" href="/media/css/style.css">
+    {% else %}
+    <link rel="stylesheet" href="/media/css/style.min.css">
+    {% endif %}
+    {# JavaScript is loaded in angular.html and static.html #}
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
 </head>
 <body>
-    <div id="Wrap">
-    {% block content %}
-    {% endblock %}
-    </div>
-</body>
-</html>
+
+ 
+{% block angularContent %}
+    {% if config.NODE_ENV == "dev" %}
+    <script src="/media/js/scaffnode.js"></script>
+    {% else %}
+    <script src="/media/js/scaffnode.min.js"></script>
+    {% endif %}
+    {# Your angular app will render here#}
+    <div id="ContentPane" data-ng-view=""></div>
+{% endblock %}
+<script>
+    // {# Populated by swig on the backend. If you can read this comment rendered in your HTML ... you're looking at a static copy, not one served via the Node.js app #}
+    var appname = "{{ config.appName }}";
+</script>
+ 
+
+    {# Place any 3rd-party/tracking/analytic addons here #}
+
+
+
+<!-- Begin Templates -->
+<script type="text/ng-template" id="home.html">
+<div class="col-xs-8">
+    <h1>Welcome</h1>
+    Name: <input type="text" name="name" class="form-control" id="name" ng-model="exampleModel.name"> <br />
+    Email: <input type="email" name="name" class="form-control" id="name" ng-model="exampleModel.email"><br />
+
+    <a href="mailto:[[ exampleModel.email ]]">[[ exampleModel.name ]]</a><br />
+    <p>Cotton candy donut bonbon unerdwear.com macaroon toffee jelly beans sweet roll. Marshmallow lemon drops biscuit bonbon. Gummi bears cookie jelly beans cotton candy apple pie brownie gummies. Icing tart sweet roll cake. Lemon drops gingerbread croissant chupa chups brownie sugar plum gummies. Gingerbread icing marshmallow. Carrot cake cake ice cream sweet oat cake. Croissant tiramisu halvah caramels brownie lollipop. Chocolate bar gummi bears jelly beans fruitcake sweet. Dragée bear claw jelly-o sweet roll chupa chups unerdwear.com. Icing candy sugar plum cheesecake cupcake croissant cookie. Cotton candy croissant soufflé sugar plum. Lollipop biscuit cupcake cheesecake chupa chups dessert gummies.</p>
+
+    {# Font-awesome and Glypicons included #}
+    <i class="fa fa-check fa-3x"></i>
+    <i class="fa fa-rss fa-3x"></i>
+    <i class="fa fa-bomb fa-3x"></i>
+    <span class="glyphicon glyphicon-search"></span>
+    <span class="glyphicon glyphicon-thumbs-up"></span>
+</div>
+</script>
+<!-- End Templates -->
+
+</body></html>

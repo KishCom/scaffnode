@@ -1,3 +1,4 @@
 node_modules
-public/media/css/style.css
+bower_components
+public/media/*
 config.js

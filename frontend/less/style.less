@@ -1,0 +1,35 @@
+@import "bootstrap/bootstrap.less";
+@import "bootstrap/bootswatch.less";
+@import "font-awesome/font-awesome.less";
+
+// A few handy mixins:
+.gradient(@color: #F5F5F5, @start: #EEE, @stop: #FFF) {
+  background: @color; /* Old browsers */
+  background: -moz-linear-gradient(top,  @start 0%, @stop 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,@start), color-stop(100%,@stop)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top,  @start 0%,@stop 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top,  @start 0%,@stop 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top,  @start 0%,@stop 100%); /* IE10+ */
+  background: linear-gradient(top,  @start 0%,@stop 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=@start, endColorstr=@stop, GradientType=0 ); /* IE6-9 */
+}
+.drop-shadow(@x-axis: 0, @y-axis: 1px, @blur: 2px, @alpha: 0.1) {
+  -webkit-box-shadow: @x-axis @y-axis @blur rgba(0, 0, 0, @alpha);
+  -moz-box-shadow: @x-axis @y-axis @blur rgba(0, 0, 0, @alpha);
+  box-shadow: @x-axis @y-axis @blur rgba(0, 0, 0, @alpha);
+}
+.transistions(@duration: 0.2s){
+    -webkit-transition: all @duration ease-out;
+    -moz-transition: all @duration ease-out;
+    -ms-transition: all @duration ease-out;
+    -o-transition: all @duration ease-out;
+    transition: all @duration ease-out;
+}
+
+html,body{
+    x-overflow: hidden;
+}
+
+#ContentPane{
+  width: 100%;
+}

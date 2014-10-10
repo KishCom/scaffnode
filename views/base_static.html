@@ -1,0 +1,31 @@
+<!doctype html>
+ <!--
+scaffnode - 686814b-dirty
+My angular.js based frontend
+Templates compiled on Friday, October 10th, 2014, 12:46:04 AM
+-->
+<html lang="en" data-ng-app="{{ config.appName }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+    <title>{{ config.appname }}</title>
+    <meta name="description" content="{{ config.appName }} app!">
+    {% if config.NODE_ENV == "dev" %}
+    <link rel="stylesheet" href="/media/css/style.css">
+    {% else %}
+    <link rel="stylesheet" href="/media/css/style.min.css">
+    {% endif %}
+    {# JavaScript is loaded in angular.html and static.html #}
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+
+ 
+<div id="ContentPane">{% block content %}{% endblock %}</div>
+ 
+
+    {# Place any 3rd-party/tracking/analytic addons here #}
+

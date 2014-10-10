@@ -7,7 +7,6 @@
 var express = require("express"),
     cons = require("consolidate"),
     bunyan = require("bunyan"), log,
-    lessMiddleware = require("less-middleware"),
     cookieParser = require("cookie-parser"),
     bodyParser = require("body-parser"),
     expressSession = require("express-session"),
@@ -19,15 +18,17 @@ var express = require("express"),
 
 // Load configuration details based on your environment
 var config, NODE_ENV;
+var packagejson = require('./package');
 if (process.env.NODE_ENV === "dev" || process.env.NODE_ENV === "live"){
     config = require("./config.sample").config[process.env.NODE_ENV];
     config.NODE_ENV = process.env.NODE_ENV;
+    config.appName = packagejson.name;
+    config.appVersion = packagejson.version;
     site.locals.config = config;
 }else{
     console.log("Missing NODE_ENV environment variable. Must be set to 'dev' or 'live'.");
     process.exit();
 }
-var packagejson = require('./package');
 
 /* Optional redis stuff
     // Add to package.json
@@ -40,9 +41,6 @@ var packagejson = require('./package');
         redis_client = redis.createClient(config.redisPort, config.redisHost, {detect_buffers: true}); // Assumes redis is running on localhost on default port
     site.set('redis', redis_client);
 */
-
-//LESS compiler middleware, if style.css is requested it will automatically compile and return style.less
-site.use(lessMiddleware(__dirname + '/public'));
 
 //Setup views and swig templates
 site.engine("html", cons.swig);

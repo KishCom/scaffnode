@@ -1,0 +1,30 @@
+{
+  "name": "scaffnode",
+  "version": "0.9.0",
+  "authors": [
+    "Andrew Kish <akish@kishcom.com>"
+  ],
+  "description": "My angular.js based web frontend",
+  "private": true,
+  "main": "./js/app.js",
+  "license": "Private",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "1.2.x",
+    "angular-animate": "1.2.x",
+    "angular-cookies": "1.2.x",
+    "angular-loader": "1.2.x",
+    "angular-resource": "1.2.x",
+    "angular-route": "1.2.x",
+    "angular-sanitize": "1.2.x",
+    "angular-touch": "1.2.x",
+    "angular-moment": "0.6.x",
+    "jquery": "~1.11.x"
+  }
+}
