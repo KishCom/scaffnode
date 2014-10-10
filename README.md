@@ -17,14 +17,21 @@ If your Node.js and NPM are already configured, setup and installation is a bree
     npm install
     # Configure server details
     cp config.sample.js config.js
-    # Edit config.js with your details then start the server:
+
+    # Name the project. Replace "YourProjectsNameHere" in the next command with your project name (alpha-numeric only)
+    find . -type f | xargs sed -i 's/scaffnode/YourProjectsNameHere/gi'
+
+    # Edit config.js with your details
+
+    # Then start the server:
     npm start
 
 ## Frontend
 
+The front end of this app bundles Angular.js, Bootstrap, and moment.js with a starter framework setup in the `frontend` folder. Assets are compiled and minified with Grunt and packages are managed by bower
+
 This app setup DOES NOT USE `"{{ variable }}"` notation in Angular.js. It uses a different [interpolation provider](http://docs.angularjs.org/api/ng.$interpolateProvider), so do this instead: `"[[ variable ]]"`. (This is because the backend templates use swig, which also uses`{{ }}` notation).
 After following the directions above and your server is running, you can start setting up the frontend:
-
 
 Builds and concatinates JS files, doesn't minify.
 
