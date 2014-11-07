@@ -7,6 +7,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-git-describe');
     grunt.loadNpmTasks('grunt-inline-angular-templates');
+    grunt.loadNpmTasks('grunt-uncss');
     var localpackage = grunt.file.readJSON('package.json');
 
     grunt.initConfig({
@@ -84,20 +85,18 @@ module.exports = function(grunt) {
                     paths: [""]
                 },
                 files: {
-                    "../public/media/css/style.css": [  "less/style.less"
+                    "../public/media/css/style.css": [ "less/style.less"
                                                         // Place additional LESS or CSS style sheets here
                                                     ]
                 }
             },
-            production: {
+            production: { // Basically just a minifier task - doesn't actually recompile less
                 options: {
                     paths: [""],
                     cleancss: true,
                 },
                 files: {
-                    "../public/media/css/style.min.css": [  "less/style.less"
-                                                        // Place additional LESS or CSS style sheets here
-                                                    ]
+                    "../public/media/css/style.min.css": [ "../public/media/css/style.css" ]
                 }
             }
         },
@@ -161,6 +160,25 @@ module.exports = function(grunt) {
                 }
             }
         },
+        uncss: {
+            dist: {
+                options: {
+                    ignore       : ['#added_at_runtime', /test\-[0-9]+/],
+                    // by default UnCSS processes stylesheets with media query "all", "screen", and those without one. Specify here which others to include.
+                    //media        : ['(min-width: 700px) handheld and (orientation: landscape)'],
+                    csspath      : '../public/media/css/',
+                    //raw          : 'h1 { color: green }',
+                    stylesheets  : ['style.css'],
+                    ignoreSheets : [/fonts.googleapis/],
+                    timeout      : 1000,
+                    htmlroot     : '../public',
+                    report       : 'min'
+                },
+                files: {
+                    '../public/media/css/style.css': ['../views/base.html', 'templates/partials/*']
+                }
+            }
+        }
     });
 
     grunt.registerTask('getGitRevision', function() {
@@ -171,9 +189,9 @@ module.exports = function(grunt) {
         });
         grunt.task.run('git-describe');
     });
-    grunt.registerTask('default', ['getGitRevision', 'concat','inline_angular_templates', 'less:development', 'copy', 'watch']);
-    grunt.registerTask('start_app', ['getGitRevision', 'concat', 'inline_angular_templates', 'less:development', 'copy']);
+    grunt.registerTask('default', ['getGitRevision', 'concat','inline_angular_templates', 'less:development', 'uncss', 'copy', 'watch']);
+    grunt.registerTask('start_app', ['getGitRevision', 'concat', 'inline_angular_templates', 'less:development', 'uncss', 'copy']);
     grunt.registerTask('launch', ['getGitRevision', 'concat', 'inline_angular_templates', 'uglify', 'less', 'copy']);
     grunt.registerTask('test', ['jshint']); // lol, tests coming soon
-    grunt.registerTask('build', ['getGitRevision', 'concat', 'inline_angular_templates', 'uglify', 'less:production', 'copy']);
+    grunt.registerTask('build', ['getGitRevision', 'concat', 'inline_angular_templates', 'uglify', 'less:development', 'uncss', 'less:production', 'copy']);
 };
