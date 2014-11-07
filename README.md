@@ -44,7 +44,7 @@ Builds and concatinates JS files, doesn't minify.
 
 ###i18n Multi-language support
 
-Example language files are found in `locale` and example useage can be found in `frontend/templates/home.html`. Currently all i18n translations must be done on the backend, frontend translation is coming soon (it's easily hacked in and I'd welcome a pull request -- I personally just try to avoid frontend i18n translation).
+Example language files are found in `locale` and example useage can be found in `frontend/templates/partials/home.html`. Currently all i18n translations must be done on the backend, frontend translation is coming soon (it's easily hacked in and I'd welcome a pull request -- I personally just try to avoid frontend i18n translation).
 
 ###Build frontend for production
 
