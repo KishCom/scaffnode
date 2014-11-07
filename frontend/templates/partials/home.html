@@ -12,4 +12,14 @@
     <i class="fa fa-bomb fa-3x"></i>
     <span class="glyphicon glyphicon-search"></span>
     <span class="glyphicon glyphicon-thumbs-up"></span>
+    <hr />
+    {# i18n Multi-language example #}
+    <aside>{{ __('Choose language') }}: <a href="?lang=en">{{ __('English') }}</a> <a href="?lang=fr">{{ __('French') }}</a> <a href="?lang=pirate">{{ __('Pirate') }}</a></aside>
+    <h1>{{ __('Hello World') }}!</h1>
+    <ul>
+        <li>{{ __("Hello %s, how are you today?", "someusername") }}</li>
+        <li>{# Plural support #}{{ __n("%s cat", 5) }}</li>
+    </ul>
+    {# Frontend language conversion is not yet supported but easily hacked in #}
+    <span></span>
 </div>
