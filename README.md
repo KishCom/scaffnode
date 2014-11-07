@@ -30,6 +30,8 @@ If your Node.js and NPM are already configured, setup and installation is a bree
 
 The front end of this app bundles Angular.js, Bootstrap, and moment.js with a starter framework setup in the `frontend` folder. Assets are compiled and minified with Grunt and packages are managed by bower
 
+The views used by the backend `views/base.html` and `views/base_static.html` are dynamically generated based on the frontend templates found in `frontend/templates`. Angular.js templates are precompiled and bundled into `views/base.html`. Just edit/create templates inside of `frontend/templates/partials/` and Grunt will automatically include them into your Angular.js app.
+
 This app setup DOES NOT USE `"{{ variable }}"` notation in Angular.js. It uses a different [interpolation provider](http://docs.angularjs.org/api/ng.$interpolateProvider), so do this instead: `"[[ variable ]]"`. (This is because the backend templates use Nunjucks, which also uses`{{ }}` notation).
 After following the directions above and your server is running, you can start setting up the frontend:
 
