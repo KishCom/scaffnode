@@ -1,8 +1,8 @@
 <!doctype html>
  <!--
-scaffnode - 686814b-dirty
+scaffnode - ff7fe44-dirty
 My angular.js based frontend
-Templates compiled on Friday, October 10th, 2014, 12:46:04 AM
+Templates compiled on Friday, November 7th, 2014, 11:42:07 AM
 -->
 <html lang="en" data-ng-app="{{ config.appName }}">
 <head>
@@ -26,9 +26,9 @@ Templates compiled on Friday, October 10th, 2014, 12:46:04 AM
  
 {% block angularContent %}
     {% if config.NODE_ENV == "dev" %}
-    <script src="/media/js/scaffnode.js"></script>
+    <script src="/media/js/scripts.js"></script>
     {% else %}
-    <script src="/media/js/scaffnode.min.js"></script>
+    <script src="/media/js/scripts.min.js"></script>
     {% endif %}
     {# Your angular app will render here#}
     <div id="ContentPane" data-ng-view=""></div>

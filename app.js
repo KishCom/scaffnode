@@ -5,7 +5,7 @@
 
 /**  Depends  **/
 var express = require("express"),
-    cons = require("consolidate"),
+    nunjucks = require("nunjucks"),
     bunyan = require("bunyan"), log,
     cookieParser = require("cookie-parser"),
     bodyParser = require("body-parser"),
@@ -42,8 +42,11 @@ if (process.env.NODE_ENV === "dev" || process.env.NODE_ENV === "live"){
     site.set('redis', redis_client);
 */
 
-//Setup views and swig templates
-site.engine("html", cons.swig);
+//Setup views and nunjucks templates
+nunjucks.configure('views', {
+    autoescape: true,
+    express: site
+});
 site.set("view engine", "html");
 site.set("views", __dirname + "/views");
 
