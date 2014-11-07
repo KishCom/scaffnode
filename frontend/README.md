@@ -2,7 +2,7 @@
 
 Angular.js based frontend scaffold.
 
-_*AT LEAST READ THIS:*_ The app DOES NOT USE `"{{ variable }}"` ... it uses a different [interpolation provider](http://docs.angularjs.org/api/ng.$interpolateProvider), so do this instead: `"[[ variable ]]"`. (The backend templates use swig, which also uses`{{ }}` notation)
+_*AT LEAST READ THIS:*_ The app DOES NOT USE `"{{ variable }}"` ... it uses a different [interpolation provider](http://docs.angularjs.org/api/ng.$interpolateProvider), so do this instead: `"[[ variable ]]"`. (The backend templates use Nunjucks, which also uses`{{ }}` notation)
 
 #Build for dev
 
