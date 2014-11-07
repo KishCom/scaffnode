@@ -58,13 +58,13 @@ This project uses UnCSS to remove any unused CSS selectors. This saves you tons 
 
 ###Updating Bootstrap
 
-Bootstrap is manually installed and updated - it is not fetched through bower like the other frontend packages. It's using the "Yeti" theme from Bootswatch.
+Bootstrap is manually installed and updated - it is not fetched through bower like the other frontend packages. It's using the "flatly" theme from Bootswatch.
 Update it:
 
     # Download bootstrap source
     # Copy everything in the less/ folder into the app/less/bootstrap/ - overwrite everything
-    # Download "Yeti" theme http://bootswatch.com/yeti/variables.less - overwrite `app/less/bootstrap/variables.less`
-    # Download http://bootswatch.com/yeti/bootswatch.less - overwrite `app/less/bootstrap/bootswatch.less`
+    # Download "flatly" theme http://bootswatch.com/flatly/variables.less - overwrite `app/less/bootstrap/variables.less`
+    # Download http://bootswatch.com/flatly/bootswatch.less - overwrite `app/less/bootstrap/bootswatch.less`
     # Update `@icon-font-path:` to be `"fonts/";`
     # Download bootstrap dist (we don't want to muck about with compiling their JS)
     # Copy dist/js/bootstrap.js to app/js/bootstrap.js
