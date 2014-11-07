@@ -56,7 +56,7 @@ We need tests, but until then:
 
 ###UnCSS
 
-This project uses UnCSS to remove any unused CSS selectors. This saves you tons of space (default CSS: 152kB :arrow_right: After UnCSS: 6.3kB :arrow_right: After minified: 4.9kB) but can cause you some headaches if you dynamically insert styles using JavaScript, have a bunch of complex media queries, or are doing other esoteric tricks with your CSS. You may need to modify parameters in the UnCSS task [according to their documentation](https://github.com/addyosmani/grunt-uncss).
+This project uses UnCSS to remove any unused CSS selectors. This saves you tons of space (default CSS: 152kB :arrow_right: After UnCSS: 6.3kB :arrow_right: After minified: 4.9kB) but can cause you some headaches if you dynamically insert styles using JavaScript, have a bunch of complex media queries, or are doing other esoteric tricks with your CSS. You may need to modify parameters in the [UnCSS grunt task](https://github.com/KishCom/scaffnode/blob/master/frontend/Gruntfile.js#L163) [according to their documentation](https://github.com/addyosmani/grunt-uncss).
 
 ###Updating Bootstrap
 
