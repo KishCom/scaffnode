@@ -20,7 +20,7 @@ var express = require("express"),
 var config, NODE_ENV;
 var packagejson = require('./package');
 if (process.env.NODE_ENV === "dev" || process.env.NODE_ENV === "live"){
-    config = require("./config.sample").config[process.env.NODE_ENV];
+    config = require("./config").config[process.env.NODE_ENV];
     config.NODE_ENV = process.env.NODE_ENV;
     config.appName = packagejson.name;
     config.appVersion = packagejson.version;
