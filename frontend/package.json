@@ -1,6 +1,6 @@
 {
   "name": "scaffnode",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "authors": [
     "Andrew Kish <akish@kishcom.com>"
   ],
@@ -14,13 +14,12 @@
     "grunt": "~0.4.x",
     "grunt-angular-templates": "~0.5.x",
     "grunt-contrib-concat": "~0.5.x",
-    "grunt-contrib-copy": "~0.7.x",
-    "grunt-contrib-jshint": "~0.10.x",
-    "grunt-contrib-less": "~0.12.x",
-    "grunt-contrib-uglify": "~0.6.x",
+    "grunt-contrib-copy": "~0.8.x",
+    "grunt-contrib-jshint": "~0.11.x",
+    "grunt-contrib-less": "~1.0.x",
+    "grunt-contrib-uglify": "~0.8.x",
     "grunt-contrib-watch": "~0.6.x",
     "grunt-git-describe": "~2.3.x",
-    "grunt-inline-angular-templates": "0.1.x",
-    "grunt-uncss": "0.3.x"
+    "grunt-inline-angular-templates": "0.1.x"
   }
 }
