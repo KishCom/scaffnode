@@ -17,10 +17,14 @@ Routes.prototype.index = function (req, res, next){
         res.render("base", { title: req.__("Welcome!"), "all_scaffnode_model": JSON.stringify(results) });
     });
 };
+
+/* Example CRUD routes */
+
+// Create
 Routes.prototype.create = function (req, res){
+    // Some validations, you'll probably want to do more
     var error = false;
     var errorMessage = "";
-
     if (!req.body.name){
         error = true;
         errorMessage = "Missing name";
@@ -29,30 +33,32 @@ Routes.prototype.create = function (req, res){
         error = true;
         errorMessage = "Missing content";
     }
-
     if (error){
         res.status(400).json({"error": true, "message": ("Bad request. " + errorMessage)});
-    }else{
-        var newItem = new model({
-            "name": validator.escape(req.body.name),
-            "content": validator.escape(req.body.content),
-            "ip": req.ip,
-            "ua": req.headers["user-agent"]
-        });
-        newItem.save(function(err, content, numberAffected){
-            if (err){
-                log.error(err);
-                res.status(500).json({"error": true, "message": ("Save to database error.")});
-            }else{
-                res.status(201).json({"error": false, "message": "Content saved.", "content": content});
-            }
-        });
+        return;
     }
+
+    var newItem = new model({
+        "name": validator.escape(req.body.name),
+        "content": validator.escape(req.body.content),
+        "ip": req.ip,
+        "ua": req.headers["user-agent"]
+    });
+    newItem.save(function(err, content, numberAffected){
+        if (err){
+            log.error(err);
+            res.status(500).json({"error": true, "message": ("Save to database error.")});
+        }else{
+            res.status(201).json({"error": false, "message": "Content saved.", "content": content});
+        }
+    });
 };
+
+// Update
 Routes.prototype.update = function (req, res){
+    // Some validations, you'll probably want to do more
     var error = false;
     var errorMessage = "";
-
     if (!req.body.scaffnodeId){
         error = true;
         errorMessage = "Missing scaffnodeId";
@@ -73,6 +79,7 @@ Routes.prototype.update = function (req, res){
         res.status(400).json({"error": true, "message": ("Bad request. " + errorMessage)});
         return;
     }
+
     model.findById(req.body.scaffnodeId, function (err, content){
         if (err){
             log.error(err);
@@ -95,10 +102,12 @@ Routes.prototype.update = function (req, res){
         }
     });
 };
+
+// Remove
 Routes.prototype.remove = function (req, res){
+    // Some validations, you'll probably want to do more
     var error = false;
     var errorMessage = "";
-
     if (!req.body.scaffnodeId){
         error = true;
         errorMessage = "Missing scaffnodeId";
@@ -107,18 +116,18 @@ Routes.prototype.remove = function (req, res){
         error = true;
         errorMessage = "Invalid scaffnodeId";
     }
-
     if (error){
         res.status(400).json({"error": true, "message": ("Bad request. " + errorMessage)});
-    }else{
-        model.remove({"_id": req.body.scaffnodeId}, function(err){
-            if (err){
-                log.error(err);
-                res.status(500).json({"error": true, "message": ("Remove from database error.")});
-            }else{
-                res.status(200).json({"error": false, "message": "Content removed.", "_id": req.body.scaffnodeId});
-            }
-        });
+        return;
     }
+
+    model.remove({"_id": req.body.scaffnodeId}, function(err){
+        if (err){
+            log.error(err);
+            res.status(500).json({"error": true, "message": ("Remove from database error.")});
+        }else{
+            res.status(200).json({"error": false, "message": "Content removed.", "_id": req.body.scaffnodeId});
+        }
+    });
 };
 module.exports = Routes;

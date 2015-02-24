@@ -6,7 +6,7 @@ An ever changing personal preference Node.js web-app scaffolding.
 
 Use this if you're looking to hit the ground running with a project using Node.js, ExpressJS and some other fairly popular Node.js modules.
 
-To install, make sure you have Node.js (>0.10.x) installed on your system as well as NPM. Make sure your node_modules folder, or the NODE_PATH environment variable are setup properly as well.
+To install, make sure you have Node.js (>0.10.x) installed on your system as well as NPM and of course MongoDB. Make sure your node_modules folder, or the NODE_PATH environment variable are setup properly as well.
 
 If your Node.js and NPM are already configured, setup and installation is a breeze:
 
@@ -28,7 +28,7 @@ If your Node.js and NPM are already configured, setup and installation is a bree
 
 ## Frontend
 
-The front end of this app bundles Angular.js, Bootstrap, and moment.js with a starter framework setup in the `frontend` folder. Assets are compiled and minified with Grunt and packages are managed by bower
+The front end of this app bundles Angular.js, Underscore, Bootstrap, and moment.js with a starter framework setup in the `frontend` folder. Assets are compiled and minified with Grunt and packages are managed by bower. The frontend also uses [Restangular](https://github.com/mgonto/restangular) to manage RESTful API calls.
 
 The views used by the backend `views/base.html` and `views/base_static.html` are dynamically generated based on the frontend templates found in `frontend/templates`. Angular.js templates are precompiled and bundled into `views/base.html`. Just edit/create templates inside of `frontend/templates/partials/` and Grunt will automatically include them into your Angular.js app.
 
