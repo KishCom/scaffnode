@@ -6,6 +6,7 @@ var scaffnode = angular.module('scaffnode',
                               'ngAnimate',
                               'ngCookies',
                               'angularMoment',
+                              'restangular',
                               'scaffnode.controllers',
                               'scaffnode.directives',
                               'scaffnode.factories'

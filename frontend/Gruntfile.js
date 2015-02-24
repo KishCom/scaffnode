@@ -20,7 +20,9 @@ module.exports = function(grunt) {
                 /* First the libraries your app requires */
                 /* Don't forget! Anything you add to bower.json will have to be added here too */
                 'bower_components/jquery/dist/jquery.js',
+                'bower_components/underscore/underscore-min.js',
                 'bower_components/angular/angular.js',
+                'bower_components/restangular/dist/restangular.min.js',
                 'bower_components/moment/moment.js',
                 'bower_components/angular-animate/angular-animate.js',
                 'bower_components/angular-route/angular-route.js',

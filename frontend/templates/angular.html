@@ -4,10 +4,11 @@
     {% else %}
     <script src="/media/js/scripts.min.js"></script>
     {% endif %}
-    {# Your angular app will render here#}
+    {# Angular app will render here #}
     <div id="ContentPane" data-ng-view=""></div>
 {% endblock %}
 <script>
     // {# Populated by swig on the backend. If you can read this comment rendered in your HTML ... you're looking at a static copy, not one served via the Node.js app #}
     var appname = "{{ config.appName }}";
+    var all_scaffnode_model = {{ all_scaffnode_model|safe }};
 </script>

@@ -10,5 +10,10 @@
 	"English": "English",
 	"French": "French",
 	"Pirate": "Pirate",
-	"Welcome!": "Welcome!"
+	"Welcome!": "Welcome!",
+	"Welcome to the Scaffnode MongoDB Demo": "Welcome to the Scaffnode MongoDB Demo",
+	"Name": "Name",
+	"Content": "Content",
+	"Collected on": "Collected on",
+	"by": "by"
 }

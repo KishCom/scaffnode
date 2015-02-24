@@ -14,6 +14,8 @@ var express = require("express"),
     i18n = require('i18n'),
     Routes = require("./routes"), routes,
     Utils = require("./utils"), utils,
+    mongoose = require('mongoose'),
+    Models = require("./models"), models,
     site = module.exports = express();
 
 // Load configuration details based on your environment
@@ -29,18 +31,6 @@ if (process.env.NODE_ENV === "dev" || process.env.NODE_ENV === "live"){
     console.log("Missing NODE_ENV environment variable. Must be set to 'dev' or 'live'.");
     process.exit();
 }
-
-/* Optional redis stuff
-    // Add to package.json
-        "hiredis": "~0.1.x",
-        "redis": "~0.12.x",
-        "connect-redis": "~2.0.x",
-    // Uncomment this stuff (and down where expressSession is initiated too!):
-    var redis = require("redis");
-    var redisStore = require('connect-redis')(expressSession),
-        redis_client = redis.createClient(config.redisPort, config.redisHost, {detect_buffers: true}); // Assumes redis is running on localhost on default port
-    site.set('redis', redis_client);
-*/
 
 //Setup views and nunjucks templates
 nunjucks.configure('views', {
@@ -69,8 +59,13 @@ log = bunyan.createLogger(
         ]}
     );
 
+// Setup MongoDB
+mongoose.connect(config.mongoDBURI);
+models = new Models(site, log, config);
+var scafnode_model = mongoose.model('scafnode_model', models.scafnode_model);
+
 // Initalize routes and a few utilities helpers
-routes = new Routes(site, log);
+routes = new Routes(site, log, scafnode_model);
 utils = new Utils(site, log, config);
 
 /** Middlewares! **/
@@ -105,7 +100,11 @@ site.use(utils.i18nHelper);
 
 /**  Routes/Views  **/
 site.get("/", routes.index);
-//site.post("/user/login", routes.index);
+// CRUD
+site.post("/model", routes.create);
+site.post("/model/update", routes.update);
+site.post("/model/remove", routes.remove);
+
 //Catch all other attempted routes and throw them a 404!
 site.all("*", function(req, resp, next){
     next({name: "NotFound", "message": "Oops! The page you requested doesn't exist","status": 404});
