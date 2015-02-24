@@ -22,6 +22,13 @@ scaffnode.config(['$logProvider', function ($logProvider) {
     $logProvider.debugEnabled(false);
 }]);
 
+scaffnode.config(['RestangularProvider', function (RestangularProvider) {
+    // Use the MongoDB `_id` instead of the default 'id'
+    RestangularProvider.setRestangularFields({
+        id: "_id"
+    });
+}]);
+
 scaffnode.run(['$rootScope', function($rootScope, tagFactory) {
     $rootScope.example = "Try to keep it clean in here...";
 }]);

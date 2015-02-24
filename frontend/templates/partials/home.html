@@ -3,13 +3,23 @@
     <aside>{{ __('Choose language') }}: <a href="?lang=en">{{ __('English') }}</a> <a href="?lang=fr">{{ __('French') }}</a> <a href="?lang=pirate">{{ __('Pirate') }}</a></aside>
     <hr />
     <h1>{{ __('Welcome to the Scaffnode MongoDB Demo') }}</h1>
-    {{ __('Name') }}: <input type="text" name="name" class="form-control" id="name" ng-model="scaffnode_model.name"> <br />
-    {{ __('Content') }}: <input type="text" name="content" class="form-control" id="content" ng-model="scaffnode_model.content"><br />
-    <button class="btn btn-primary" ng-click="addnew()">Add new</button>
-    <span id="status">::</span>
-    <hr/>
-    <div class="all_data_item" ng-repeat="data in all_scaffnode_model" ng-click="edit(data._id)">
+    <div class="col-xs-12" id="NewItem" ng-hide="editingMode">
+        {{ __('Name') }}: <input type="text" name="name" class="form-control" id="name" ng-model="scaffnode_model.name"> <br />
+        {{ __('Content') }}: <input type="text" name="content" class="form-control" id="content" ng-model="scaffnode_model.content"><br />
+        <button class="btn btn-primary" ng-click="addnew()">Add new</button>
+    </div>
+    <div class="col-xs-12" id="EditItem" ng-show="editingMode">
+        {{ __('Name') }}: <input type="text" name="name" class="form-control" id="editname" ng-model="scaffnode_model.name"> <br />
+        {{ __('Content') }}: <input type="text" name="content" class="form-control" id="editcontent" ng-model="scaffnode_model.content"><br />
+        <button class="btn btn-primary" ng-click="doEdit()">Edit Content</button>
+    </div>
+    <br /><span id="status"></span>
+
+    <div class="all_data_item" ng-repeat="data in all_scaffnode_model">
         {{ __('Collected on') }} [[ data.timestamp ]] {{ __('by') }} [[ data.name ]] ([[data.ip]] - [[data.ua]])<br />
         <pre>[[ data.content ]]</pre>
+        <button class="btn btn-warning" ng-click="remove(data._id)">Delete</button>
+        <button class="btn btn-info" ng-click="edit(data._id)">Edit</button>
+        <br /><br /><br />
     </div>
 </div>
