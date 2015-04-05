@@ -134,7 +134,10 @@ module.exports = function(grunt) {
             dist: {
                 options: {
                     method: 'append',
-                    base: 'templates/partials/'
+                    base: 'templates/partials/',
+                    unescape: {
+                        '&apos;': '\''
+                    }
                 },
                 files: {
                     '../views/base.html': ['templates/partials/**/*.html']

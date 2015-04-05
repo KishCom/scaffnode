@@ -1,6 +1,6 @@
 {
   "name": "scaffnode",
-  "version": "0.14.2",
+  "version": "0.14.4",
   "authors": [
     "Andrew Kish <akish@kishcom.com>"
   ],
@@ -28,5 +28,8 @@
     "jquery": "1.11.x",
     "restangular": "1.4.x",
     "underscore": "~1.8.2"
+  },
+  "resolutions": {
+    "moment": ">=2.8.0 <2.10.0"
   }
 }
