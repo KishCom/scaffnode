@@ -1,7 +1,8 @@
-var log, self;
-var Routes = function(app, bunyan){
+var log, self, config;
+var Routes = function(app, bunyan, siteConfig){
     self = app;
     log = bunyan;
+    config = siteConfig;
 };
 
 /* Landing page */

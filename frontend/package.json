@@ -17,7 +17,7 @@
     "grunt-contrib-copy": "~0.8.x",
     "grunt-contrib-jshint": "~0.11.x",
     "grunt-contrib-less": "~1.0.x",
-    "grunt-contrib-uglify": "~0.8.x",
+    "grunt-contrib-uglify": "~0.9.x",
     "grunt-contrib-watch": "~0.6.x",
     "grunt-git-describe": "~2.3.x",
     "grunt-inline-angular-templates": "0.1.x"

@@ -6,7 +6,7 @@
   "scripts": {
     "start": "clear;cd frontend;grunt start_app;cd ..;NODE_ENV=dev nodemon app.js | bunyan",
     "postinstall": "cd frontend;npm install;cd ..;",
-    "test": "cd frontend;grunt test;cd ..;NODE_ENV=dev mocha tests/*_tests.js"
+    "test": "cd frontend;grunt test;cd ..;NODE_ENV=test mocha tests/*_tests.js"
   },
   "dependencies": {
     "accepts": "1.2.x",
@@ -19,6 +19,7 @@
     "i18n": "0.5.x",
     "less": "2.5.x",
     "less-middleware": "2.0.x",
+    "lodash": "^3.6.0",
     "multer": "0.1.x",
     "nodemon": "1.3.x",
     "nunjucks": "1.3.x",
