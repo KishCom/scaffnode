@@ -1,5 +1,4 @@
 var log, self;
-
 var Routes = function(app, bunyan){
     self = app;
     log = bunyan;
@@ -12,10 +11,8 @@ Routes.prototype.index = function (req, res){
 
 /* Fill in backend variables for the frontend templates */
 Routes.prototype.frontendTemplates = function (req, res){
-
-    res.render("templates.js", { title: req.__("Welcome!") }, function(err, html){
-        log.trace(err);
-        log.trace(html);
+    res.render("templates.js.html", { title: req.__("Welcome!") }, function(err, html){
+        res.set("Content-Type", "application/javascript");
         res.send(html);
     });
 };

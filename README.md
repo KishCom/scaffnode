@@ -11,9 +11,7 @@ To install, make sure you have Node.js (>0.10.x) installed on your system as wel
 If your Node.js and NPM are already configured, setup and installation is a breeze:
 
     # Install nodemon and bunyan globally
-    sudo npm install nodemon -g
-    sudo npm install bunyan -g
-    sudo npm install mocha -g
+    sudo npm install bunyan nodemon mocha -g
     # Get other dependencies
     npm install
     # Configure server details
@@ -29,11 +27,36 @@ If your Node.js and NPM are already configured, setup and installation is a bree
 
 ## Frontend
 
-The front end of this app bundles Angular.js, Bootstrap, and moment.js with a starter framework setup in the `frontend` folder. Assets are compiled and minified with Grunt and packages are managed by bower
+The front end of this app bundles Angular.js, Bootstrap, and moment.js with a starter framework setup in the `frontend` folder. Assets are compiled and minified with Grunt and packages are managed by bower.
 
-The views used by the backend `views/base.html` and `views/base_static.html` are dynamically generated based on the frontend templates found in `frontend/templates`. Angular.js templates are precompiled and bundled into `views/base.html`. Just edit/create templates inside of `frontend/templates/partials/` and Grunt will automatically include them into your Angular.js app.
+This app setup is probably a little different than you're used to, if you have any questions please feel free to [ask me](https://twitter.com/twitter) or open an issue in this repo.
 
-This app setup DOES NOT USE `"{{ variable }}"` notation in Angular.js. It uses a different [interpolation provider](http://docs.angularjs.org/api/ng.$interpolateProvider), so do this instead: `"[[ variable ]]"`. (This is because the backend templates use Nunjucks, which also uses`{{ }}` notation).
+### Hybrid single page app
+
+Templates used in the Angular.js frontend are preprocessed by the Express.js backend. A Grunt task ensures that all files in the `frontend/templates/partials/` folder are compiled into a backend view file `views/templates.js.html`. When requested this file is processed and served by the backend. This allows backend variables to be used in your frontend partial templates. Backend variables use Nunjucks style `{{ BackendVariable }}` -- this conflicts with Angular, so we use a different [interpolation provider](http://docs.angularjs.org/api/ng.$interpolateProvider): access frontend Angular variables like this instead: `"[[ FrontendVariable ]]"`.
+
+### Development Rules
+
+Backend tags in frontend partial files MUST use single quotes `'` not double quotes `"`.
+
+    Good:
+    <span>
+    {% if somebackendthing == 'derp' %}Derp from the backend.{% endif %}
+    </span>
+
+    Bad -- notice the double quotes around derp:
+    <span>
+    {% if somebackendthing == "derp" %}Derp from the backend.{% endif %}
+    </span>
+
+Do not call `<script>` tags in your frontend partial files. All JS logic should go in the `frontend/js` folder -- ideally in the controller file for the template you're working on. If needed you can add `<script>` tags in `frontend/templates/header.html` or `frontend/templates/footer.html` (but you really should be just adding this to `bower.json` and the Gruntfile to be compiled with the rest of your JS).
+
+    Bad:
+    <span>I don't know how to use Angular, Grunt or Bower, so I'm just going to include this jQuery script</span>
+    <script src='/some/lib.js'></script>
+
+The views used by the backend `views/base.html` and `views/base_static.html` are also dynamically generated based on the frontend templates found in `frontend/templates`. Angular.js templates are precompiled and bundled into `views/base.html`. `views/base_static.html` is to be used for error pages, and other pages in your app that you do not want inside of your frontend single page app.
+
 After following the directions above and your server is running, you can start setting up the frontend:
 
 Builds and concatinates JS files, doesn't minify.
@@ -57,13 +80,13 @@ We need tests, but until then:
 
 ###Updating Bootstrap
 
-Bootstrap is manually installed and updated - it is not fetched through bower like the other frontend packages. It's using the "flatly" theme from Bootswatch.
+Bootstrap is manually installed and updated - it is not fetched through bower like the other frontend packages. It's using the "cerulean" theme from Bootswatch.
 Update it:
 
     # Download bootstrap source
     # Copy everything in the less/ folder into the app/less/bootstrap/ - overwrite everything
-    # Download "flatly" theme http://bootswatch.com/flatly/variables.less - overwrite `app/less/bootstrap/variables.less`
-    # Download http://bootswatch.com/flatly/bootswatch.less - overwrite `app/less/bootstrap/bootswatch.less`
+    # Download "cerulean" theme http://bootswatch.com/cerulean/variables.less - overwrite `app/less/bootstrap/variables.less`
+    # Download http://bootswatch.com/cerulean/bootswatch.less - overwrite `app/less/bootstrap/bootswatch.less`
     # Update `@icon-font-path:` to be `"fonts/";`
     # Download bootstrap dist (we don't want to muck about with compiling their JS)
     # Copy dist/js/bootstrap.js to app/js/bootstrap.js

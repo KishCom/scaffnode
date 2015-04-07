@@ -129,13 +129,14 @@ module.exports = function(grunt) {
         },
         ngtemplates: {
             app:            {
-                src: 'templates/partials/*.html',
-                prefix: '/',
+                src: '*.html',
+                cwd: 'templates/partials/',
                 dest: '../views/templates.js.html',
                 options:      {
-                    prefix: '/',
+                    prefix: '',
                     bootstrap:  function(module, script) {
-                        return "angular.module('" + localpackage.name + "').run(['$templateCache'," + script + ' }; });';
+                        script = script.replace("'use strict';", "");
+                        return "angular.module('" + localpackage.name + "').run(['$templateCache', function($templateCache){" + script + '}]);';
                     },
                     htmlmin: {
                         collapseWhitespace: true,
