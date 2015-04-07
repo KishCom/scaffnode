@@ -155,6 +155,7 @@ module.exports = function(grunt) {
         jshint: {
             files: ['Gruntfile.js', 'js/**/*.js'],
             options: {
+                ignores: ["js/bootstrap.js"],
                 // options here to override JSHint defaults
                 globals: {
                     angular: true,
@@ -179,5 +180,5 @@ module.exports = function(grunt) {
     grunt.registerTask('start_app', ['getGitRevision', 'concat', 'ngtemplates', 'less:development', 'copy']);
     grunt.registerTask('launch', ['getGitRevision', 'concat', 'ngtemplates', 'uglify', 'less', 'copy']);
     grunt.registerTask('build', ['getGitRevision', 'concat', 'ngtemplates', 'uglify', 'less', 'copy']);
-    grunt.registerTask('templates', ['ngtemplates']);
+    grunt.registerTask('test', ['jshint']);
 };

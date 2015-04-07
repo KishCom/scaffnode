@@ -31,11 +31,11 @@ The front end of this app bundles Angular.js, Bootstrap, and moment.js with a st
 
 This app setup is probably a little different than you're used to, if you have any questions please feel free to [ask me](https://twitter.com/twitter) or open an issue in this repo.
 
-### Hybrid single page app
+#### Hybrid single page app
 
 Templates used in the Angular.js frontend are preprocessed by the Express.js backend. A Grunt task ensures that all files in the `frontend/templates/partials/` folder are compiled into a backend view file `views/templates.js.html`. When requested this file is processed and served by the backend. This allows backend variables to be used in your frontend partial templates. Backend variables use Nunjucks style `{{ BackendVariable }}` -- this conflicts with Angular, so we use a different [interpolation provider](http://docs.angularjs.org/api/ng.$interpolateProvider): access frontend Angular variables like this instead: `"[[ FrontendVariable ]]"`.
 
-### Development Rules
+#### Development Rules
 
 Backend tags in frontend partial files MUST use single quotes `'` not double quotes `"`.
 
@@ -68,7 +68,15 @@ Builds and concatinates JS files, doesn't minify.
 
 ### Tests
 
+Run all tests:
+
     npm test
+
+Run backend tests:
+
+    NODE_ENV=dev mocha tests/*_tests.js
+
+Run frontend tests:
 
 ###i18n Multi-language support
 
