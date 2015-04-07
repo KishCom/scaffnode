@@ -66,6 +66,10 @@ Builds and concatinates JS files, doesn't minify.
     # Run grunt, it will watch for changes and rebuild automatically
     grunt
 
+### Tests
+
+    npm test
+
 ###i18n Multi-language support
 
 Example language files are found in `locale` and example useage can be found in `frontend/templates/partials/home.html`. Currently all i18n translations must be done on the backend, frontend translation is coming soon (it's easily hacked in and I'd welcome a pull request -- I personally just try to avoid frontend i18n translation).
