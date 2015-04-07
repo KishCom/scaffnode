@@ -11,7 +11,7 @@ To install, make sure you have Node.js (>0.10.x) installed on your system as wel
 If your Node.js and NPM are already configured, setup and installation is a breeze:
 
     # Install nodemon and bunyan globally
-    sudo npm install bunyan nodemon mocha -g
+    sudo npm install bunyan nodemon mocha karma-cli -g
     # Get other dependencies
     npm install
     # Configure server details
@@ -77,6 +77,8 @@ Run backend tests:
     NODE_ENV=dev mocha tests/*_tests.js
 
 Run frontend tests:
+
+    karma start app_karma.conf.js --log-level debug --single-run
 
 ###i18n Multi-language support
 

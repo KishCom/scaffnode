@@ -28,6 +28,10 @@
   "devDependencies": {
     "mocha": "2.2.x",
     "should": "5.2.x",
-    "supertest": "0.15.x"
+    "supertest": "0.15.x",
+    "karma": "^0.12.x",
+    "karma-chrome-launcher": "^0.1.x",
+    "karma-firefox-launcher": "^0.1.x",
+    "karma-mocha": "^0.1.x"
   }
 }

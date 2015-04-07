@@ -4,7 +4,7 @@
     <script src="/media/js/templates.js"></script>
     {% else %}
     <script src="/media/js/scripts.min.js"></script>
-    <script src="/media/js/templates.min.js"></script>
+    <script src="/media/js/templates.js"></script>{# only a little smaller with way more problems if minified - see htmlmin options in the ngtemplates Gruntfile task #}
     {% endif %}
     {# Your angular app will render here#}
     <div id="ContentPane" data-ng-view=""></div>

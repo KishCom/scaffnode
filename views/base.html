@@ -1,8 +1,8 @@
 <!doctype html>
  <!--
-scaffnode - f4273bb-dirty
+scaffnode - 1085099-dirty
 My angular.js based frontend
-Templates compiled on Tuesday, April 7th, 2015, 12:59:55 PM
+Templates compiled on Tuesday, April 7th, 2015, 4:11:30 PM
 -->
 <html lang="en" data-ng-app="{{ config.appName }}">
 <head>
@@ -30,7 +30,7 @@ Templates compiled on Tuesday, April 7th, 2015, 12:59:55 PM
     <script src="/media/js/templates.js"></script>
     {% else %}
     <script src="/media/js/scripts.min.js"></script>
-    <script src="/media/js/templates.min.js"></script>
+    <script src="/media/js/templates.js"></script>{# only a little smaller with way more problems if minified - see htmlmin options in the ngtemplates Gruntfile task #}
     {% endif %}
     {# Your angular app will render here#}
     <div id="ContentPane" data-ng-view=""></div>
