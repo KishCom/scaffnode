@@ -1,8 +1,10 @@
 {% block angularContent %}
-    {% if config.NODE_ENV == "dev" %}
+    {% if config.NODE_ENV == 'dev' %}
     <script src="/media/js/scripts.js"></script>
+    <script src="/media/js/templates.js"></script>
     {% else %}
     <script src="/media/js/scripts.min.js"></script>
+    <script src="/media/js/templates.min.js"></script>
     {% endif %}
     {# Your angular app will render here#}
     <div id="ContentPane" data-ng-view=""></div>

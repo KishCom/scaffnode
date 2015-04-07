@@ -13,6 +13,7 @@ If your Node.js and NPM are already configured, setup and installation is a bree
     # Install nodemon and bunyan globally
     sudo npm install nodemon -g
     sudo npm install bunyan -g
+    sudo npm install mocha -g
     # Get other dependencies
     npm install
     # Configure server details

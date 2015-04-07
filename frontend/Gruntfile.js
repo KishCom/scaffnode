@@ -6,9 +6,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-git-describe');
-    grunt.loadNpmTasks('grunt-inline-angular-templates');
+    grunt.loadNpmTasks('grunt-angular-templates');
     var localpackage = grunt.file.readJSON('package.json');
-
     grunt.initConfig({
         localpackage: grunt.file.readJSON('package.json'),
         concat: {
@@ -38,7 +37,7 @@ module.exports = function(grunt) {
                 dest: '../public/media/js/scripts.js'
             },
             backendAngularView: {
-                src: ['templates/header.html', 'templates/angular.html', 'templates/compiled_partials.html', 'templates/footer.html'],
+                src: ['templates/header.html', 'templates/angular.html', 'templates/footer.html'],
                 dest: '../views/base.html',
                 options: {
                     banner: "<!doctype html>\n <!--\n"+
@@ -125,17 +124,23 @@ module.exports = function(grunt) {
             },
             partials: {
                 files: ['templates/header.html', 'templates/partials/*.html', 'templates/footer.html'],
-                tasks: ['getGitRevision', 'concat', 'inline_angular_templates']
+                tasks: ['getGitRevision', 'concat', 'ngtemplates']
             }
         },
-        inline_angular_templates: {
-            dist: {
-                options: {
-                    method: 'append',
-                    base: 'templates/partials/'
-                },
-                files: {
-                    '../views/base.html': ['templates/partials/**/*.html']
+        ngtemplates: {
+            app:            {
+                src: 'templates/partials/*.html',
+                prefix: '/',
+                dest: '../views/templates.js.html',
+                options:      {
+                    prefix: '/',
+                    bootstrap:  function(module, script) {
+                        return "angular.module('" + localpackage.name + "').run(['$templateCache'," + script + ' }; });';
+                    },
+                    htmlmin: {
+                        collapseWhitespace: true,
+                        removeComments: true // Don't use Angular comment directives!
+                    }
                 }
             }
         },
@@ -169,8 +174,9 @@ module.exports = function(grunt) {
         });
         grunt.task.run('git-describe');
     });
-    grunt.registerTask('default', ['getGitRevision', 'concat','inline_angular_templates', 'less:development', 'copy', 'watch']);
-    grunt.registerTask('start_app', ['getGitRevision', 'concat', 'inline_angular_templates', 'less:development', 'copy']);
-    grunt.registerTask('launch', ['getGitRevision', 'concat', 'inline_angular_templates', 'uglify', 'less', 'copy']);
-    grunt.registerTask('build', ['getGitRevision', 'concat', 'inline_angular_templates', 'uglify', 'less', 'copy']);
+    grunt.registerTask('default', ['getGitRevision', 'concat','ngtemplates', 'less:development', 'copy', 'watch']);
+    grunt.registerTask('start_app', ['getGitRevision', 'concat', 'ngtemplates', 'less:development', 'copy']);
+    grunt.registerTask('launch', ['getGitRevision', 'concat', 'ngtemplates', 'uglify', 'less', 'copy']);
+    grunt.registerTask('build', ['getGitRevision', 'concat', 'ngtemplates', 'uglify', 'less', 'copy']);
+    grunt.registerTask('templates', ['ngtemplates']);
 };

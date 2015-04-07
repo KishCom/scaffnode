@@ -105,6 +105,8 @@ site.use(utils.i18nHelper);
 
 /**  Routes/Views  **/
 site.get("/", routes.index);
+site.get("/media/js/templates.js", routes.frontendTemplates);
+site.get("/media/js/templatesc.min.js", routes.frontendTemplates);
 //site.post("/user/login", routes.index);
 //Catch all other attempted routes and throw them a 404!
 site.all("*", function(req, resp, next){

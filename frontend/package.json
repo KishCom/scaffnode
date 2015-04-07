@@ -21,5 +21,8 @@
     "grunt-contrib-watch": "~0.6.x",
     "grunt-git-describe": "~2.3.x",
     "grunt-inline-angular-templates": "0.1.x"
+  },
+  "dependencies": {
+    "grunt-angular-templates": "^0.5.7"
   }
 }
