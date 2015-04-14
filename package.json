@@ -1,11 +1,12 @@
 {
   "name": "scaffnode",
   "author": "Andrew Kish",
-  "version": "0.13.0",
+  "version": "0.16.1",
   "private": true,
   "scripts": {
     "start": "clear;cd frontend;grunt start_app;cd ..;NODE_ENV=dev nodemon app.js | bunyan",
-    "postinstall": "cd frontend;npm install;cd ..;"
+    "postinstall": "cd frontend;npm install;cd ..;",
+    "test": "cd frontend;grunt test;cd ..;NODE_ENV=test mocha tests/*_tests.js;karma start app_karma.conf.js --log-level debug --single-run"
   },
   "dependencies": {
     "accepts": "1.2.x",
@@ -14,13 +15,24 @@
     "cookie-parser": "1.3.x",
     "escape-html": "1.0.x",
     "express": "4.12.x",
-    "express-session": "1.10.x",
+    "express-session": "1.11.x",
     "i18n": "0.5.x",
-    "less": "2.4.x",
+    "less": "2.5.x",
     "less-middleware": "2.0.x",
+    "lodash": "^3.6.0",
     "multer": "0.1.x",
     "nodemon": "1.3.x",
-    "nunjucks": "1.2.x",
-    "validator": "3.32.x"
+    "nunjucks": "1.3.x",
+    "validator": "3.37.x"
+  },
+  "devDependencies": {
+    "chai": "^2.2.x",
+    "karma": "^0.12.x",
+    "karma-chrome-launcher": "^0.1.x",
+    "karma-firefox-launcher": "^0.1.x",
+    "karma-mocha": "^0.1.x",
+    "mocha": "2.2.x",
+    "should": "5.2.x",
+    "supertest": "0.15.x"
   }
 }

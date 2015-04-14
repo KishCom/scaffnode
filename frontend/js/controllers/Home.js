@@ -4,4 +4,9 @@ controller('HomeController', ['$scope', '$timeout', function($scope, $timeout) {
         name: "",
         email: ""
     };
+
+    // Example function used to illustrate testing Angular controllers
+    $scope.exampleFunction = function(sumA, sumB){
+        return sumA + sumB;
+    };
 }]);

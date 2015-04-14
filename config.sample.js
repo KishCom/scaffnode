@@ -15,4 +15,4 @@ exports.config = {
         logLevel: "info",
         sessionSecret: "Put a random secret here."
     }
-}
+};

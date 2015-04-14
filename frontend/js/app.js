@@ -1,5 +1,5 @@
 /**
-  * Angular.js based frontend
+  * Angular.js based frontend for scaffnode
 **/
 var scaffnode = angular.module('scaffnode',
                              ['ngRoute',
@@ -42,14 +42,3 @@ $routeProvider.when('/home',  {templateUrl: 'home.html', controller: "HomeContro
 $(document).ready(function(){
 
 });
-
-// Other handy JS
-function sortByKey(array, key) {
-    return array.sort(function(a, b) {
-        var x = a[key]; var y = b[key];
-        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
-    });
-}
-function randRange(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
