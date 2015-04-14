@@ -6,7 +6,7 @@
   "scripts": {
     "start": "clear;cd frontend;grunt start_app;cd ..;NODE_ENV=dev nodemon app.js | bunyan",
     "postinstall": "cd frontend;npm install;cd ..;",
-    "test": "cd frontend;grunt test;cd ..;NODE_ENV=test mocha tests/*_tests.js"
+    "test": "cd frontend;grunt test;cd ..;NODE_ENV=test mocha tests/*_tests.js;karma start app_karma.conf.js --log-level debug --single-run"
   },
   "dependencies": {
     "accepts": "1.2.x",
@@ -26,12 +26,13 @@
     "validator": "3.37.x"
   },
   "devDependencies": {
-    "mocha": "2.2.x",
-    "should": "5.2.x",
-    "supertest": "0.15.x",
+    "chai": "^2.2.x",
     "karma": "^0.12.x",
     "karma-chrome-launcher": "^0.1.x",
     "karma-firefox-launcher": "^0.1.x",
-    "karma-mocha": "^0.1.x"
+    "karma-mocha": "^0.1.x",
+    "mocha": "2.2.x",
+    "should": "5.2.x",
+    "supertest": "0.15.x"
   }
 }

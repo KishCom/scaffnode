@@ -68,6 +68,8 @@ Builds and concatinates JS files, doesn't minify.
 
 ### Tests
 
+Scaffnode aims to have full "end to end" testing. This includes backend API tests ([Mocha](http://mochajs.org/) + [superagent](http://visionmedia.github.io/superagent/)), frontend unit tests ([Mocha](http://mochajs.org/) + [Karma](http://karma-runner.github.io)), and frontend integration tests ([Selenium](http://www.seleniumhq.org/)).
+
 Run all tests:
 
     npm test
@@ -76,9 +78,13 @@ Run backend tests:
 
     NODE_ENV=dev mocha tests/*_tests.js
 
-Run frontend tests:
+Run frontend unit tests:
 
     karma start app_karma.conf.js --log-level debug --single-run
+
+Run frontend Selenium integration tests:
+
+    #TODO Selenium...
 
 ###i18n Multi-language support
 
