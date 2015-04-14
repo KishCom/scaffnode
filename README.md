@@ -82,6 +82,12 @@ Run just frontend unit tests:
 
     karma start app_karma.conf.js --log-level debug --single-run
 
+##### Selenium
+
+Selenium tests require significant additional setup -- please note you can opt to not do Selenium testing; this section is totally optional. We're going to use [Docker](https://www.docker.com/) to setup our Selenium Hub, Nodes, and [Fig](http://www.fig.sh/) to wire ports up. Please make sure you have Docker and Fig installed on your development environment before continuing.
+
+    #TODO Selenium...
+
 ###i18n Multi-language support
 
 Example language files are found in `locale` and example useage can be found in `frontend/templates/partials/home.html`. Currently all i18n translations must be done on the backend, frontend translation is coming soon (it's easily hacked in and I'd welcome a pull request -- I personally just try to avoid frontend i18n translation).
