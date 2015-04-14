@@ -66,23 +66,25 @@ Builds and concatinates JS files, doesn't minify.
     # Run grunt, it will watch for changes and rebuild automatically
     grunt
 
-### Tests
+## Tests
 
 Scaffnode aims to have full "end to end" testing. This includes backend API tests ([Mocha](http://mochajs.org/) + [superagent](http://visionmedia.github.io/superagent/)), frontend unit tests ([Mocha](http://mochajs.org/) + [Karma](http://karma-runner.github.io)), and frontend integration tests ([Selenium](http://www.seleniumhq.org/)).
 
-Run all tests:
+Run frontend unit tests, backend unit tests, and JSHint linter:
 
     npm test
 
-Run backend tests:
+Run just backend unit tests:
 
     NODE_ENV=dev mocha tests/*_tests.js
 
-Run frontend unit tests:
+Run just frontend unit tests:
 
     karma start app_karma.conf.js --log-level debug --single-run
 
-Run frontend Selenium integration tests:
+##### Selenium
+
+Selenium tests require significant additional setup -- please note you can opt to not do Selenium testing; this section is totally optional. We're going to use [Docker](https://www.docker.com/) to setup our Selenium Hub, Nodes, and [Fig](http://www.fig.sh/) to wire ports up. Please make sure you have Docker and Fig installed on your development environment before continuing.
 
     #TODO Selenium...
 
@@ -98,9 +100,9 @@ We need tests, but until then:
     grunt build
     cd ..
 
-###Updating Bootstrap
+###Updating Bootstrap + Font-Awesome
 
-Bootstrap is manually installed and updated - it is not fetched through bower like the other frontend packages. It's using the "cerulean" theme from Bootswatch.
+Bootstrap and Font-Awesome are manually installed and updated - it is not fetched through bower like the other frontend packages. It's using the "cerulean" theme from Bootswatch.
 Update it:
 
     # Download bootstrap source
