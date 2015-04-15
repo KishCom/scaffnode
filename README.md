@@ -14,13 +14,16 @@ If your Node.js and NPM are already configured, setup and installation is a bree
     sudo npm install bunyan nodemon mocha karma-cli -g
     # Get other dependencies
     npm install
+
     # Configure server details
     cp config.sample.js config.js
+    # Edit config.js with your details
+
+    # Re-set permissions for this users ~/.npm folder
+    sudo chown -R `whoami`:`groups $(whoami) | cut -d' ' -f1` ~/.npm
 
     # Name the project. Replace "YourProjectsNameHere" in the next command with your project name (alpha-numeric only)
     find . -type f | xargs sed -i 's/scaffnode/YourProjectsNameHere/gi'
-
-    # Edit config.js with your details
 
     # Then start the server:
     npm start
@@ -55,7 +58,22 @@ Do not call `<script>` tags in your frontend partial files. All JS logic should 
     <span>I don't know how to use Angular, Grunt or Bower, so I'm just going to include this jQuery script</span>
     <script src='/some/lib.js'></script>
 
-The views used by the backend `views/base.html` and `views/base_static.html` are also dynamically generated based on the frontend templates found in `frontend/templates`. Angular.js templates are precompiled and bundled into `views/base.html`. `views/base_static.html` is to be used for error pages, and other pages in your app that you do not want inside of your frontend single page app.
+The views used by the backend `views/base.html` and `views/base_static.html` are dynamically generated based on the frontend templates found in `frontend/templates`. Angular.js templates are precompiled and bundled into `views/templates.js.html` -- which is rendered by the backend and served when an HTTP request is made to `/media/js/templates.js`. `views/base_static.html` is for error pages, and other pages in your app that you do not want inside of your frontend single page app.
+
+It can be overwhelming trying to understand the difference between frontend and backend templates, and routing. Here's the view/template structure laid out:
+
+    # Main page + entry point for Angular single page page app:
+    frontend/templates/header.html    Concatenated to                       Renders
+    frontend/templates/angular.html    -------------->    views/base.html   ---->  http://localhost/
+    frontend/templates/footer.html
+
+    # Static pages that do no belong in the Angular app (error pages)
+    frontend/templates/header.html    Concatenated to                             Renders
+    frontend/templates/static.html    -------------->     views/base_static.html  ---->  http://localhost/nosuchpage
+    frontend/templates/footer.html
+
+    # Frontend Angular.js templates for single page app
+    frontend/templates/partials/*     --compiled to-->  views/templates.js.html  --Renders--> http://localhost/media/js/templates.js
 
 After following the directions above and your server is running, you can start setting up the frontend:
 
