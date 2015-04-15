@@ -78,7 +78,7 @@ Utils.prototype.errorHandler = function(err, req, res, next){
                 "env": env
             });
         }else{
-            var stack = (err.stack || '').split('\n').slice(1).map(function(v){ return '<li>' + escapeHtml(v).replace(/  /g, ' &nbsp;') + '</li>'; }).join('');
+            var stack = (err.stack || '').split('\n').slice(1).map(function(v){ return '<code style="float: left;">' + escapeHtml(v).replace(/  /g, ' &nbsp;') + '</code><br />'; }).join('');
             res.render('errors/500.html',{
                 http_status: res.statusCode,
                 error: String(err).replace(/  /g, ' &nbsp;').replace(/\n/g, '<br>'),

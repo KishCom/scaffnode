@@ -1,8 +1,8 @@
 <!doctype html>
  <!--
-scaffnode - 1372dc6-dirty
+scaffnode - 624b029-dirty
 My angular.js based frontend
-Templates compiled on Wednesday, April 15th, 2015, 4:06:39 PM
+Templates compiled on Wednesday, April 15th, 2015, 4:44:53 PM
 -->
 <html lang="{{__('html_locale')}}" data-ng-app="{{ config.appName }}">
 <head>
@@ -45,7 +45,10 @@ Templates compiled on Wednesday, April 15th, 2015, 4:06:39 PM
 <body>
 
  
-<div id="ContentPane">{% block content %}{% endblock %}</div>
+<div class="container center-block">
+    <div class="col-xs-10 text-center">{% block content %}{% endblock %}</div>
+</div>
+
  
 <!--[if lt IE 9]>
 <div id="outdated"></div>{# https://github.com/burocratik/outdated-browser - Not Gruntfile/bower integrated #}

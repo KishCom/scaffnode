@@ -72,6 +72,8 @@ server {
         #proxy_http_version 1.1;
         #proxy_set_header Upgrade $http_upgrade;
         #proxy_set_header Connection "upgrade";
+        # Be warned about using NGINX as a WS proxy. See Doug's comment on: http://www.jayway.com/2015/04/13/600k-concurrent-websocket-connections-on-aws-using-node-js/
+        # "When NGINX forwards all the web sockets they will come from the same ip and port which is a huge bottleneck."
    }
 }
 server {

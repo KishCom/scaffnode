@@ -6,8 +6,19 @@
 <p>To have no errors<br />Would be life without meaning<br />No struggle, no joy</p>
 
 {% if env == "dev" %}
-<hr />
-<span class="serverError">{{ showStack|safe }}</span>
+<br />
+<h3 class="text-danger">Server is in dev mode</h3>
+<span class="serverError bg-danger text-left">{{ showStack|safe }}</span>
+<br />
+<br />
+<div class="tips text-left">
+    <span class="text-muted">Need a deeper stack trace? Restart the app with the execution flag: node app.js --stack-size=50 (default is 10)</span>
+    <br />
+    <span class="text-muted">Need more debug details? Restart the app with the debug flag (or connect up <a href="https://www.npmjs.com/package/node-inspector" target="_BLANK">node-inspector</a>): node debug app.js</span>
+    <br />
+    <span class="text-muted">Problematic anonymous functions? Don't forget about the <a href="https://www.npmjs.com/package/decofun" target="_BLANK">decofun</a> function deanonymizer. </span>
+</div>
+<br />
 <br />
 {% endif %}
 
