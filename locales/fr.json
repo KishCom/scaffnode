@@ -1,5 +1,6 @@
 {
 	"html_locale": "fr-CA",
+	"locale": "fr",
 	"Hello World": "bonjour tout le monde",
 	"Hello %s, how are you today?": "Bonjour %s, comment allez-vous aujourd'hui?",
 	"%s cat": {
