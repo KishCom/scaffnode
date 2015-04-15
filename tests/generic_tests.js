@@ -1,10 +1,13 @@
  var    request = require('supertest'),
         app = require('./../app.js'),
         bunyan = require('bunyan'),
-        should = require('should'),
+        chai = require('chai'),
         _      = require('lodash'),
         config = require("./../config").config.dev;
 
+chai.should();
+//var expect = chai.expect; // Uncomment as needed
+//var assert = chai.assert; // Uncomment as needed
 var testIDString = String(new Date().toISOString()).replace(/\:/gi, "-");
 var log = bunyan.createLogger({ name: "Mocha runner", streams: [{ level:  "fatal", stream: process.stdout }]});
 var Cookie = "";

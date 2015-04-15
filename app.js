@@ -12,6 +12,7 @@ var express = require("express"),
     expressSession = require("express-session"),
     multer = require('multer'),
     i18n = require('i18n'),
+    hpp = require('hpp'),
     Routes = require("./routes"), routes,
     Utils = require("./utils"), utils,
     site = module.exports = express();
@@ -92,6 +93,7 @@ site.use(multer({
 }));
 site.use(bodyParser.urlencoded({extended: true}));
 site.use(bodyParser.json());
+site.use(hpp()); // Protect against HTTP Parameter Pollution attacks
 site.use(cookieParser());
 site.use(expressSession({   secret: config.sessionSecret,
                             key: packagejson.name + ".sid",

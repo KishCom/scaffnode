@@ -16,6 +16,7 @@
     "escape-html": "1.0.x",
     "express": "4.12.x",
     "express-session": "1.11.x",
+    "hpp": "0.1.x",
     "i18n": "0.5.x",
     "less": "2.5.x",
     "less-middleware": "2.0.x",
@@ -32,7 +33,6 @@
     "karma-firefox-launcher": "^0.1.x",
     "karma-mocha": "^0.1.x",
     "mocha": "2.2.x",
-    "should": "5.2.x",
     "supertest": "0.15.x"
   }
 }

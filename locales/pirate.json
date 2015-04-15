@@ -1,5 +1,6 @@
 {
 	"html_locale": "en-US",
+	"locale": "en",
 	"Hello World": "Ahoy salty dogs",
 	"Hello %s, how are you today?": "Ahoy %s, how goes the fight?",
 	"%s cat": {
