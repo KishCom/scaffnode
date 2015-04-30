@@ -5,16 +5,17 @@
 var expect = chai.expect;
 describe('scaffnode', function() {
     describe('scaffnode controllers', function() {
+        beforeEach(module('restangular'));
         beforeEach(module('scaffnode.controllers'));
         describe('HomeController', function() {
             it('should make sure the example model is empty',
                 inject(function($rootScope, $controller) {
                 var scope = $rootScope.$new();
                 var ctrl = $controller("HomeController", {$scope: scope });
-                expect(scope.exampleModel).to.have.property("name");
-                expect(scope.exampleModel.name).to.equal("");
-                expect(scope.exampleModel).to.have.property("email");
-                expect(scope.exampleModel.email).to.equal("");
+                expect(scope.scaffnode_model).to.have.property("name");
+                expect(scope.scaffnode_model.name).to.equal("");
+                expect(scope.scaffnode_model).to.have.property("content");
+                expect(scope.scaffnode_model.content).to.equal("");
             }));
             it('should have an exampleFunction() that sums 2 numbers',
                 inject(function($rootScope, $controller) {
