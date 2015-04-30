@@ -12,6 +12,7 @@ var express = require("express"),
     expressSession = require("express-session"),
     multer = require('multer'),
     i18n = require('i18n'),
+    hpp = require('hpp'),
     Routes = require("./routes"), routes,
     Utils = require("./utils"), utils,
     mongoose = require('mongoose'),
@@ -21,8 +22,16 @@ var express = require("express"),
 // Load configuration details based on your environment
 var config, NODE_ENV;
 var packagejson = require('./package');
-if (process.env.NODE_ENV === "dev" || process.env.NODE_ENV === "live"){
+var isTestMode = false;
+if (process.env.NODE_ENV === "dev" || process.env.NODE_ENV === "live" || process.env.NODE_ENV === "test"){
+    // If we're in test mode, just set a flag on the config object and switch the NODE_ENV to "dev"
+    //
+    if (process.env.NODE_ENV === "test"){
+        isTestMode = true;
+        process.env.NODE_ENV = "dev";
+    }
     config = require("./config").config[process.env.NODE_ENV];
+    config.isTestMode = isTestMode;
     config.NODE_ENV = process.env.NODE_ENV;
     config.appName = packagejson.name;
     config.appVersion = packagejson.version;
@@ -39,6 +48,8 @@ nunjucks.configure('views', {
 });
 site.set("view engine", "html");
 site.set("views", __dirname + "/views");
+site.enable('trust proxy');
+site.disable('x-powered-by');
 
 //The rest of our static-served files
 site.use(express.static(__dirname + "/public"));
@@ -48,7 +59,7 @@ log = bunyan.createLogger(
     { name: packagejson.name + " " + packagejson.version,
         streams:
         [{
-            level: config.logLevel, // Priority of levels looks like this: Trace -> Debug -> Info -> Warn -> Error -> Fatal
+            level: isTestMode ? "fatal" : config.logLevel, // Priority of levels looks like this: Trace -> Debug -> Info -> Warn -> Error -> Fatal
             stream: process.stdout
         }
         // Setup an addional logger with ease
@@ -77,6 +88,7 @@ site.use(multer({
 }));
 site.use(bodyParser.urlencoded({extended: true}));
 site.use(bodyParser.json());
+site.use(hpp()); // Protect against HTTP Parameter Pollution attacks
 site.use(cookieParser());
 site.use(expressSession({   secret: config.sessionSecret,
                             key: packagejson.name + ".sid",
@@ -104,7 +116,9 @@ site.get("/", routes.index);
 site.post("/model", routes.create);
 site.post("/model/update", routes.update);
 site.post("/model/remove", routes.remove);
-
+// Server processed frontend JS
+site.get("/media/js/templates.js", routes.frontendTemplates);
+site.get("/media/js/templates.min.js", routes.frontendTemplates);
 //Catch all other attempted routes and throw them a 404!
 site.all("*", function(req, resp, next){
     next({name: "NotFound", "message": "Oops! The page you requested doesn't exist","status": 404});
