@@ -1,3 +1,2 @@
-- Test framework scaffolding
-- Build automation scaffolding with grunt
-- Consider adding in database component (MongoDB? C*?)
+- Build automation scaffolding with grunt + jenknins
+- Remove extra whitespace (or post-process with htmlmin) from rendered nunjucks templates

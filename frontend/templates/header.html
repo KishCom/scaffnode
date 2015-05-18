@@ -1,9 +1,30 @@
-<html lang="{{ __('html_locale') }}" data-ng-app="{{ config.appName }}">
+<html lang="{{__('html_locale')}}" data-ng-app="{{ config.appName }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
     <title>{{ config.appname }}</title>
     <meta name="description" content="{{ config.appName }} app!">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="canonical" href="https://{{ config.domain }}/" />
+    {# Social/OG tags #}
+    {#
+    <!-- Google -->
+    <meta name="description" content="" />
+    <meta name="keywords" content="Scaffnode" />
+    <meta name="author" content="Scaffnode" />
+    <meta name="copyright" content="Scaffnode" />
+    <!-- <meta name="application-name" content="" /> -->
+    <!-- Facebook -->
+    <meta property="og:title" content="" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://{{ config.domain }}/media/images/facebook_cover_{{__('locale')}}.jpg" />
+    <meta property="og:url" content="https://{{ config.domain }}/{% if __('locale') == 'fr' %}fr{% endif %}" />
+    <meta property="og:description" content="" />
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="" />
+    <meta name="twitter:description" content="" />
+    #}
     {% if config.NODE_ENV == "dev" %}
     <link rel="stylesheet" href="/media/css/style.css">
     {% else %}
@@ -11,8 +32,8 @@
     {% endif %}
     {# JavaScript is loaded in angular.html and static.html #}
     <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <script src="/media/js/outdatedbrowser/outdatedbrowser.min.js"></script>
+        <link rel="stylesheet" href="/media/css/outdatedbrowser.min.css">
     <![endif]-->
 </head>
 <body>

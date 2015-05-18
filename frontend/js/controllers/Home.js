@@ -97,4 +97,17 @@ controller('HomeController', ['$scope', '$timeout', 'Restangular', function($sco
             $("#status").html("There was an error removing. Try again later.");
         });
     };
+
+    // Example function sums two numbers -- for testing example purposes (see frontend/tests/angular_tests.js)
+    $scope.exampleFunction = function(a, b){
+        a = parseInt(a);
+        if (isNaN(a)){
+            a = 0;
+        }
+        b = parseInt(b);
+        if (isNaN(b)){
+            b = 0;
+        }
+        return parseInt(a) + parseInt(b);
+    };
 }]);

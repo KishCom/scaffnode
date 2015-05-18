@@ -19,7 +19,6 @@ Routes.prototype.index = function (req, res, next){
 };
 
 /* Example CRUD routes */
-
 // Create
 Routes.prototype.create = function (req, res){
     // Some validations, you'll probably want to do more
@@ -130,4 +129,13 @@ Routes.prototype.remove = function (req, res){
         }
     });
 };
+
+/* Fill in backend variables for the frontend templates */
+Routes.prototype.frontendTemplates = function (req, res){
+    res.render("templates.js.html", { title: req.__("Welcome!") }, function(err, html){
+        res.set("Content-Type", "application/javascript");
+        res.send(html);
+    });
+};
+
 module.exports = Routes;

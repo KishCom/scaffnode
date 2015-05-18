@@ -6,9 +6,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-git-describe');
-    grunt.loadNpmTasks('grunt-inline-angular-templates');
+    grunt.loadNpmTasks('grunt-angular-templates');
     var localpackage = grunt.file.readJSON('package.json');
-
     grunt.initConfig({
         localpackage: grunt.file.readJSON('package.json'),
         concat: {
@@ -20,10 +19,10 @@ module.exports = function(grunt) {
                 /* First the libraries your app requires */
                 /* Don't forget! Anything you add to bower.json will have to be added here too */
                 'bower_components/jquery/dist/jquery.js',
-                'bower_components/underscore/underscore.js',
+                'bower_components/lodash/lodash.js',
                 'bower_components/angular/angular.js',
-                'bower_components/restangular/dist/restangular.js',
                 'bower_components/moment/moment.js',
+                'bower_components/restangular/dist/restangular.js',
                 'bower_components/angular-animate/angular-animate.js',
                 'bower_components/angular-route/angular-route.js',
                 'bower_components/angular-cookies/angular-cookies.js',
@@ -40,7 +39,7 @@ module.exports = function(grunt) {
                 dest: '../public/media/js/scripts.js'
             },
             backendAngularView: {
-                src: ['templates/header.html', 'templates/angular.html', 'templates/compiled_partials.html', 'templates/footer.html'],
+                src: ['templates/header.html', 'templates/angular.html', 'templates/footer.html'],
                 dest: '../views/base.html',
                 options: {
                     banner: "<!doctype html>\n <!--\n"+
@@ -127,20 +126,24 @@ module.exports = function(grunt) {
             },
             partials: {
                 files: ['templates/header.html', 'templates/partials/*.html', 'templates/footer.html'],
-                tasks: ['getGitRevision', 'concat', 'inline_angular_templates']
+                tasks: ['getGitRevision', 'concat', 'ngtemplates']
             }
         },
-        inline_angular_templates: {
-            dist: {
-                options: {
-                    method: 'append',
-                    base: 'templates/partials/',
-                    unescape: {
-                        '&apos;': '\''
+        ngtemplates: {
+            app:            {
+                src: '*.html',
+                cwd: 'templates/partials/',
+                dest: '../views/templates.js.html',
+                options:      {
+                    prefix: '',
+                    bootstrap:  function(module, script) {
+                        script = script.replace("'use strict';", "");
+                        return "angular.module('" + localpackage.name + "').run(['$templateCache', function($templateCache){" + script + '}]);';
+                    },
+                    htmlmin: {
+                        collapseWhitespace: true,
+                        removeComments: true // Don't use Angular comment directives!
                     }
-                },
-                files: {
-                    '../views/base.html': ['templates/partials/**/*.html']
                 }
             }
         },
@@ -154,14 +157,8 @@ module.exports = function(grunt) {
         jshint: {
             files: ['Gruntfile.js', 'js/**/*.js'],
             options: {
-                // options here to override JSHint defaults
-                globals: {
-                    angular: true,
-                    jQuery: true,
-                    console: true,
-                    module: true,
-                    document: true
-                }
+                ignores: ["js/bootstrap.js"],
+                jshintrc: "../.jshint"
             }
         }
     });
@@ -174,8 +171,9 @@ module.exports = function(grunt) {
         });
         grunt.task.run('git-describe');
     });
-    grunt.registerTask('default', ['getGitRevision', 'concat','inline_angular_templates', 'less:development', 'copy', 'watch']);
-    grunt.registerTask('start_app', ['getGitRevision', 'concat', 'inline_angular_templates', 'less:development', 'copy']);
-    grunt.registerTask('launch', ['getGitRevision', 'concat', 'inline_angular_templates', 'uglify', 'less', 'copy']);
-    grunt.registerTask('build', ['getGitRevision', 'concat', 'inline_angular_templates', 'uglify', 'less', 'copy']);
+    grunt.registerTask('default', ['getGitRevision', 'concat','ngtemplates', 'less:development', 'copy', 'watch']);
+    grunt.registerTask('start_app', ['getGitRevision', 'concat', 'ngtemplates', 'less:development', 'copy']);
+    grunt.registerTask('launch', ['getGitRevision', 'concat', 'ngtemplates', 'uglify', 'less', 'copy']);
+    grunt.registerTask('build', ['getGitRevision', 'concat', 'ngtemplates', 'uglify', 'less', 'copy']);
+    grunt.registerTask('test', ['jshint']);
 };

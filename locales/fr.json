@@ -1,19 +1,20 @@
 {
-	"html_locale": "fr-CA",
-	"Hello World": "bonjour tout le monde",
-	"Hello %s, how are you today?": "Bonjour %s, comment allez-vous aujourd'hui?",
-	"%s cat": {
-		"one": "%s chat",
-		"other": "%s chats"
-	},
-	"Choose language": "Choisissez la langue",
-	"English": "anglais",
-	"French": "Français",
-	"Pirate": "pirate",
-	"Welcome!": "accueil.",
-	"Welcome to the Scaffnode MongoDB Demo": "Bienvenue à la démonstration",
-	"Name": "Nom",
-	"Content": "Content",
-	"Collected on": "Recueillies sur",
-	"by": "par"
+    "html_locale": "fr-CA",
+    "locale": "fr",
+    "Hello World": "bonjour tout le monde",
+    "Hello %s, how are you today?": "Bonjour %s, comment allez-vous aujourd'hui?",
+    "%s cat": {
+        "one": "%s chat",
+        "other": "%s chats"
+    },
+    "Choose language": "Choisissez la langue",
+    "English": "anglais",
+    "French": "Français",
+    "Pirate": "pirate",
+    "Welcome!": "accueil.",
+    "Welcome to the Scaffnode MongoDB Demo": "Bienvenue à la démonstration",
+    "Name": "Nom",
+    "Content": "Content",
+    "Collected on": "Recueillies sur",
+    "by": "par"
 }
