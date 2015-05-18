@@ -1,8 +1,8 @@
 <!doctype html>
  <!--
-scaffnode - ab80ebe-dirty
+scaffnode - 0e8d371
 My angular.js based frontend
-Templates compiled on Monday, May 18th, 2015, 1:13:33 PM
+Templates compiled on Monday, May 18th, 2015, 1:54:46 PM
 -->
 <html lang="{{__('html_locale')}}" data-ng-app="{{ config.appName }}">
 <head>
@@ -31,10 +31,10 @@ Templates compiled on Monday, May 18th, 2015, 1:13:33 PM
     <meta name="twitter:title" content="" />
     <meta name="twitter:description" content="" />
     #}
-    {% if config.NODE_ENV == "dev" %}
-    <link rel="stylesheet" href="/media/css/style.css">
-    {% else %}
+    {% if config.NODE_ENV == 'live' %}
     <link rel="stylesheet" href="/media/css/style.min.css">
+    {% else %}
+    <link rel="stylesheet" href="/media/css/style.css">
     {% endif %}
     {# JavaScript is loaded in angular.html and static.html #}
     <!--[if lt IE 9]>
