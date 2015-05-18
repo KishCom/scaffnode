@@ -11,13 +11,16 @@ To install, make sure you have Node.js (>0.10.x) installed on your system as wel
 If your Node.js and NPM are already configured, setup and installation is a breeze:
 
     # Install nodemon and bunyan globally
-    sudo npm install bunyan nodemon mocha karma-cli -g
+    sudo npm install bunyan nodemon mocha karma-cli bower -g
+    # Reset permissions for everything in ~/.npm (just in case)
+    sudo chown -R `whoami`:`groups $(whoami) | cut -d' ' -f1` ~/.npm
     # Get other dependencies
     npm install
     # Configure server details
     cp config.sample.js config.js
 
     # Name the project. Replace "YourProjectsNameHere" in the next command with your project name (alpha-numeric only)
+    # This changes all instances of "scaffnode" to whatever you wish (TODO: yeoman generator)
     find . -type f | xargs sed -i 's/scaffnode/YourProjectsNameHere/gi'
 
     # Edit config.js with your details
@@ -77,9 +80,12 @@ Run frontend unit tests, backend unit tests, and JSHint linter:
 Run just backend unit tests:
 
     NODE_ENV=dev mocha tests/*_tests.js
+    # Clear your test DB (TODO: automate this in the tests and remove from `npm test` script)
+    mongo scaffnode_test --eval 'printjson(db.dropDatabase())';
 
 Run just frontend unit tests:
 
+    # Running locally? Test in your browsers instead of phantomjs by editing app_karma.conf
     karma start app_karma.conf.js --log-level debug --single-run
 
 ###i18n Multi-language support

@@ -25,10 +25,10 @@
     <meta name="twitter:title" content="" />
     <meta name="twitter:description" content="" />
     #}
-    {% if config.NODE_ENV == "dev" %}
-    <link rel="stylesheet" href="/media/css/style.css">
-    {% else %}
+    {% if config.NODE_ENV == 'live' %}
     <link rel="stylesheet" href="/media/css/style.min.css">
+    {% else %}
+    <link rel="stylesheet" href="/media/css/style.css">
     {% endif %}
     {# JavaScript is loaded in angular.html and static.html #}
     <!--[if lt IE 9]>

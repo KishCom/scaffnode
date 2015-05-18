@@ -24,13 +24,11 @@ var config, NODE_ENV;
 var packagejson = require('./package');
 var isTestMode = false;
 if (process.env.NODE_ENV === "dev" || process.env.NODE_ENV === "live" || process.env.NODE_ENV === "test"){
-    // If we're in test mode, just set a flag on the config object and switch the NODE_ENV to "dev"
-    //
+    // We also put another boolean property on the config object: "isTestMode"
+    config = require("./config").config[process.env.NODE_ENV];
     if (process.env.NODE_ENV === "test"){
         isTestMode = true;
-        process.env.NODE_ENV = "dev";
     }
-    config = require("./config").config[process.env.NODE_ENV];
     config.isTestMode = isTestMode;
     config.NODE_ENV = process.env.NODE_ENV;
     config.appName = packagejson.name;
@@ -113,6 +111,7 @@ site.use(utils.i18nHelper);
 /**  Routes/Views  **/
 site.get("/", routes.index);
 // CRUD
+site.get("/model", routes.read);
 site.post("/model", routes.create);
 site.post("/model/update", routes.update);
 site.post("/model/remove", routes.remove);

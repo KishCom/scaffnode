@@ -6,6 +6,13 @@ exports.config = {
         logLevel: "trace",
         sessionSecret: "Put a random secret here."
     },
+    "test":{
+        domain: "localhost",
+        supportedLocales: ['en'],
+        mongoDBURI: "mongodb://localhost/scaffnode_test",
+        logLevel: "trace",
+        sessionSecret: "Put a random secret here."
+    },
     "live":{
         domain: "productionurl.com",
         supportedLocales: ['en', 'fr'],

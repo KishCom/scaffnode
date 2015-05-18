@@ -1,10 +1,10 @@
 {% block angularContent %}
-    {% if config.NODE_ENV == 'dev' %}
-    <script src="/media/js/scripts.js"></script>
-    <script src="/media/js/templates.js"></script>
-    {% else %}
+    {% if config.NODE_ENV == 'live' %}
     <script src="/media/js/scripts.min.js"></script>
     <script src="/media/js/templates.js"></script>{# only a little smaller with way more problems if minified - see htmlmin options in the ngtemplates Gruntfile task #}
+    {% else %}
+    <script src="/media/js/scripts.js"></script>
+    <script src="/media/js/templates.js"></script>
     {% endif %}
     {# Angular app will render here #}
     <div id="ContentPane" data-ng-view=""></div>

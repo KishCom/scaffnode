@@ -65,7 +65,7 @@ controller('HomeController', ['$scope', '$timeout', 'Restangular', function($sco
         .then(function(data) {
             console.log("Object updated OK", data);
             $("#status").html("Updated!");
-            // Fancy underscore footwork updates the all_scaffnode_model object to remove the just-updated content
+            // Fancy lodash footwork updates the all_scaffnode_model object to remove the just-updated content
             $scope.all_scaffnode_model = _.without($scope.all_scaffnode_model, _.findWhere($scope.all_scaffnode_model, {_id: data.content._id}));
             // Readd the updated content to the all_scaffnode_model object
             $scope.all_scaffnode_model.push(data.content);

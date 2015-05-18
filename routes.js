@@ -53,19 +53,51 @@ Routes.prototype.create = function (req, res){
     });
 };
 
+// Read
+Routes.prototype.read = function (req, res, next){
+    var error = false;
+    var message = "";
+    if (!validator.isNumeric(req.query.gofrom)){
+        req.query.gofrom = 0;
+    }
+    if (!validator.isNumeric(req.query.limit)){
+        req.query.limit = 100;
+    }else{
+        if (req.query.limit > 500){
+            req.query.limit = 500;
+            message = "Warning: requested limit too high -- capped to 500.";
+        }
+        if (req.query.limit <= 0){
+            req.query.limit = 1;
+            message = "Warning: requested limit too low -- set to 1.";
+        }
+    }
+    // Actually get the data now
+    model.find({}).skip(req.query.gofrom).limit(req.query.limit).exec(function(err, results){
+        if (err){
+            log.error(err);
+            next();
+        }
+        res.json({error: false, "message": message, "model": results });
+    });
+};
+
 // Update
 Routes.prototype.update = function (req, res){
     // Some validations, you'll probably want to do more
     var error = false;
     var errorMessage = "";
+    // Make sure we have the id to update
     if (!req.body.scaffnodeId){
         error = true;
         errorMessage = "Missing scaffnodeId";
     }
+    // Make sure it's a valid kind of ID for our db
     if (String(req.body.scaffnodeId).match(/^[a-f\d]{24}$/i) === null){
         error = true;
         errorMessage = "Invalid scaffnodeId";
     }
+    // In this simple case we're requring both "name" and "content" to update
     if (!req.body.name){
         error = true;
         errorMessage = "Missing name";
@@ -74,19 +106,24 @@ Routes.prototype.update = function (req, res){
         error = true;
         errorMessage = "Missing content";
     }
+
+    // If we had any errors, pass them now and return
     if (error){
         res.status(400).json({"error": true, "message": ("Bad request. " + errorMessage)});
         return;
     }
 
+    // Lookup the id
     model.findById(req.body.scaffnodeId, function (err, content){
         if (err){
             log.error(err);
             res.status(500).json({"error": true, "message": ("Look up content for update database error.")});
         }else{
+            // null means there is no document with that id
             if (content === null){
                 res.status(500).json({"error": true, "message": ("Cannot find content with that id.")});
             }else{
+                // We have the document. Set the new content. We could have done this all with a mongoose.update command instead of findById(), then model.save().
                 content.name = req.body.name;
                 content.content = req.body.content;
                 content.save(function(err, content){
@@ -102,7 +139,7 @@ Routes.prototype.update = function (req, res){
     });
 };
 
-// Remove
+// Delete
 Routes.prototype.remove = function (req, res){
     // Some validations, you'll probably want to do more
     var error = false;
