@@ -6,5 +6,6 @@ node_js:
   - "iojs"
 services:
   - mongodb
-before_script:
-  - cp config.sample.js config.js
+before_install: npm install bunyan nodemon mocha karma-cli bower jshint -g
+install: npm install
+before_script: cp config.sample.js config.js;cd frontend;grunt build
