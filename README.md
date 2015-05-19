@@ -2,6 +2,8 @@
     [__  |    |__| |___ |___ |\ | |  | |  \ |___
     ___] |___ |  | |    |    | \| |__| |__/ |___
 
+[![Build Status](https://travis-ci.org/KishCom/scaffnode.svg)](https://travis-ci.org/KishCom/scaffnode)
+
 An ever changing personal preference Node.js web-app scaffolding.
 
 Use this if you're looking to hit the ground running with a project using Node.js, ExpressJS and some other fairly popular Node.js modules.
