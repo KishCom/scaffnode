@@ -11,10 +11,10 @@ controller('HomeController', ['$scope', '$timeout', 'Restangular', function($sco
     $scope.editingMode = false;
 
     // Get all the data to show here -- the server leaves this for us on the window object (see frontend/templates/angular.html)
-    // However if we wanted to get updated ones:
-    // $scope.all_scaffnode_model = scaffnodeModelEndpoint.getList().$object; (this endpoint isn't setup on the backend)
-    // Which would query the server with a GET request to /model
     $scope.all_scaffnode_model = window.all_scaffnode_model;
+    // However maybe we wanted to get updated ones right away:
+    // Don't forget to checkout RestangularProvider.addResponseInterceptor in frontend/app.js
+    $scope.all_scaffnode_model = scaffnodeModelEndpoint.getList().$object;
 
     $scope.addnew = function(){
         // You'd do some client-side validation here...
@@ -23,8 +23,10 @@ controller('HomeController', ['$scope', '$timeout', 'Restangular', function($sco
         .then(function(data) {
             console.log("Object saved OK", data);
             $("#status").html("Saved!");
-            // Again; we could re-pull the list from the server, instead we just manage the local object
+            // we'll re-pull the list from the server but in the meantime let's pop the content onto the local object
             $scope.all_scaffnode_model.push(data.content);
+            // when this resolves the model will automatically update
+            $scope.all_scaffnode_model = scaffnodeModelEndpoint.getList().$object;
             // Clear the status message after 5 seconds
             $timeout(function(){
                 $("#status").html("");
@@ -69,6 +71,7 @@ controller('HomeController', ['$scope', '$timeout', 'Restangular', function($sco
             $scope.all_scaffnode_model = _.without($scope.all_scaffnode_model, _.findWhere($scope.all_scaffnode_model, {_id: data.content._id}));
             // Readd the updated content to the all_scaffnode_model object
             $scope.all_scaffnode_model.push(data.content);
+            $scope.all_scaffnode_model = scaffnodeModelEndpoint.getList().$object;
             $scope.editingMode = false;
             // Clear the status message after 5 seconds
             $timeout(function(){

@@ -80,8 +80,6 @@ Run frontend unit tests, backend unit tests, and JSHint linter:
 Run just backend unit tests:
 
     NODE_ENV=dev mocha tests/*_tests.js
-    # Clear your test DB (TODO: automate this in the tests and remove from `npm test` script)
-    mongo scaffnode_test --eval 'printjson(db.dropDatabase())';
 
 Run just frontend unit tests:
 

@@ -1,12 +1,12 @@
 {
   "name": "scaffnode",
   "author": "Andrew Kish",
-  "version": "0.18.1",
+  "version": "0.18.3",
   "private": true,
   "scripts": {
     "start": "clear;cd frontend;grunt start_app;cd ..;NODE_ENV=dev nodemon app.js | bunyan",
     "postinstall": "cd frontend;npm install;cd ..;",
-    "test": "cd frontend;grunt test;cd ..;mongo scaffnode_test --eval 'printjson(db.dropDatabase())';NODE_ENV=test mocha tests/*_tests.js;karma start app_karma.conf.js --log-level debug --single-run"
+    "test": "cd frontend;grunt test;cd ..;NODE_ENV=test mocha tests/*_tests.js;karma start app_karma.conf.js --log-level debug --single-run"
   },
   "dependencies": {
     "accepts": "1.2.x",

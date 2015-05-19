@@ -79,22 +79,6 @@ describe('CRUD: Create tests', function(){
                 "content": "Some kinda test content." + testIDString})
         .expect(201, done);
     });
-    it('Create 10 successfully each respond with 201.', function(done){
-        var doneCount = 0;
-        for (var i = 0; i < 10; i++){
-            request(app)
-                .post('/model')
-                .send({ "name": "Testy "+ i +" Testerson" + testIDString,
-                        "content": "Some kinda test "+ i +" content." + testIDString})
-                .end(function(err, res){
-                    res.status.should.equal(201);
-                    doneCount++;
-                    if (i === 10 && doneCount === 10){
-                        done();
-                    }
-                });
-        }
-    });
 });
 
  describe('CRUD: Read tests', function(){
@@ -103,11 +87,11 @@ describe('CRUD: Create tests', function(){
         .get('/model')
         .end(function(err, res){
             res.status.should.equal(200);
-            res.body.should.have.property("model");
-            knownModelID = res.body.model[0]._id;
-            knownTotalModels = res.body.model.length;
+            res.body.should.have.property("content");
+            knownModelID = res.body.content[0]._id;
+            knownTotalModels = res.body.content.length;
             // We use this same logic after we delete (looking for -1) so we test here too:
-            (_.findIndex(res.body.model, "_id", knownModelID)).should.be.greaterThan(-1);
+            (_.findIndex(res.body.content, "_id", knownModelID)).should.be.greaterThan(-1);
             done();
         });
     });
@@ -215,9 +199,9 @@ describe('CRUD: Update tests', function(){
         .end(function(err, res){
             res.status.should.equal(200);
             res.body.should.have.property("message");
-            res.body.should.have.property("model");
-            ((knownTotalModels - 1) === res.body.model.length).should.equal(true);
-            (_.findIndex(res.body.model, "_id", knownModelID)).should.equal(-1);
+            res.body.should.have.property("content");
+            ((knownTotalModels - 1) === res.body.content.length).should.equal(true);
+            (_.findIndex(res.body.content, "_id", knownModelID)).should.equal(-1);
             done();
         });
     });

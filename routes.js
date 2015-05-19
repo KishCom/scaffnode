@@ -14,6 +14,7 @@ Routes.prototype.index = function (req, res, next){
             log.error(err);
             next();
         }
+        results = results.reverse();
         res.render("base", { title: req.__("Welcome!"), "all_scaffnode_model": JSON.stringify(results) });
     });
 };
@@ -78,7 +79,8 @@ Routes.prototype.read = function (req, res, next){
             log.error(err);
             next();
         }
-        res.json({error: false, "message": message, "model": results });
+        results = results.reverse();
+        res.json({error: false, "message": message, "content": results });
     });
 };
 
