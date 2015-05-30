@@ -19,6 +19,9 @@ var express = require("express"),
     Models = require("./models"), models,
     site = module.exports = express();
 
+// Use MongoDB sessions
+var MongoStore = require('connect-mongo')(expressSession);
+
 // Load configuration details based on your environment
 var config, NODE_ENV;
 var packagejson = require('./package');
@@ -92,7 +95,7 @@ site.use(expressSession({   secret: config.sessionSecret,
                             key: packagejson.name + ".sid",
                             saveUninitialized: false,
                             resave: false,
-                            //store: new redisStore({ client: redis_client }),
+                            store: new MongoStore({ mongooseConnection: mongoose.connection }),
                             cookie: {maxAge: new Date(Date.now() + 604800*1000), path: '/', httpOnly: true, secure: false}
                         }));
 
