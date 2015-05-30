@@ -8,7 +8,24 @@ An ever changing personal preference Node.js web-app scaffolding.
 
 Use this if you're looking to hit the ground running with a project using Node.js, ExpressJS and some other fairly popular Node.js modules.
 
-To install, make sure you have Node.js (>0.10.x) installed on your system as well as NPM and of course MongoDB. Make sure your node_modules folder, or the NODE_PATH environment variable are setup properly as well.
+To install, make sure you have Node.js (>0.10.x) installed on your system as well as NPM and of course Cassandra. Make sure your node_modules folder, or the NODE_PATH environment variable are setup properly as well.
+
+I recommend using a Cassandra docker image to setup for local development. If you don't have a Cassandra server ready, just [install Docker](https://docs.docker.com/installation/) and follow these instructions (uses the [official Docker Cassandra repo](https://registry.hub.docker.com/_/cassandra/)):
+
+
+    # Setup the networking for the cassandra db in one of two ways:
+
+    # Bind port 9042 to docker host (running scaffnode app outside of a docker container)
+    docker run --name scaffnode-cassandra -d cassandra:2.1.5 -p 9042:9042
+
+    #or
+
+    #Docker to Docker (running scaffnode app inside of a docker container)
+    docker run --name scaffnode-cassandra -d cassandra:2.1.5
+    docker run --name some-app --link scaffnode-cassandra:cassandra -d app-that-uses-cassandra
+
+    # See cassandra logs:
+    docker logs scaffnode-cassandra
 
 If your Node.js and NPM are already configured, setup and installation is a breeze:
 
