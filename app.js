@@ -15,12 +15,12 @@ var express = require("express"),
     hpp = require('hpp'),
     Routes = require("./routes"), routes,
     Utils = require("./utils"), utils,
-    mongoose = require('mongoose'),
+    cassandra = require('cassandra-driver'),
     Models = require("./models"), models,
     site = module.exports = express();
 
-// Use MongoDB sessions
-var MongoStore = require('connect-mongo')(expressSession);
+// Use Cassandra sessions
+//var CassStore = require('connect-cassandra-cql')(expressSession);
 
 // Load configuration details based on your environment
 var config, NODE_ENV;
@@ -71,13 +71,19 @@ log = bunyan.createLogger(
         ]}
     );
 
-// Setup MongoDB
-mongoose.connect(config.mongoDBURI);
-models = new Models(site, log, config);
-var scafnode_model = mongoose.model('scafnode_model', models.scafnode_model);
+// Setup Cassandra
+var cassClient = new cassandra.Client({ "contactPoints": config.cassandraContactPoints });
+cassClient.connect(function (err) {
+    if (err) {
+        cassClient.shutdown();
+        return log.error('There was an error when connecting', err);
+    }
+    log.trace('Connected to cluster with %d host(s): %j', cassClient.hosts.length, cassClient.hosts.keys());
+});
+models = new Models(site, log, config, cassClient);
 
 // Initalize routes and a few utilities helpers
-routes = new Routes(site, log, scafnode_model);
+routes = new Routes(site, log, models);
 utils = new Utils(site, log, config);
 
 /** Middlewares! **/
@@ -95,7 +101,7 @@ site.use(expressSession({   secret: config.sessionSecret,
                             key: packagejson.name + ".sid",
                             saveUninitialized: false,
                             resave: false,
-                            store: new MongoStore({ mongooseConnection: mongoose.connection }),
+                            //store: new CassStore(),
                             cookie: {maxAge: new Date(Date.now() + 604800*1000), path: '/', httpOnly: true, secure: false}
                         }));
 

@@ -9,12 +9,12 @@ var Routes = function(app, bunyan, appModels){
 /* Landing page */
 Routes.prototype.index = function (req, res, next){
     // Get data stick on to the window object for angular (limit to 100 results)
-    model.find({}).limit(100).exec(function(err, results){
+    model.examplemodel.find({}, function(err, results){
         if (err){
             log.error(err);
             next();
+            return;
         }
-        results = results.reverse();
         res.render("base", { title: req.__("Welcome!"), "all_scaffnode_model": JSON.stringify(results) });
     });
 };
@@ -38,18 +38,17 @@ Routes.prototype.create = function (req, res){
         return;
     }
 
-    var newItem = new model({
+    var newItem = model.examplemodel.create({
         "name": validator.escape(req.body.name),
         "content": validator.escape(req.body.content),
         "ip": req.ip,
         "ua": req.headers["user-agent"]
-    });
-    newItem.save(function(err, content, numberAffected){
+    }, function(err, content){
         if (err){
             log.error(err);
             res.status(500).json({"error": true, "message": ("Save to database error.")});
         }else{
-            res.status(201).json({"error": false, "message": "Content saved.", "content": content});
+            res.status(201).json({"error": false, "message": "Content saved.", "content": [content]});
         }
     });
 };
@@ -74,14 +73,15 @@ Routes.prototype.read = function (req, res, next){
         }
     }
     // Actually get the data now
-    model.find({}).skip(req.query.gofrom).limit(req.query.limit).exec(function(err, results){
-        if (err){
-            log.error(err);
-            next();
-        }
-        results = results.reverse();
-        res.json({error: false, "message": message, "content": results });
-    });
+    model.examplemodel.find({ skip: req.query.gofrom,
+                 limit: req.query.limit },
+        function(err, results){
+            if (err){
+                log.error(err);
+                res.status(500).json({error: true, "message": "Problem reading from DB." });
+            }
+            res.json({error: false, "message": message, "content": results });
+        });
 };
 
 // Update

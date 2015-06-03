@@ -88,10 +88,10 @@ describe('CRUD: Create tests', function(){
         .end(function(err, res){
             res.status.should.equal(200);
             res.body.should.have.property("content");
-            knownModelID = res.body.content[0]._id;
+            knownModelID = res.body.content[0].id;
             knownTotalModels = res.body.content.length;
             // We use this same logic after we delete (looking for -1) so we test here too:
-            (_.findIndex(res.body.content, "_id", knownModelID)).should.be.greaterThan(-1);
+            (_.findIndex(res.body.content, "id", knownModelID)).should.be.greaterThan(-1);
             done();
         });
     });
@@ -187,8 +187,8 @@ describe('CRUD: Update tests', function(){
             res.status.should.equal(200);
             res.body.should.have.property("message");
             res.body.message.should.equal("Content removed.");
-            res.body.should.have.property("_id");
-            var knownDeletedId = res.body._id;
+            res.body.should.have.property("id");
+            var knownDeletedId = res.body.id;
             done();
         });
     });
@@ -201,7 +201,7 @@ describe('CRUD: Update tests', function(){
             res.body.should.have.property("message");
             res.body.should.have.property("content");
             ((knownTotalModels - 1) === res.body.content.length).should.equal(true);
-            (_.findIndex(res.body.content, "_id", knownModelID)).should.equal(-1);
+            (_.findIndex(res.body.content, "id", knownModelID)).should.equal(-1);
             done();
         });
     });

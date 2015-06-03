@@ -12,11 +12,10 @@ To install, make sure you have Node.js (>0.10.x) installed on your system as wel
 
 I recommend using a Cassandra docker image to setup for local development. If you don't have a Cassandra server ready, just [install Docker](https://docs.docker.com/installation/) and follow these instructions (uses the [official Docker Cassandra repo](https://registry.hub.docker.com/_/cassandra/)):
 
-
     # Setup the networking for the cassandra db in one of two ways:
 
     # Bind port 9042 to docker host (running scaffnode app outside of a docker container)
-    docker run --name scaffnode-cassandra -d cassandra:2.1.5 -p 9042:9042
+    DOCKERJOB=$(docker run --name scaffnode-cassandra -p 9042:9042 -d cassandra:2.1.5 -e "CASSANDRA_LISTEN_ADDRESS=0.0.0.0")
 
     #or
 
@@ -26,6 +25,9 @@ I recommend using a Cassandra docker image to setup for local development. If yo
 
     # See cassandra logs:
     docker logs scaffnode-cassandra
+
+    # Access your Cassandra instance directly via cqlsh
+    docker run -it --link scaffnode-cassandra:cassandra --rm cassandra cqlsh cassandra
 
 If your Node.js and NPM are already configured, setup and installation is a breeze:
 
