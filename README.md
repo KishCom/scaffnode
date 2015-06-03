@@ -23,6 +23,7 @@ I recommend using a Cassandra docker image to setup for local development. If yo
     docker run --name scaffnode-cassandra -d cassandra:2.1.5
     docker run --name some-app --link scaffnode-cassandra:cassandra -d app-that-uses-cassandra
 
+    # Useful to know:
     # See cassandra logs:
     docker logs scaffnode-cassandra
 

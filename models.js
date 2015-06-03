@@ -29,39 +29,26 @@ var Models = function(app, bunyan, appconfig, cassClient){
         }
     });
 
-    // Initalize our keyspace
-    cassClient.execute("CREATE KEYSPACE IF NOT EXISTS scaffnode WITH replication = {'class' : 'SimpleStrategy', 'replication_factor' : 3};",
-        function(err) {
+    // Initalize our tables
+    cassClient.execute('CREATE TABLE IF NOT EXISTS scaffnode.examplemodel (' +
+    'id uuid PRIMARY KEY,' +
+    'content text,' +
+    'name text,' +
+    'ua text,' +
+    'ip text,' +
+    'timestamp timestamp,' +
+    //'tags set<text>,' +
+    //'data blob' +
+    // ...etc
+    ');',
+    function(err) {
         if (err) {
             log.error(err);
         } else {
-            log.trace("Keyspace created.");
-            setupTables();
+            log.trace("Table created");
+            cassClient.execute('USE scaffnode;',function(err) { if (err) { log.error(err); } else { log.trace("Cassandra ready for queries"); } });
         }
     });
-    function setupTables(){
-        // Initalize our tables
-        cassClient.execute('CREATE TABLE IF NOT EXISTS scaffnode.examplemodel (' +
-        'id uuid PRIMARY KEY,' +
-        'content text,' +
-        'name text,' +
-        'ua text,' +
-        'ip text,' +
-        'timestamp timestamp,' +
-        //'tags set<text>,' +
-        //'data blob' +
-        // ...etc
-        ');',
-        function(err) {
-            if (err) {
-                log.error(err);
-            } else {
-                log.trace("Table created");
-                cassClient.execute('USE scaffnode;',function(err) { if (err) { log.error(err); } else { log.trace("Cassandra ready for queries"); } });
-            }
-        });
-    }
-
 };
 
 /* Example model */
@@ -82,7 +69,7 @@ Models.prototype.examplemodel = {
         newObjectToCreate.ip = newObjectToCreate.ip ? newObjectToCreate.ip : "";
         newObjectToCreate.id = uuid.random();
         var valuesArray = [newObjectToCreate.id, newObjectToCreate.content, newObjectToCreate.name, newObjectToCreate.ua, newObjectToCreate.ip, new Date()];
-        client.execute('INSERT INTO examplemodel (id, content, name, ua, ip, timestamp) VALUES (?, ?, ?, ?, ?, ?);', valuesArray, function(err, result){
+        client.execute('INSERT INTO scaffnode.examplemodel (id, content, name, ua, ip, timestamp) VALUES (?, ?, ?, ?, ?, ?);', valuesArray, function(err, result){
             if (err) {
                 log.error(err);
             } else {
@@ -104,7 +91,7 @@ Models.prototype.examplemodel = {
         var cql = "";
         var cqlParams = [];
         if (findOptions.id){
-            cql = 'SELECT id, content, name, ua, ip, timestamp FROM examplemodel WHERE key=?';
+            cql = 'SELECT id, content, name, ua, ip, timestamp FROM scaffnode.examplemodel WHERE key=?';
             cqlParams = [findOptions.id];
         }else{
             if (!validator.isNumeric(findOptions.skip)){
@@ -122,7 +109,7 @@ Models.prototype.examplemodel = {
                     message = "Warning: requested limit too low -- set to 100.";
                 }
             }
-            cql = 'SELECT id, content, name, ua, ip, timestamp FROM examplemodel';
+            cql = 'SELECT id, content, name, ua, ip, timestamp FROM scaffnode.examplemodel';
         }
         var resultsToBeReturned = [];
 
