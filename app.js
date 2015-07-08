@@ -93,10 +93,13 @@ site.use(hpp()); // Protect against HTTP Parameter Pollution attacks
 site.use(cookieParser());
 site.use(expressSession({   secret: config.sessionSecret,
                             key: packagejson.name + ".sid",
-                            saveUninitialized: false,
-                            resave: false,
-                            store: new MongoStore({ mongooseConnection: mongoose.connection }),
-                            cookie: {maxAge: new Date(Date.now() + 604800*1000), path: '/', httpOnly: true, secure: false}
+                            saveUninitialized: false, // don't create session until something stored
+                            resave: false, // don't save session if unmodified
+                            store: new MongoStore({ "mongooseConnection": mongoose.connection,
+                                                    "touchAfter": 24 * 3600 // Only resave to the DB once a day instead of every request
+                            }),
+                            cookie: {maxAge: new Date(Date.now() + 604800*1000), path: '/', httpOnly: true, secure: false},
+                            rolling: true // keep resetting maxAge so session doesn't expire 1 week after server starts
                         }));
 
 
