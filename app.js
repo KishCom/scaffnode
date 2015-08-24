@@ -80,13 +80,18 @@ var scafnode_model = mongoose.model('scafnode_model', models.scafnode_model);
 routes = new Routes(site, log, scafnode_model);
 utils = new Utils(site, log, config);
 
-/** Middlewares! **/
-site.use(multer({
+// Multipart upload handler
+var upload = multer({
     dest: '/tmp/',
     rename: function (fieldname, filename) {
         return filename.replace(/\W+/g, '-').toLowerCase();
     }
-}));
+});
+// Enable multi-part uploads only on routes you need them on like this:
+// site.post("/upload-image", upload.single("imagefieldname"), routes.handleUploadRoute)
+// More details: https://github.com/expressjs/multer
+
+/** Middlewares! **/
 site.use(bodyParser.urlencoded({extended: true}));
 site.use(bodyParser.json());
 site.use(hpp()); // Protect against HTTP Parameter Pollution attacks
