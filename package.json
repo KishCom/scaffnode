@@ -1,7 +1,7 @@
 {
   "name": "scaffnode",
   "author": "Andrew Kish",
-  "version": "0.18.8",
+  "version": "0.18.9",
   "private": true,
   "scripts": {
     "start": "clear;cd frontend;grunt start_app;cd ..;NODE_ENV=dev nodemon app.js | bunyan",
@@ -9,24 +9,24 @@
     "test": "cd frontend;grunt test;cd ..;NODE_ENV=test mocha tests/*_tests.js;karma start app_karma.conf.js --log-level debug --single-run"
   },
   "dependencies": {
-    "accepts": "1.2.x",
-    "body-parser": "1.13.x",
-    "bunyan": "1.4.x",
-    "connect-mongo": "^0.8.1",
-    "cookie-parser": "1.3.x",
+    "accepts": "1.3.x",
+    "body-parser": "1.14.x",
+    "bunyan": "1.5.x",
+    "connect-mongo": "^1.1.0",
+    "cookie-parser": "1.4.x",
     "escape-html": "1.0.x",
     "express": "4.13.x",
-    "express-session": "1.11.x",
+    "express-session": "1.13.x",
     "hpp": "0.2.x",
     "i18n": "0.5.x",
     "less": "2.5.x",
     "less-middleware": "2.0.x",
-    "lodash": "3.10.x",
-    "mongoose": "4.1.x",
-    "multer": "1.0.x",
-    "nodemon": "1.4.x",
-    "nunjucks": "1.3.x",
-    "validator": "4.0.x"
+    "lodash": "4.0.x",
+    "mongoose": "4.3.x",
+    "multer": "1.1.x",
+    "nodemon": "1.8.x",
+    "nunjucks": "2.3.x",
+    "validator": "4.5.x"
   },
   "devDependencies": {
     "chai": "^3.0.x",
@@ -35,7 +35,8 @@
     "karma-firefox-launcher": "0.1.x",
     "karma-phantomjs-launcher": "0.2.x",
     "karma-mocha": "^0.2.x",
-    "mocha": "2.2.x",
-    "supertest": "1.0.x"
+    "mocha": "2.3.x",
+    "supertest": "1.1.x",
+    "phantomjs": "1.9.x"
   }
 }

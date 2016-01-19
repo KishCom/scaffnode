@@ -10,21 +10,21 @@ var express = require("express"),
     cookieParser = require("cookie-parser"),
     bodyParser = require("body-parser"),
     expressSession = require("express-session"),
-    multer = require('multer'),
-    i18n = require('i18n'),
-    hpp = require('hpp'),
+    multer = require("multer"),
+    i18n = require("i18n"),
+    hpp = require("hpp"),
     Routes = require("./routes"), routes,
     Utils = require("./utils"), utils,
-    mongoose = require('mongoose'),
+    mongoose = require("mongoose"),
     Models = require("./models"), models,
     site = module.exports = express();
 
 // Use MongoDB sessions
-var MongoStore = require('connect-mongo')(expressSession);
+var MongoStore = require("connect-mongo")(expressSession);
 
 // Load configuration details based on your environment
 var config, NODE_ENV;
-var packagejson = require('./package');
+var packagejson = require("./package");
 var isTestMode = false;
 if (process.env.NODE_ENV === "dev" || process.env.NODE_ENV === "live" || process.env.NODE_ENV === "test"){
     // We also put another boolean property on the config object: "isTestMode"
@@ -38,19 +38,20 @@ if (process.env.NODE_ENV === "dev" || process.env.NODE_ENV === "live" || process
     config.appVersion = packagejson.version;
     site.locals.config = config;
 }else{
-    console.log("Missing NODE_ENV environment variable. Must be set to 'dev' or 'live'.");
+    console.log("Missing NODE_ENV environment variable. Must be set to \"dev\" or \"live\".");
     process.exit();
 }
 
 //Setup views and nunjucks templates
-nunjucks.configure('views', {
+nunjucks.configure("views", {
     autoescape: true,
     express: site
 });
+site.set("json spaces", 4);
 site.set("view engine", "html");
 site.set("views", __dirname + "/views");
-site.enable('trust proxy');
-site.disable('x-powered-by');
+site.enable("trust proxy");
+site.disable("x-powered-by");
 
 //The rest of our static-served files
 site.use(express.static(__dirname + "/public"));
@@ -65,8 +66,8 @@ log = bunyan.createLogger(
         }
         // Setup an addional logger with ease
         /*,{
-            level: 'warn',
-            stream: new utils(), // looks for 'write' method. https://github.com/trentm/node-bunyan
+            level: "warn",
+            stream: new utils(), // looks for "write" method. https://github.com/trentm/node-bunyan
         }*/
         ]}
     );
@@ -74,7 +75,7 @@ log = bunyan.createLogger(
 // Setup MongoDB
 mongoose.connect(config.mongoDBURI);
 models = new Models(site, log, config);
-var scafnode_model = mongoose.model('scafnode_model', models.scafnode_model);
+var scafnode_model = mongoose.model("scafnode_model", models.scafnode_model);
 
 // Initalize routes and a few utilities helpers
 routes = new Routes(site, log, scafnode_model);
@@ -82,9 +83,9 @@ utils = new Utils(site, log, config);
 
 // Multipart upload handler
 var upload = multer({
-    dest: '/tmp/',
+    dest: "/tmp/",
     rename: function (fieldname, filename) {
-        return filename.replace(/\W+/g, '-').toLowerCase();
+        return filename.replace(/\W+/g, "-").toLowerCase();
     }
 });
 // Enable multi-part uploads only on routes you need them on like this:
@@ -98,13 +99,13 @@ site.use(hpp()); // Protect against HTTP Parameter Pollution attacks
 site.use(cookieParser());
 site.use(expressSession({   secret: config.sessionSecret,
                             key: packagejson.name + ".sid",
-                            saveUninitialized: false, // don't create session until something stored
-                            resave: false, // don't save session if unmodified
+                            saveUninitialized: false, // don"t create session until something stored
+                            resave: false, // don"t save session if unmodified
                             store: new MongoStore({ "mongooseConnection": mongoose.connection,
                                                     "touchAfter": 24 * 3600 // Only resave to the DB once a day instead of every request
                             }),
-                            cookie: {maxAge: new Date(Date.now() + 604800*1000), path: '/', httpOnly: true, secure: false},
-                            rolling: true // keep resetting maxAge so session doesn't expire 1 week after server starts
+                            cookie: {maxAge: new Date(Date.now() + 604800*1000), path: "/", httpOnly: true, secure: false},
+                            rolling: true // keep resetting maxAge so session doesn"t expire 1 week after server starts
                         }));
 
 
@@ -112,9 +113,9 @@ site.use(expressSession({   secret: config.sessionSecret,
 i18n.configure({
   locales: config.supportedLocales,
   cookie: packagejson.name + "_lang.sid",
-  directory: __dirname + '/locales'
+  directory: __dirname + "/locales"
 });
-// Express helper (makes '__' functions available in templates)
+// Express helper (makes "__" functions available in templates)
 site.use(i18n.init);
 // Middleware helper, makes user language preferences sticky and watches for "lang" query variable
 site.use(utils.i18nHelper);
@@ -141,5 +142,7 @@ site.use(utils.errorHandler);
 */
 // Get proper from from ENV variable for live mode, otherwise use port 8888
 var port = process.env.PORT || 8888;
-site.listen(port);
+var server = site.listen(port, function(){
+    utils.setRunningServer(server);
+});
 log.info("Server listening on http://" + site.locals.config.domain + ":" + port + " in " + site.locals.config.NODE_ENV + " mode");

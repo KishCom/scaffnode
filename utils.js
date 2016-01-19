@@ -1,4 +1,4 @@
-var log, self, config;
+var log, self, config, server;
 var accepts = require('accepts');
 var escapeHtml = require('escape-html');
 var Utils = function(app, bunyan, appConfig){
@@ -41,28 +41,28 @@ Utils.prototype.i18nHelper = function(req, res, next){
 /* Error handler */
 Utils.prototype.errorHandler = function(err, req, res, next){
     var env = process.env.NODE_ENV;
-    // respect err.status
+    // Respect err.status
     if (err.status) {
         res.statusCode = err.status;
     }
-    // default status code to 500
+    // Default unknown status code to 500
     if (res.statusCode < 400) {
         res.statusCode = 500;
     }
 
-    // write error to console
+    // Write error to log
     if (env !== 'test') {
         if (res.statusCode !== 404){
-            log.error(err.stack || JSON.stringify(err));
+            log.fatal(err.stack || "", JSON.stringify(err));
         }
     }
 
-    // cannot actually respond
+    // Cannot actually respond
     if (res._header) {
         return req.socket.destroy();
     }
 
-    // negotiate
+    // Negotiate
     var accept = accepts(req);
     var type = accept.types('html', 'json', 'text');
 
@@ -71,7 +71,7 @@ Utils.prototype.errorHandler = function(err, req, res, next){
 
     // html
     if (type === 'html') {
-        if (res.statusCode == 404){
+        if (res.statusCode >= 400 && res.statusCode <= 499){
             log.info("404 :", req.url, " UA: ", req.headers["user-agent"], "IP: ", req.ip);
             return res.render("errors/404.html", {
                 http_status: res.statusCode,
@@ -84,6 +84,8 @@ Utils.prototype.errorHandler = function(err, req, res, next){
                 error: String(err).replace(/  /g, ' &nbsp;').replace(/\n/g, '<br>'),
                 showStack: stack,
                 "env": env
+            },function(err, html) {
+                res.send(html);
             });
         }
     // json
@@ -99,7 +101,37 @@ Utils.prototype.errorHandler = function(err, req, res, next){
     } else {
         res.setHeader('Content-Type', 'text/plain');
         res.end(err.stack || String(err));
+        if (res.statusCode >= 500){
+            killServer();
+        }
     }
+    // Sorry Keep-Alive connections, but we need to part ways
+    req.connection.setTimeout(1);
+};
+Utils.prototype.setRunningServer = function(runningServer){
+    server = runningServer;
 };
 
+// It is not safe to resume normal operation after 'uncaughtException'. If you do use it, restart your application after every unhandled exception!
+process.on('uncaughtException', (err) => {
+  log.fatal(`Caught exception: ${err}`);
+  killServer();
+});
+
+var killServer = function(){
+    if (env !== "live"){ // We only need to do this on production
+        return;
+    }
+    var suicideTimeout = 30000; // Wait for connections to close for 30 seconds
+    // Set the timeout and wait for connections to close
+    setTimeout(function(){
+        log.fatal("Couldn't wait for all connections to close, stopping process", process.pid);
+        process.exit(-1);
+    }, suicideTimeout);
+    server.close(function() {
+        // Everything was closed successfully
+        log.fatal("All connections done, stopping process", process.pid);
+        process.exit(0);
+    });
+};
 module.exports = Utils;
