@@ -84,13 +84,18 @@ log = bunyan.createLogger(
 routes = new Routes(site, log, config);
 utils = new Utils(site, log, config);
 
-/** Middlewares! **/
-site.use(multer({
-    dest: '/tmp/',
+// Multipart upload handler
+var upload = multer({
+    dest: "/tmp/",
     rename: function (fieldname, filename) {
-        return filename.replace(/\W+/g, '-').toLowerCase();
+        return filename.replace(/\W+/g, "-").toLowerCase();
     }
-}));
+});
+// Enable multi-part uploads only on routes you need them on like this:
+// site.post("/upload-image", upload.single("imagefieldname"), routes.handleUploadRoute)
+// More details: https://github.com/expressjs/multer
+
+/** Middlewares! **/
 site.use(bodyParser.urlencoded({extended: true}));
 site.use(bodyParser.json());
 site.use(hpp()); // Protect against HTTP Parameter Pollution attacks
