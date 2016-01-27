@@ -68,38 +68,7 @@ Utils.prototype.cleanUserDoc = function(doc){
     if (typeof(doc.toObject) === 'function'){
         doc = doc.toObject(); // Data returned from Mongoose is actually immutable
     }
-    return _.omit(doc, ["password", "lastLogin", "__v", "authProviderId"]);
-};
-
-Utils.prototype.recaptchaVerify = function(req, res, next){
-    if (config.isTestMode){
-        log.warn("App is being tested, skipping recaptcha verify");
-        req.recaptchaVerified = true;
-        next();
-        return;
-    }
-    if (req.body.recaptcha_response_field){
-        var ip = req.ip;
-        if (ip === "127.0.0.1" && process.env.NODE_ENV !== "live"){
-            req.recaptchaVerified = true;
-            log.warn("IP is local. Not going to verify recaptcha.");
-            next();
-            return;
-        }
-        if (!req.recaptchaVerified){
-            simpleRecaptcha(config.recaptchaSecretKey, ip, req.body.recaptcha_response_field, function(err) {
-                if (err){
-                    log.warn(err);
-                    req.recaptchaVerified = false;
-                }else{
-                    req.recaptchaVerified = true;
-                }
-                next();
-            });
-        }
-    }else{
-        next();
-    }
+    return _.omit(doc, ["password", "lastLogin", "__v", "authProviderId", "token", "tokenSecret"]);
 };
 
 /* Passport helpers
@@ -141,7 +110,6 @@ passport.use(new LocalStrategy(function(email, password, done) {
         });
     });
 }));
-
 /* Set up Twitter Strategy within Passport. */
 passport.use(new TwitterStrategy({
         consumerKey: config.TwitterConsumerKey,
@@ -156,7 +124,7 @@ passport.use(new TwitterStrategy({
             }else{
                 // No user found for this authProvider and authProviderId, create one!
                 var newUser = new model.Users({
-                    "email": "twitter-" + profile.id + "@example.com",
+                    "email": "twitter-" + profile.id + "@example.com", // This is a hack so we can keep a unique index on users signedin without email addresses
                     "name": profile.displayName,
                     "lang": profile.lang,
                     "authProvider": "twitter",
@@ -171,6 +139,7 @@ passport.use(new TwitterStrategy({
         });
     }
 ));
+/* Set up Facebook Strategy within Passport. */
 passport.use(new FacebookStrategy({
         clientID: config.FacebookAppId,
         clientSecret: config.FacebookAppSecret,
@@ -185,7 +154,7 @@ passport.use(new FacebookStrategy({
             }else{
                 // No user found for this authProvider and authProviderId, create one!
                 var newUser = new model.Users({
-                    "email": "facebook-" + profile.id + "@example.com",
+                    "email": "facebook-" + profile.id + "@example.com", // This is a hack so we can keep a unique index on users signedin without email addresses
                     "name": profile.displayName,
                     "lang": profile.lang,
                     "authProvider": "facebook",
@@ -216,7 +185,7 @@ Utils.prototype.passportLogin = function(req, res, next){
         req.logIn(user, function(err) {
             if (err) { return next(err); }
             user = user.toObject();
-            user = _.omit(user, ["password", "lastLogin", "__v", "authProvider"]);
+            user = _.omit(user, ["password", "lastLogin", "__v", "authProviderId", "token", "tokenSecret"]);
             return res.json({error: false, "message": "Logged in.", "User": user});
         });
     })(req, res, next);
