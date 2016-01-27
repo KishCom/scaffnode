@@ -5,7 +5,9 @@ exports.config = {
         authProviders: ["facebook", "twitter", "local"],
         mongoDBURI: "mongodb://localhost/scaffnode",
         logLevel: "trace",
-        sessionSecret: "Put a random secret here."
+        sessionSecret: "Put a random secret here.",
+        TwitterConsumerKey: "",
+        TwitterConsumerSecret: ""
     },
     "test":{
         domain: "localhost",
@@ -13,7 +15,9 @@ exports.config = {
         authProviders: ["local"],
         mongoDBURI: "mongodb://localhost/scaffnode_test",
         logLevel: "trace",
-        sessionSecret: "Put a random secret here."
+        sessionSecret: "Put a random secret here.",
+        TwitterConsumerKey: "",
+        TwitterConsumerSecret: ""
     },
     "live":{
         domain: "productionurl.com",
@@ -21,6 +25,8 @@ exports.config = {
         authProviders: ["facebook", "twitter", "local"],
         mongoDBURI: "mongodb://localhost/scaffnode",
         logLevel: "info",
-        sessionSecret: "Put a random secret here."
+        sessionSecret: "Put a random secret here.",
+        TwitterConsumerKey: "",
+        TwitterConsumerSecret: ""
     }
 };

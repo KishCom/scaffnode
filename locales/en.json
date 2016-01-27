@@ -48,5 +48,6 @@
 	"Please enter your email address": "Please enter your email address",
 	"Please enter a password that is at least 8 characters or longer": "Please enter a password that is at least 8 characters or longer",
 	"Please enter a password that is not longer then 128 characters": "Please enter a password that is not longer then 128 characters",
-	"Missing credentials": "Missing credentials"
+	"Missing credentials": "Missing credentials",
+	"Signin with Twitter": "Signin with Twitter"
 }

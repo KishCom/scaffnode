@@ -1,14 +1,16 @@
-var log, self, config, server, model;
+var log, self, server, model;
 var accepts         = require('accepts'),
     LocalStrategy   = require('passport-local'),
+    TwitterStrategy = require('passport-twitter'),
     passport        = require('passport'),
     _               = require('lodash'),
+    validator       = require('validator'),
 //    mailer          = require('nodemailer'),
 //    htmlToText      = require('nodemailer-html-to-text').htmlToText,
 //    smtpTransport   = require('nodemailer-smtp-transport'),
 //    simpleRecaptcha = require('simple-recaptcha-new'),
     escapeHtml      = require('escape-html');
-
+var config = require("./config").config[process.env.NODE_ENV];
 var Utils = function(app, bunyan, appConfig, appModels){
     config = appConfig;
     self = app;
@@ -61,6 +63,7 @@ Utils.prototype.i18nHelper = function(req, res, next){
 };
 
 Utils.prototype.cleanUserDoc = function(doc){
+    if (!doc) return false;
     if (typeof(doc.toObject) === 'function'){
         doc = doc.toObject(); // Data returned from Mongoose is actually immutable
     }
@@ -105,12 +108,19 @@ Utils.prototype.recaptchaVerify = function(req, res, next){
 * Both serializer and deserializer are wired for "remember me" functionality
 */
 passport.serializeUser(function(user, done) {
-    done(null, user.email);
+    if (user.authProvider === "local"){ done(null, user.email); }
+    if (user.authProvider === "twitter"){ done(null, user.authProviderId); }
 });
-passport.deserializeUser(function(email, done) {
-    model.Users.findOne( { email: email } , function (err, user) {
-        done(err, user);
-    });
+passport.deserializeUser(function(emailOrID, done) {
+    if (validator.isEmail(emailOrID)){
+        model.Users.findOne( { email: emailOrID } , function (err, user) {
+            done(err, user);
+        });
+    }else{
+        model.Users.findOne( { authProviderId: emailOrID } , function (err, user) {
+            done(err, user);
+        });
+    }
 });
 /* Set up LocalStrategy within Passport. */
 passport.use(new LocalStrategy(function(email, password, done) {
@@ -128,6 +138,38 @@ passport.use(new LocalStrategy(function(email, password, done) {
         });
     });
 }));
+
+var callbackURL = process.env.NODE_ENV === "live" ? "https://"+ config.domain +"/auth/twitter/callback" : "http://"+ config.domain +":8888/auth/twitter/callback";
+/* Set up Twitter Strategy within Passport. */
+passport.use(new TwitterStrategy({
+        consumerKey: config.TwitterConsumerKey,
+        consumerSecret: config.TwitterConsumerSecret,
+        callbackURL: callbackURL
+    },
+    function(token, tokenSecret, profile, done) {
+        model.Users.findOne({"authProviderId": "twitter-" + profile.id}, function(err, User){
+            if (err) return done(null, false, { message: 'Error authenticating with Twitter' });
+            if (User){
+                return done(null, User);
+            }else{
+                // No user found for this authProvider and authProviderId, create one!
+                var newUser = new model.Users({
+                    "name": profile.displayName,
+                    "lang": profile.lang,
+                    "authProvider": "twitter",
+                    "authProviderId": "twitter-" + profile.id
+                });
+                newUser.save(function(err){
+                    if (err) return done(null, false, { message: 'Error creating new user from Twitter' });
+                    log.info("Saved", newUser);
+                    return done(null, newUser.toObject());
+                });
+            }
+
+        });
+    }
+));
+
 Utils.prototype.setupPassport = function(){
     return passport;
 };

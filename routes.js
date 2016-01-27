@@ -17,7 +17,8 @@ Routes.prototype.index = function (req, res, next){
         }
         results = results.reverse();
         var User = req.user ? JSON.stringify( utils.cleanUserDoc(req.user) ) : "false"; // The Angular frontend will parse this JSON object on app-load as the currently logged in user
-        res.render("base", { title: req.__("Welcome!"), "all_scaffnode_model": JSON.stringify(results), "User": User });
+        var UserObj = req.user ? utils.cleanUserDoc(req.user) : {};
+        res.render("base", { title: req.__("Welcome!"), "all_scaffnode_model": JSON.stringify(results), "User": User, "UserObj": UserObj });
     });
 };
 
