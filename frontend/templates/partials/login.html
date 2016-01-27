@@ -1,0 +1,40 @@
+<section class="login-container">
+    <h2>Login</h2>
+    <span class="req brand-danger">*</span> {{__('indicates required field')}}
+    <form name="login_form" validate>
+        <div class="row"><div class="col-xs-12">
+            <label for="email">{{__('Email Address')}}<span class="req">*</span></label><br />
+            <input id="email" name="email" type="email" ng-model="userModel.email"/>
+            <div class="errors">
+                <small class="error" ng-show="login_form.email.$error.required">{{__('Please enter your email address.')}}</small>
+                <small class="error" ng-show="login_form.email.$error.email">{{__('Please enter a valid email address.')}}</small>
+            </div>
+            <div class="errors serverErrors" ng-show="serverValidation.email != ''">
+                <small class="error">[[serverValidation.email]]</small>
+            </div>
+        </div></div>
+        <div class="row"><div class="col-xs-12">
+            <label for="password">{{__('Password')}}<span class="req">*</span></label><br />
+            <input type="password" id="field-1" name="password" ng-model="userModel.password" ng-minlength=8 ng-maxlength=128 ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }" ng-class="{'server-invalid' : serverValidation.password != ''}" ng-required="true"/>
+            <div class="errors">
+                <small class="error" ng-show="login_form.password.$error.required">{{__('Please enter a password.')}}</small>
+                <small class="error" ng-show="login_form.password.$error.minlength">{{__('Your password is required to be at least 8 characters.')}}</small>
+                <small class="error" ng-show="login_form.password.$error.maxlength">{{__('Your name cannot be longer than 128 characters.')}}</small>
+            </div>
+            <div class="errors serverErrors" ng-show="serverValidation.password != ''">
+                <small class="error">[[serverValidation.password]]</small>
+            </div>
+        </div></div>
+
+        <div class="row"><div class="col-xs-12">
+        <input type="submit" class="btn btn-success submit" ng-click="login($event)" value="{{__('Login')}}" ng-disabled="login_form.email.$invalid || login_form.password.$invalid" />
+            <div class="errors serverErrors" ng-show="serverValidation.critical != ''">
+                <small class="error">[[serverValidation.critical]]</small>
+            </div>
+        </div></div>
+    </form>
+    <hr />
+    <div>
+        {#<a href="/forgotpassword" class="grey">{{__('Forgot your password?')}}</a> |#} <a href="/#/signup" class="grey">{{__('Signup instead')}}</a>
+    </div>
+</section>

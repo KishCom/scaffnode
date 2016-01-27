@@ -80,6 +80,7 @@ var scafnode_model = mongoose.model("scafnode_model", models.scafnode_model);
 // Initalize routes and a few utilities helpers
 routes = new Routes(site, log, scafnode_model);
 utils = new Utils(site, log, config);
+var passport = utils.setupPassport();
 
 // Multipart upload handler
 var upload = multer({
@@ -99,13 +100,13 @@ site.use(hpp()); // Protect against HTTP Parameter Pollution attacks
 site.use(cookieParser());
 site.use(expressSession({   secret: config.sessionSecret,
                             key: packagejson.name + ".sid",
-                            saveUninitialized: false, // don"t create session until something stored
-                            resave: false, // don"t save session if unmodified
+                            saveUninitialized: false, // don't create session until something stored
+                            resave: false, // don't save session if unmodified
                             store: new MongoStore({ "mongooseConnection": mongoose.connection,
                                                     "touchAfter": 24 * 3600 // Only resave to the DB once a day instead of every request
                             }),
                             cookie: {maxAge: new Date(Date.now() + 604800*1000), path: "/", httpOnly: true, secure: false},
-                            rolling: true // keep resetting maxAge so session doesn"t expire 1 week after server starts
+                            rolling: true // keep resetting maxAge so session don't expire 1 week after app-process started
                         }));
 
 
@@ -119,9 +120,18 @@ i18n.configure({
 site.use(i18n.init);
 // Middleware helper, makes user language preferences sticky and watches for "lang" query variable
 site.use(utils.i18nHelper);
+// Setup Passport.js for login management (initalized and returned by utils.js)
+site.use(passport.initialize());
+site.use(passport.session());
 
 /**  Routes/Views  **/
 site.get("/", routes.index);
+// User related API routes. Since this is a single page app, consider prefixing your API routes with a version: site.post("/apiv1/users/signup", routes.newUser);
+site.post("/users/signup", routes.newUser);
+site.post("/users/login", utils.passportLogin);
+site.get("/users/logout", routes.logout);
+site.get("/logout", routes.logout); // Simple sugar alias
+
 // CRUD
 site.get("/model", routes.read);
 site.post("/model", routes.create);

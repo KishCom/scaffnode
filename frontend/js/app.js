@@ -59,8 +59,9 @@ scaffnode.run(['$rootScope', function($rootScope, tagFactory) {
 **/
 scaffnode.config(['$routeProvider', function ($routeProvider) {
 $routeProvider.when('/home',  {templateUrl: 'home.html', controller: "HomeController"})
-                  //.when('/signup', {templateUrl: 'signup.html', controller: "LoginAndSignUp"})
-                  .otherwise( {redirectTo: '/home'} );
+                  .when('/signup', {templateUrl: 'signup.html', controller: "SignupController"})
+                  .when('/login', {templateUrl: 'login.html', controller: "LoginController"})
+                  .otherwise( {redirectTo: '/signup'} );
 }]);
 
 

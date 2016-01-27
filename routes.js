@@ -15,9 +15,117 @@ Routes.prototype.index = function (req, res, next){
             next();
         }
         results = results.reverse();
-        res.render("base", { title: req.__("Welcome!"), "all_scaffnode_model": JSON.stringify(results) });
+        var User = req.user ? JSON.stringify( utils.cleanUserDoc(req.user) ) : "false"; // The Angular frontend will parse this JSON object on app-load as the currently logged in user
+        res.render("base", { title: req.__("Welcome!"), "all_scaffnode_model": JSON.stringify(results), "User": User });
     });
 };
+
+/* User Routes */
+Routes.prototype.newUser = function (req, res){
+    var error = false;
+    var errorMessage, onField = "";
+    if (!req.body.name){
+        error = true;
+        errorMessage = "Please enter your full name";
+        onField = "name";
+    }
+    if (!req.body.email){
+        error = true;
+        errorMessage = "Please enter your email address";
+        onField = "email";
+    }
+    if (!req.body.password){
+        error = true;
+        errorMessage = "Please enter a password";
+        onField = "password";
+    }else{
+        if (req.body.password.length < 8){
+            error = true;
+            errorMessage = "Please enter a password that is at least 8 characters or longer";
+            onField = "password";
+        }
+        if (req.body.password.length > 128){
+            error = true;
+            errorMessage = "Please enter a password that is not longer then 128 characters";
+            onField = "password";
+        }
+    }
+    var responseJSON = {"error":true,"message": "Validation failed", "errors":{}};
+    if (error){
+        responseJSON.errors[onField] = {"message": req.__(errorMessage),
+                                        "name": "ValidatorError",
+                                        "path": onField,
+                                        "type": "manual",
+                                        "value": req.body[onField]
+                                    };
+        res.status(400).json(responseJSON);
+        return;
+    }
+
+    var newUser = new Users({
+        "name": req.body.name,
+        "email": req.body.email,
+        "password": req.body.password,
+        "lang": req.getLocale()
+    });
+
+    newUser.validate(function(err){
+        if (err){
+            res.status(400).json({"error": true, "message": err.message, "errors": err.errors});
+        }else{
+            newUser.save(function(err, content, numberAffected){
+                if (err){
+                    if (err.code){
+                        if (err.code === 11000){
+                            responseJSON.errors.email = {"message": req.__("The email address has already been used"),
+                                        "name": "ValidatorError",
+                                        "path": "email",
+                                        "type": "manual",
+                                        "value": req.body.email
+                                    };
+                            res.status(400).json(responseJSON);
+                        }else{
+                            log.error(err);
+                            res.status(500).json({"error": true, "critical": true, "message": req.__("An unexpected error has occurred, please try again later")});
+                        }
+                    }else{
+                        log.error(err);
+                        res.status(500).json({"error": true, "critical": true, "message": req.__("An unexpected error has occurred, please try again later")});
+                    }
+                }else{
+                    // After "coming soon", have users be auto-logged in. Remove the following 2 lines and uncomment the block under those.
+                    // TODO: Email thanks after email is setup properly
+                    /*if (!config.isTestMode){
+                        var emailUser = utils.cleanUserDoc(newUser);
+                        var thanksEmail = config.nunjucks.render("emails/thankYou-"+req.getLocale()+".html", {"user": emailUser});
+                        utils.sendEmail(newUser.email, thanksEmail, (newUser.name + ", " + req.__("thank you for registering!")), function(err, sendInfo){
+                            if (err){
+                                log.error(err);
+                            }else{
+                                log.trace(sendInfo);
+                            }
+                        });
+                    }else{
+                        log.trace("Skip sending signup email in test mode");
+                    }*/
+
+                    // Automatically log the newly signed up user in.
+                    req.logIn(content, function(err){
+                        if (err) { log.error(err); }
+                        content = utils.cleanUserDoc(content);
+                        res.status(201).json({"error": false, "message": "Content saved.", "content": content});
+                    });
+                }
+            });
+        }
+    });
+};
+Routes.prototype.logout = function (req, res){
+    req.logout();
+    res.redirect('/');
+};
+
+// TODO/COMING-VERY-SOON: Forgot password
 
 /* Example CRUD routes */
 // Create

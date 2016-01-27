@@ -1,0 +1,60 @@
+
+<section class="signup-container">
+	<h2>Signup</h2>
+	<span class="req brand-danger">*</span> {{__('indicates required field')}}
+    <form name="signup_form" validate>
+        <div class="row">
+            <!-- {# Name #} -->
+            <div class="col-xs-12">
+                <label for="name">{{__('Full Name')}}</label><br />
+                <input tabindex="1" type="text" id="name" name="name" ng-model="userModel.name" ng-minlength=3 ng-maxlength=128 ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }" ng-class="{'server-invalid' : serverValidation.name != ''}" ng-required="true" tabindex="0"/>
+                <div class="errors">
+                    <small class="error" ng-show="signup_form.name.$error.required">{{__('Please input your name.')}}</small>
+                    <small class="error" ng-show="signup_form.name.$error.minlength">{{__('Your name is required to be at least 3 characters.')}}</small>
+                    <small class="error" ng-show="signup_form.name.$error.maxlength">{{__('Your name cannot be longer than 128 characters.')}}</small>
+                </div>
+                <div class="errors serverErrors" ng-show="serverValidation.name != ''">
+                    <small class="error">[[serverValidation.name]]</small>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <!-- {# Email #} -->
+            <div class="col-xs-12">
+                <label for="email">{{__('Email Address')}}<span class="req">*</span></label><br />
+                <input tabindex="2" id="email" name="email" type="email" ng-model="userModel.email" ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }" ng-class="{'server-invalid' : serverValidation.email != ''}" ng-required="true" tabindex="1"/>
+                <div class="errors">
+                    <small class="error" ng-show="signup_form.email.$error.required">{{__('Please enter your email address.')}}</small>
+                    <small class="error" ng-show="signup_form.email.$error.email">{{__('Please enter a valid email address.')}}</small>
+                </div>
+                <div class="errors serverErrors" ng-show="serverValidation.email != ''">
+                    <small class="error">[[serverValidation.email]]</small>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <!-- {# Password #} -->
+            <div class="col-xs-12">
+                <label for="password">{{__('Password')}}<span class="req">*</span></label><br />
+                <input tabindex="3" type="password" id="field-1" name="password" ng-model="userModel.password" ng-minlength=8 ng-maxlength=128 ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }" ng-class="{'server-invalid' : serverValidation.password != ''}" ng-required="true" tabindex="2"/>
+                <div class="errors">
+                    <small class="error" ng-show="signup_form.password.$error.required">{{__('Please enter a password.')}}</small>
+                    <small class="error" ng-show="signup_form.password.$error.minlength">{{__('Your password is required to be at least 8 characters.')}}</small>
+                    <small class="error" ng-show="signup_form.password.$error.maxlength">{{__('Your name cannot be longer than 128 characters.')}}</small>
+                </div>
+                <div class="errors serverErrors" ng-show="serverValidation.password != ''">
+                    <small class="error">[[serverValidation.password]]</small>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="errors serverErrors" ng-show="serverValidation.critical != ''"><small class="error">[[serverValidation.critical]]</small></div>
+            <input id='btnRegister' type="submit" class="btn btn-success submit" ng-click="signup($event)" ng-keyup="keyup($event)" value="{{__('Signup')}}" ng-disabled="signup_form.name.$invalid || signup_form.email.$invalid || signup_form.password.$invalid || signup_form.zip.$invalid || userModel.recaptcha_response_field == ''" tabindex="4" submit-on-enter/>
+        </div>
+    </form>
+    <hr />
+    <div>
+        {#<a href="/forgotpassword" class="grey">{{__('Forgot your password?')}}</a> | #}<a href="/#/login" class="grey">{{__('Login instead')}}</a>
+    </div>
+    <br /><br />
+</section>

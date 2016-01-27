@@ -1,10 +1,35 @@
 var log, self, config, server;
-var accepts = require('accepts');
-var escapeHtml = require('escape-html');
+var accepts         = require('accepts'),
+    LocalStrategy   = require('passport-local'),
+    passport        = require('passport'),
+//    mailer          = require('nodemailer'),
+//    htmlToText      = require('nodemailer-html-to-text').htmlToText,
+//    smtpTransport   = require('nodemailer-smtp-transport'),
+//    simpleRecaptcha = require('simple-recaptcha-new'),
+    escapeHtml      = require('escape-html');
+
 var Utils = function(app, bunyan, appConfig){
     config = appConfig;
     self = app;
     log = bunyan;
+    // It is not safe to resume normal operation after 'uncaughtException'. If you do use it, restart your application after every unhandled exception!
+    process.on('uncaughtException', (err) => {
+        log.fatal(`Caught exception: ${err}`);
+        killServer();
+    });
+
+    /**
+    // TODO Setup email
+    transporter = mailer.createTransport(smtpTransport({
+        host: config.SMTPHost,
+        port: config.SMTPPort,
+        auth: {
+            user: config.SMTPUser,
+            pass: config.SMTPPass
+        }
+    }));
+    transporter.use('compile', htmlToText());
+    **/
 };
 
 /* i18n Helper
@@ -36,6 +61,94 @@ Utils.prototype.i18nHelper = function(req, res, next){
     }
     res.header("Content-Language", req.session.lang);
     next();
+};
+
+Utils.prototype.cleanUserDoc = function(doc){
+    if (typeof(doc.toObject) === 'function'){
+        doc = doc.toObject(); // Data returned from Mongoose is actually immutable
+    }
+    return _.omit(doc, ["password", "lastLogin", "__v", "authProvider"]);
+};
+
+Utils.prototype.recaptchaVerify = function(req, res, next){
+    if (config.isTestMode){
+        log.warn("App is being tested, skipping recaptcha verify");
+        req.recaptchaVerified = true;
+        next();
+        return;
+    }
+    if (req.body.recaptcha_response_field){
+        var ip = req.ip;
+        if (ip === "127.0.0.1" && process.env.NODE_ENV !== "live"){
+            req.recaptchaVerified = true;
+            log.warn("IP is local. Not going to verify recaptcha.");
+            next();
+            return;
+        }
+        if (!req.recaptchaVerified){
+            simpleRecaptcha(config.recaptchaSecretKey, ip, req.body.recaptcha_response_field, function(err) {
+                if (err){
+                    log.warn(err);
+                    req.recaptchaVerified = false;
+                }else{
+                    req.recaptchaVerified = true;
+                }
+                next();
+            });
+        }
+    }else{
+        next();
+    }
+};
+
+/* Passport helpers
+* Passport session setup.
+* To support persistent login sessions, Passport needs to be able to serialize users into and deserialize users out of the session.
+* This should be as simple as storing the userID when serializing, and finding the user by that ID when deserializing.
+* Both serializer and deserializer are wired for "remember me" functionality
+*/
+passport.serializeUser(function(user, done) {
+    done(null, user.email);
+});
+passport.deserializeUser(function(email, done) {
+    Users.findOne( { email: email } , function (err, user) {
+        done(err, user);
+    });
+});
+/* Set up LocalStrategy within Passport. */
+passport.use(new LocalStrategy(function(email, password, done) {
+    Users.findOne({ email: email }, function(err, user) {
+        if (err) { return done(err); }
+        if (!user) { return done(null, false, { message: 'Email address or password incorrect, please try again' }); }
+        user.comparePassword(password, function(err, isMatch) {
+            if (err){ return done(err); }
+            if(isMatch) {
+
+                return done(null, user);
+            } else {
+                return done(null, false, { message: 'Email address or password incorrect, please try again' });
+            }
+        });
+    });
+}));
+Utils.prototype.setupPassport = function(){
+    return passport;
+};
+Utils.prototype.passportLogin = function(req, res, next){
+    var thisUtils = this;
+    req.body.username = req.body.email;
+    passport.authenticate('local', function(err, user, info) {
+        if (err) { return next(err); }
+        if (!user) {
+            log.debug(info.message);
+            return res.status(401).json({error: true, "message": req.__(info.message)});
+        }
+        req.logIn(user, function(err) {
+            if (err) { return next(err); }
+            user = thisUtils.cleanUserDoc(user);
+            return res.json({error: false, "message": "Logged in.", "User": user});
+        });
+    })(req, res, next);
 };
 
 /* Error handler */
@@ -112,14 +225,8 @@ Utils.prototype.setRunningServer = function(runningServer){
     server = runningServer;
 };
 
-// It is not safe to resume normal operation after 'uncaughtException'. If you do use it, restart your application after every unhandled exception!
-process.on('uncaughtException', (err) => {
-  log.fatal(`Caught exception: ${err}`);
-  killServer();
-});
-
 var killServer = function(){
-    if (env !== "live"){ // We only need to do this on production
+    if (process.env.NODE_ENV !== "live"){ // We only need to do this on production
         return;
     }
     var suicideTimeout = 30000; // Wait for connections to close for 30 seconds

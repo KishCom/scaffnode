@@ -18,6 +18,7 @@
     "maxdepth": 5,
     "browser": true,
     "node": true,
+    "esversion": 6,
     "globals": {
         "angular": true,
         "jQuery": true,

@@ -1,5 +1,8 @@
 angular.module('scaffnode.controllers').
-controller('HomeController', ['$scope', '$timeout', 'Restangular', function($scope, $timeout, Restangular) {
+controller('HomeController', ['$scope', '$timeout', 'Restangular', '$location', function($scope, $timeout, Restangular, $location) {
+    if (window.User === false){
+        $location.path('/signup');
+    }
     // Restangular https://github.com/mgonto/restangular
     var scaffnodeModelEndpoint = Restangular.all('model');
     $scope.scaffnode_model = {
