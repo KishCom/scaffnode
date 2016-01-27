@@ -31,7 +31,7 @@ Models.prototype.Users = Schema({
     email: {type: String, unique: true, match: emailMatch},
     password: {type: String},
     authProvider: {type: String, enum: config.authProviders, required: true},
-    authProviderId: {type: String},
+    authProviderId: {type: String, unique: true},
     token: {type: String},
     tokenSecret: {type: String},
     lastLogin: Date,
@@ -69,10 +69,6 @@ Models.prototype.Users.methods.comparePassword = function(candidatePassword, cb)
         if(err){ return cb(err); }
         cb(null, isMatch);
     });
-};
-
-Models.prototype.Users.FindOrCreateFrom3rdParty = function(){
-
 };
 
 module.exports = Models;

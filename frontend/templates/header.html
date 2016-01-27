@@ -40,6 +40,9 @@
 <div id="Wrapper" class="center-block col-xs-12 col-md-10 col-lg-8">
 {# i18n Multi-language example #}
 <aside>{{ __('Choose language') }}: <a href="?lang=en">{{ __('English') }}</a> <a href="?lang=fr">{{ __('French') }}</a> <a href="?lang=pirate">{{ __('Pirate') }}</a></aside>
-{% if User != "false" %}<a href="/logout">Logout {{ UserObj.name }}</a>{% endif %}
+{% if User != "false" %}<a href="/logout">Logout {{ UserObj.name }}</a>
+{% if UserObj.authProvider == "twitter" %}<i class="fa fa-twitter"></i>{% endif %}
+{% if UserObj.authProvider == "facebook" %}<i class="fa fa-facebook-square"></i>{% endif %}
+{% endif %}
 <hr />
 <h1>{{ __('Welcome to the Scaffnode MongoDB + Users Demo') }}</h1>

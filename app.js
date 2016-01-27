@@ -138,6 +138,8 @@ site.get("/users/logout", routes.logout);
 site.get("/logout", routes.logout); // Simple sugar alias
 site.get("/auth/twitter", passport.authenticate('twitter'));
 site.get("/auth/twitter/callback", passport.authenticate('twitter', { failureRedirect: '/' }), function(req, res) { res.redirect('/'); });
+site.get("/auth/facebook", passport.authenticate('facebook'));
+site.get("/auth/facebook/callback", passport.authenticate('facebook', { failureRedirect: '/' }), function(req, res) { res.redirect('/'); });
 
 // CRUD
 site.get("/model", routes.read);

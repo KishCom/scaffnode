@@ -1,10 +1,11 @@
 var log, self, server, model;
-var accepts         = require('accepts'),
-    LocalStrategy   = require('passport-local'),
-    TwitterStrategy = require('passport-twitter'),
-    passport        = require('passport'),
-    _               = require('lodash'),
-    validator       = require('validator'),
+var accepts           = require('accepts'),
+    LocalStrategy     = require('passport-local'),
+    TwitterStrategy   = require('passport-twitter'),
+    FacebookStrategy  = require('passport-facebook'),
+    passport          = require('passport'),
+    _                 = require('lodash'),
+    validator         = require('validator'),
 //    mailer          = require('nodemailer'),
 //    htmlToText      = require('nodemailer-html-to-text').htmlToText,
 //    smtpTransport   = require('nodemailer-smtp-transport'),
@@ -67,7 +68,7 @@ Utils.prototype.cleanUserDoc = function(doc){
     if (typeof(doc.toObject) === 'function'){
         doc = doc.toObject(); // Data returned from Mongoose is actually immutable
     }
-    return _.omit(doc, ["password", "lastLogin", "__v", "authProvider"]);
+    return _.omit(doc, ["password", "lastLogin", "__v", "authProviderId"]);
 };
 
 Utils.prototype.recaptchaVerify = function(req, res, next){
@@ -108,8 +109,10 @@ Utils.prototype.recaptchaVerify = function(req, res, next){
 * Both serializer and deserializer are wired for "remember me" functionality
 */
 passport.serializeUser(function(user, done) {
-    if (user.authProvider === "local"){ done(null, user.email); }
-    if (user.authProvider === "twitter"){ done(null, user.authProviderId); }
+    if (user.authProvider === "local"){ return done(null, user.email); }
+    if (user.authProvider === "twitter"){ return done(null, user.authProviderId); }
+    if (user.authProvider === "facebook"){ return done(null, user.authProviderId); }
+    return done(null, false);
 });
 passport.deserializeUser(function(emailOrID, done) {
     if (validator.isEmail(emailOrID)){
@@ -139,21 +142,21 @@ passport.use(new LocalStrategy(function(email, password, done) {
     });
 }));
 
-var callbackURL = process.env.NODE_ENV === "live" ? "https://"+ config.domain +"/auth/twitter/callback" : "http://"+ config.domain +":8888/auth/twitter/callback";
 /* Set up Twitter Strategy within Passport. */
 passport.use(new TwitterStrategy({
         consumerKey: config.TwitterConsumerKey,
         consumerSecret: config.TwitterConsumerSecret,
-        callbackURL: callbackURL
+        callbackURL: process.env.NODE_ENV === "live" ? "https://"+ config.domain +"/auth/twitter/callback" : "http://"+ config.domain +":8888/auth/twitter/callback"
     },
-    function(token, tokenSecret, profile, done) {
+    function(accessToken, refreshToken, profile, done) {
         model.Users.findOne({"authProviderId": "twitter-" + profile.id}, function(err, User){
             if (err) return done(null, false, { message: 'Error authenticating with Twitter' });
             if (User){
-                return done(null, User);
+                return done(null, User.toObject());
             }else{
                 // No user found for this authProvider and authProviderId, create one!
                 var newUser = new model.Users({
+                    "email": "twitter-" + profile.id + "@example.com",
                     "name": profile.displayName,
                     "lang": profile.lang,
                     "authProvider": "twitter",
@@ -161,11 +164,39 @@ passport.use(new TwitterStrategy({
                 });
                 newUser.save(function(err){
                     if (err) return done(null, false, { message: 'Error creating new user from Twitter' });
-                    log.info("Saved", newUser);
                     return done(null, newUser.toObject());
                 });
             }
 
+        });
+    }
+));
+passport.use(new FacebookStrategy({
+        clientID: config.FacebookAppId,
+        clientSecret: config.FacebookAppSecret,
+        callbackURL: process.env.NODE_ENV === "live" ? "https://"+ config.domain +"/auth/facebook/callback" : "http://"+ config.domain +":8888/auth/facebook/callback",
+        enableProof: false
+    },
+    function(accessToken, refreshToken, profile, done) {
+        model.Users.findOne({"authProviderId": "facebook-" + profile.id}, function(err, User){
+            if (err) return done(null, false, { message: 'Error authenticating with Facebook' });
+            if (User){
+                return done(null, User);
+            }else{
+                // No user found for this authProvider and authProviderId, create one!
+                var newUser = new model.Users({
+                    "email": "facebook-" + profile.id + "@example.com",
+                    "name": profile.displayName,
+                    "lang": profile.lang,
+                    "authProvider": "facebook",
+                    "authProviderId": "facebook-" + profile.id
+                });
+                newUser.save(function(err){
+                    log.info(err);
+                    if (err) return done(null, false, { message: 'Error creating new user from Facebook' });
+                    return done(null, newUser.toObject());
+                });
+            }
         });
     }
 ));

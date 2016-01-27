@@ -7,7 +7,9 @@ exports.config = {
         logLevel: "trace",
         sessionSecret: "Put a random secret here.",
         TwitterConsumerKey: "",
-        TwitterConsumerSecret: ""
+        TwitterConsumerSecret: "",
+        FacebookAppId: "",
+        FacebookAppSecret: ""
     },
     "test":{
         domain: "localhost",
@@ -17,7 +19,9 @@ exports.config = {
         logLevel: "trace",
         sessionSecret: "Put a random secret here.",
         TwitterConsumerKey: "",
-        TwitterConsumerSecret: ""
+        TwitterConsumerSecret: "",
+        FacebookAppId: "",
+        FacebookAppSecret: ""
     },
     "live":{
         domain: "productionurl.com",
@@ -27,6 +31,8 @@ exports.config = {
         logLevel: "info",
         sessionSecret: "Put a random secret here.",
         TwitterConsumerKey: "",
-        TwitterConsumerSecret: ""
+        TwitterConsumerSecret: "",
+        FacebookAppId: "",
+        FacebookAppSecret: ""
     }
 };
