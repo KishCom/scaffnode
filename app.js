@@ -75,11 +75,16 @@ log = bunyan.createLogger(
 // Setup MongoDB
 mongoose.connect(config.mongoDBURI);
 models = new Models(site, log, config);
-var scafnode_model = mongoose.model("scafnode_model", models.scafnode_model);
+var scaffnodeModel = mongoose.model("scaffnode_model", models.scaffnode_model);
+var UserModel = mongoose.model("Users", models.Users);
+var models = {
+    "scaffnodeModel": scaffnodeModel,
+    "Users": UserModel
+};
 
 // Initalize routes and a few utilities helpers
-routes = new Routes(site, log, scafnode_model);
-utils = new Utils(site, log, config);
+utils = new Utils(site, log, config, models);
+routes = new Routes(site, log, config, models, utils);
 var passport = utils.setupPassport();
 
 // Multipart upload handler

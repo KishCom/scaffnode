@@ -1,15 +1,16 @@
-var log, self, model;
+var log, self, model, utils;
 var validator = require('validator');
-var Routes = function(app, bunyan, appModels){
+var Routes = function(app, bunyan, config, appModels, appUtils){
     self = app;
     log = bunyan;
     model = appModels;
+    utils = appUtils;
 };
 
 /* Landing page */
 Routes.prototype.index = function (req, res, next){
     // Get data stick on to the window object for angular (limit to 100 results)
-    model.find({}).limit(100).exec(function(err, results){
+    model.scaffnodeModel.find({}).limit(100).exec(function(err, results){
         if (err){
             log.error(err);
             next();
@@ -62,11 +63,12 @@ Routes.prototype.newUser = function (req, res){
         return;
     }
 
-    var newUser = new Users({
+    var newUser = new model.Users({
         "name": req.body.name,
         "email": req.body.email,
         "password": req.body.password,
-        "lang": req.getLocale()
+        "lang": req.getLocale(),
+        "authProvider": "local"
     });
 
     newUser.validate(function(err){
@@ -146,7 +148,7 @@ Routes.prototype.create = function (req, res){
         return;
     }
 
-    var newItem = new model({
+    var newItem = new model.scaffnodeModel({
         "name": validator.escape(req.body.name),
         "content": validator.escape(req.body.content),
         "ip": req.ip,
@@ -182,7 +184,7 @@ Routes.prototype.read = function (req, res, next){
         }
     }
     // Actually get the data now
-    model.find({}).skip(req.query.gofrom).limit(req.query.limit).exec(function(err, results){
+    model.scaffnodeModel.find({}).skip(req.query.gofrom).limit(req.query.limit).exec(function(err, results){
         if (err){
             log.error(err);
             next();
@@ -224,7 +226,7 @@ Routes.prototype.update = function (req, res){
     }
 
     // Lookup the id
-    model.findById(req.body.scaffnodeId, function (err, content){
+    model.scaffnodeModel.findById(req.body.scaffnodeId, function (err, content){
         if (err){
             log.error(err);
             res.status(500).json({"error": true, "message": ("Look up content for update database error.")});
@@ -267,7 +269,7 @@ Routes.prototype.remove = function (req, res){
         return;
     }
 
-    model.remove({"_id": req.body.scaffnodeId}, function(err){
+    model.scaffnodeModel.remove({"_id": req.body.scaffnodeId}, function(err){
         if (err){
             log.error(err);
             res.status(500).json({"error": true, "message": ("Remove from database error.")});

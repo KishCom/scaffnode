@@ -1,22 +1,19 @@
-var log, self, config, server;
+var log, self, config, server, model;
 var accepts         = require('accepts'),
     LocalStrategy   = require('passport-local'),
     passport        = require('passport'),
+    _               = require('lodash'),
 //    mailer          = require('nodemailer'),
 //    htmlToText      = require('nodemailer-html-to-text').htmlToText,
 //    smtpTransport   = require('nodemailer-smtp-transport'),
 //    simpleRecaptcha = require('simple-recaptcha-new'),
     escapeHtml      = require('escape-html');
 
-var Utils = function(app, bunyan, appConfig){
+var Utils = function(app, bunyan, appConfig, appModels){
     config = appConfig;
     self = app;
     log = bunyan;
-    // It is not safe to resume normal operation after 'uncaughtException'. If you do use it, restart your application after every unhandled exception!
-    process.on('uncaughtException', (err) => {
-        log.fatal(`Caught exception: ${err}`);
-        killServer();
-    });
+    model = appModels;
 
     /**
     // TODO Setup email
@@ -111,13 +108,13 @@ passport.serializeUser(function(user, done) {
     done(null, user.email);
 });
 passport.deserializeUser(function(email, done) {
-    Users.findOne( { email: email } , function (err, user) {
+    model.Users.findOne( { email: email } , function (err, user) {
         done(err, user);
     });
 });
 /* Set up LocalStrategy within Passport. */
 passport.use(new LocalStrategy(function(email, password, done) {
-    Users.findOne({ email: email }, function(err, user) {
+    model.Users.findOne({ email: email }, function(err, user) {
         if (err) { return done(err); }
         if (!user) { return done(null, false, { message: 'Email address or password incorrect, please try again' }); }
         user.comparePassword(password, function(err, isMatch) {
@@ -145,7 +142,8 @@ Utils.prototype.passportLogin = function(req, res, next){
         }
         req.logIn(user, function(err) {
             if (err) { return next(err); }
-            user = thisUtils.cleanUserDoc(user);
+            user = user.toObject();
+            user = _.omit(user, ["password", "lastLogin", "__v", "authProvider"]);
             return res.json({error: false, "message": "Logged in.", "User": user});
         });
     })(req, res, next);
@@ -227,6 +225,7 @@ Utils.prototype.setRunningServer = function(runningServer){
 
 var killServer = function(){
     if (process.env.NODE_ENV !== "live"){ // We only need to do this on production
+        process.exit(-1);
         return;
     }
     var suicideTimeout = 30000; // Wait for connections to close for 30 seconds

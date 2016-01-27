@@ -40,5 +40,9 @@
 	"Login instead": "Login instead",
 	"indicates required field": "indicates required field",
 	"Login": "Login",
-	"Signup instead": "Signup instead"
+	"Signup instead": "Signup instead",
+	"Please enter a password": "Please enter a password",
+	"The email address has already been used": "The email address has already been used",
+	"Welcome to the Scaffnode MongoDB + Users Demo": "Welcome to the Scaffnode MongoDB + Users Demo",
+	"Email address or password incorrect, please try again": "Email address or password incorrect, please try again"
 }

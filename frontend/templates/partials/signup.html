@@ -49,7 +49,7 @@
         </div>
         <div>
             <div class="errors serverErrors" ng-show="serverValidation.critical != ''"><small class="error">[[serverValidation.critical]]</small></div>
-            <input id='btnRegister' type="submit" class="btn btn-success submit" ng-click="signup($event)" ng-keyup="keyup($event)" value="{{__('Signup')}}" ng-disabled="signup_form.name.$invalid || signup_form.email.$invalid || signup_form.password.$invalid || signup_form.zip.$invalid || userModel.recaptcha_response_field == ''" tabindex="4" submit-on-enter/>
+            <input id='btnRegister' type="submit" class="btn btn-success submit" ng-click="signup($event)" ng-keyup="keyup($event)" value="{{__('Signup')}}" ng-disabled="signup_form.name.$invalid || signup_form.email.$invalid || signup_form.password.$invalid" tabindex="4" submit-on-enter/>
         </div>
     </form>
     <hr />
