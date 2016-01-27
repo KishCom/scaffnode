@@ -8,22 +8,19 @@
 chai.should();
 //var expect = chai.expect; // Uncomment as needed
 //var assert = chai.assert; // Uncomment as needed
+var randomString = "usertests" + String(new Date().toISOString()).replace(/[-:.]/gi, "");
 var testIDString = String(new Date().toISOString()).replace(/\:/gi, "-");
 var log = bunyan.createLogger({ name: "Mocha test runner", streams: [{ level:  "fatal", stream: process.stdout }]});
-var Cookie = "";
+var LoggedInCookie = "";
 var knownModelID = null;
 var knownTotalModels = 0;
-
 describe('Landing page', function(){
     it('respond with 200.', function(done){
     request(app)
         .get('/')
         .expect(200)
         .end(function(err, res){
-            // Save the cookie for use in other tests
-            Cookie = res.headers['set-cookie'].map(function(r){
-                return r.replace("; path=/; httponly","");
-            }).join("; ");
+            res.status.should.equal(200);
             done();
         });
     });
@@ -32,15 +29,23 @@ describe('Landing page', function(){
 // Really just an example test showing how to store and reuse a session (great for authenticated requests which this app and tests don't cover)
 describe('A test that requires the session cookie', function(){
     it('respond with 200 using a cookie.', function(done){
-        var req = request(app).get('/');
-        req.cookies = Cookie;
-        req.expect(200)
+        request(app)
+        .post('/users/signup')
+        .send({ "email": ("douglas"+randomString+"@mailinator.com"),
+                "name": ("Mocha Test" + randomString),
+                "password": "areally!goodstrong444password"
+        })
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end(function(err, res){
-            // Maybe your response is a JSON response with a `user` object from the database:
-            //res.body.user.should.not.have.property('password');
-            //res.body.user.should.have.property('username');
-            var findCookie = String(res.request.cookies).split(config.appName + ".sid");
-            findCookie.length.should.equal(2);
+            res.status.should.equal(201);
+            res.body.should.have.property("content");
+            res.body.content.should.have.property("lang");
+            res.body.content.lang.should.equal("en");
+            // Save the cookie for use in other tests
+            LoggedInCookie = res.headers['set-cookie'].map(function(r){
+                return r.replace("; path=/; httponly","");
+            }).join("; ");
             done();
         });
     });
@@ -49,10 +54,10 @@ describe('A test that requires the session cookie', function(){
 // Test out our CRUD
 describe('CRUD: Create tests', function(){
     it('Fail to create with missing name respond with 400.', function(done){
-    request(app)
-        .post('/model')
-        .send({ "content": "Some kinda test content."})
-        .end(function(err, res){
+    var req = request(app).post('/model');
+        req.cookies = LoggedInCookie;
+        req.send({ "content": "Some kinda test content."});
+        req.end(function(err, res){
             res.status.should.equal(400);
             res.body.should.have.property("error");
             res.body.error.should.equal(true);
@@ -61,9 +66,9 @@ describe('CRUD: Create tests', function(){
         });
     });
     it('Fail to create with missing content respond with 400.', function(done){
-    request(app)
-        .post('/model')
-        .send({ "name": "Testy Testerson" })
+        var req = request(app).post('/model');
+        req.cookies = LoggedInCookie;
+        req.send({ "name": "Testy Testerson" })
         .end(function(err, res){
             res.status.should.equal(400);
             res.body.should.have.property("error");
@@ -73,11 +78,17 @@ describe('CRUD: Create tests', function(){
         });
     });
     it('Create successfully respond with 201.', function(done){
-    request(app)
-        .post('/model')
-        .send({ "name": "Testy Testerson" + testIDString,
+    var req = request(app).post('/model');
+        req.cookies = LoggedInCookie;
+        req.send({ "name": "Testy Testerson" + testIDString,
                 "content": "Some kinda test content." + testIDString})
-        .expect(201, done);
+        .end(function(err, res){
+            res.status.should.equal(201);
+            res.body.should.have.property("error");
+            res.body.error.should.equal(false);
+            res.body.should.have.property("message");
+            done();
+        });
     });
 });
 
@@ -99,9 +110,9 @@ describe('CRUD: Create tests', function(){
 
 describe('CRUD: Update tests', function(){
     it('Update fails with 400 when missing "name" from request object.', function(done){
-    request(app)
-        .post('/model/update')
-        .send({
+    var req = request(app).post('/model/update');
+        req.cookies = LoggedInCookie;
+        req.send({
             "content": "Updated content." + testIDString,
             "scaffnodeId": knownModelID
         })
@@ -113,9 +124,9 @@ describe('CRUD: Update tests', function(){
         });
     });
     it('Update fails with 400 when missing "content" from request object.', function(done){
-    request(app)
-        .post('/model/update')
-        .send({
+    var req = request(app).post('/model/update');
+        req.cookies = LoggedInCookie;
+        req.send({
             "name": "Rusty Rusterson" + testIDString,
             "scaffnodeId": knownModelID
         })
@@ -127,9 +138,9 @@ describe('CRUD: Update tests', function(){
         });
     });
     it('Update fails with 400 when missing "id" from request object.', function(done){
-    request(app)
-        .post('/model/update')
-        .send({
+    var req = request(app).post('/model/update');
+        req.cookies = LoggedInCookie;
+        req.send({
             "name": "Rusty Rusterson" + testIDString,
             "content": "Updated content." + testIDString
         })
@@ -141,9 +152,9 @@ describe('CRUD: Update tests', function(){
         });
     });
     it('Update fails with 400 with invalid "id" from request object.', function(done){
-    request(app)
-        .post('/model/update')
-        .send({
+    var req = request(app).post('/model/update');
+        req.cookies = LoggedInCookie;
+        req.send({
             "name": "Rusty Rusterson" + testIDString,
             "content": "Updated content." + testIDString,
             "scaffnodeId": "lolwut"
@@ -157,9 +168,9 @@ describe('CRUD: Update tests', function(){
     });
 
     it('Update successfully respond with 200 and more the updated example model object.', function(done){
-    request(app)
-        .post('/model/update')
-        .send({
+    var req = request(app).post('/model/update');
+        req.cookies = LoggedInCookie;
+        req.send({
             "name": "Rusty Rusterson" + testIDString,
             "content": "Updated content." + testIDString,
             "scaffnodeId": knownModelID
@@ -178,9 +189,9 @@ describe('CRUD: Update tests', function(){
 
  describe('CRUD: Delete tests', function(){
     it('Delete successfully respond with 200.', function(done){
-    request(app)
-        .post('/model/remove')
-        .send({
+    var req = request(app).post('/model/remove');
+        req.cookies = LoggedInCookie;
+        req.send({
             "scaffnodeId": knownModelID
         })
         .end(function(err, res){

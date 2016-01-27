@@ -143,6 +143,10 @@ Routes.prototype.create = function (req, res){
         error = true;
         errorMessage = "Missing content";
     }
+    if (!req.user){
+        error = true;
+        errorMessage = JSON.stringify(req.user);
+    }
     if (error){
         res.status(400).json({"error": true, "message": ("Bad request. " + errorMessage)});
         return;
@@ -199,6 +203,10 @@ Routes.prototype.update = function (req, res){
     // Some validations, you'll probably want to do more
     var error = false;
     var errorMessage = "";
+    if (!req.user){
+        error = true;
+        errorMessage = "Must be logged in to do this";
+    }
     // Make sure we have the id to update
     if (!req.body.scaffnodeId){
         error = true;
@@ -256,6 +264,10 @@ Routes.prototype.remove = function (req, res){
     // Some validations, you'll probably want to do more
     var error = false;
     var errorMessage = "";
+    if (!req.user){
+        error = true;
+        errorMessage = "Must be logged in to do this";
+    }
     if (!req.body.scaffnodeId){
         error = true;
         errorMessage = "Missing scaffnodeId";

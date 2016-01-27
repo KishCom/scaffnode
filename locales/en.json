@@ -44,5 +44,9 @@
 	"Please enter a password": "Please enter a password",
 	"The email address has already been used": "The email address has already been used",
 	"Welcome to the Scaffnode MongoDB + Users Demo": "Welcome to the Scaffnode MongoDB + Users Demo",
-	"Email address or password incorrect, please try again": "Email address or password incorrect, please try again"
+	"Email address or password incorrect, please try again": "Email address or password incorrect, please try again",
+	"Please enter your email address": "Please enter your email address",
+	"Please enter a password that is at least 8 characters or longer": "Please enter a password that is at least 8 characters or longer",
+	"Please enter a password that is not longer then 128 characters": "Please enter a password that is not longer then 128 characters",
+	"Missing credentials": "Missing credentials"
 }

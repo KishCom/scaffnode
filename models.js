@@ -38,7 +38,6 @@ Models.prototype.Users = Schema({
 // Bcrypt middleware
 .pre('save', function(next) {
     var user = this;
-    console.log(user);
     if (user.authProvider !== "local"){
         return next();
     }
