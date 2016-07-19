@@ -4,7 +4,8 @@ module.exports = {
         "es6": true,
         "mocha": true,
         "phantomjs": true,
-
+        "jquery": true,
+        "browser": true
     },
     "globals":{
         "inject": true,

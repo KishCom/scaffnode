@@ -6,6 +6,7 @@
 /**  Depends  **/
 var express = require("express"),
     nunjucks = require("nunjucks"),
+    dateFilter = require('nunjucks-date-filter'),
     bunyan = require("bunyan"), log,
     cookieParser = require("cookie-parser"),
     bodyParser = require("body-parser"),
@@ -23,7 +24,6 @@ var packagejson = require('./package');
 var isTestMode = false;
 if (process.env.NODE_ENV === "dev" || process.env.NODE_ENV === "live" || process.env.NODE_ENV === "test"){
     // If we're in test mode, just set a flag on the config object and switch the NODE_ENV to "dev"
-    //
     if (process.env.NODE_ENV === "test"){
         isTestMode = true;
         process.env.NODE_ENV = "dev";
@@ -39,25 +39,26 @@ if (process.env.NODE_ENV === "dev" || process.env.NODE_ENV === "live" || process
     process.exit();
 }
 
-/* Optional redis stuff
-    // Add to package.json
-        "hiredis": "~0.1.x",
-        "redis": "~0.12.x",
-        "connect-redis": "~2.0.x",
-    // Uncomment this stuff (and down where expressSession is initiated too!):
-    var redis = require("redis");
-    var redisStore = require('connect-redis')(expressSession),
-        redis_client = redis.createClient(config.redisPort, config.redisHost, {detect_buffers: true}); // Assumes redis is running on localhost on default port
-    site.set('redis', redis_client);
-*/
+// Setup redis
+var redis = require("redis");
+var redisStore = require('connect-redis')(expressSession),
+    redisClient = redis.createClient(config.redisPort, config.redisHost, {detect_buffers: true}); // eslint-disable-line camelcase
+site.set('redis', redisClient);
 
 //Setup views and nunjucks templates
-nunjucks.configure('views', {
+var viewFolder = (config.NODE_ENV === "live") ? "viewsLive" : "views";
+var env = nunjucks.configure(viewFolder, {
     autoescape: true,
+    noCache: config.NODE_ENV === "dev",
     express: site
 });
+env.addFilter('date', dateFilter);
+env.addFilter('nl2br', function(str) {
+    return str.replace(/\n/gi, "<br />");
+});
+config.nunjucks = env;
 site.set("view engine", "html");
-site.set("views", __dirname + "/views");
+site.set("views", __dirname + "/" + viewFolder);
 site.enable('trust proxy');
 site.disable('x-powered-by');
 
@@ -80,8 +81,8 @@ log = bunyan.createLogger({
 ]});
 
 // Initalize routes and a few utilities helpers
-routes = new Routes(site, log, config);
-utils = new Utils(site, log, config);
+utils = new Utils(site, log, config, redisClient);
+routes = new Routes(log, config, redisClient, utils);
 
 // Multipart upload handler
 // Enable multi-part uploads only on routes you need them on like this:
@@ -105,7 +106,7 @@ site.use(expressSession({
     key: packagejson.name + ".sid",
     saveUninitialized: false,
     resave: false,
-    //store: new redisStore({ client: redis_client }),
+    store: new redisStore({client: redisClient}),
     cookie: {maxAge: new Date(Date.now() + 604800*1000), path: '/', httpOnly: true, secure: false}
 }));
 
@@ -122,14 +123,14 @@ site.use(i18n.init);
 site.use(utils.i18nHelper);
 
 /**  Routes/Views  **/
-site.get("/", routes.index);
-site.get("/media/js/templates.js", routes.frontendTemplates);
-site.get("/media/js/templates.min.js", routes.frontendTemplates);
-//site.post("/user/login", routes.index);
+site.get("/", routes.base.index);
+site.get("/about", routes.base.aboutUs);
+
 //Catch all other attempted routes and throw them a 404!
 site.all("*", function(req, resp, next){
     next({name: "NotFound", "message": "Oops! The page you requested doesn't exist", "status": 404});
 });
+
 // Finally, user our errorHandler
 site.use(utils.errorHandler);
 

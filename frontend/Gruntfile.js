@@ -6,7 +6,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-angular-templates');
+    grunt.loadNpmTasks('grunt-contrib-htmlmin');
     var localpackage = grunt.file.readJSON('package.json');
     grunt.initConfig({
         localpackage: grunt.file.readJSON('package.json'),
@@ -19,46 +19,13 @@ module.exports = function(grunt) {
                     /* First the libraries your app requires */
                     /* Don't forget! Anything you add to frontend/package.json will have to be added here too */
                     'node_modules/jquery/dist/jquery.js',
-                    'node_modules/angular/angular.js',
                     'node_modules/moment/moment.js',
-                    'node_modules/angular-animate/angular-animate.js',
-                    'node_modules/angular-route/angular-route.js',
-                    'node_modules/angular-cookies/angular-cookies.js',
-                    'node_modules/angular-touch/angular-touch.js',
-                    'node_modules/angular-moment/angular-moment.js',
                     'node_modules/bootstrap/dist/js/bootstrap.js',
-                    /* The rest of the angular.js app */
-                    'js/directives.js',
-                    'js/factories.js',
-                    'js/controllers.js',
-                    'js/controllers/*.js',
+                    'node_modules/lodash/lodash.js',
+                    /* Another other *globally* used JS */
                     'js/app.js'
                 ],
                 dest: '../public/media/js/scripts.js'
-            },
-            backendAngularView: {
-                src: ['templates/header.html', 'templates/angular.html', 'templates/footer.html'],
-                dest: '../views/base.html',
-                options: {
-                    banner: "<!doctype html>\n <!--\n"+
-                            "<%= localpackage.name %> - <%= gitRevisionSHA %><%= gitRevisionDirty %>\n" +
-                            "<%= localpackage.description %>\n" +
-                            "Templates compiled on <%= grunt.template.today('dddd, mmmm dS, yyyy, h:MM:ss TT') %>\n" +
-                            "-->\n",
-                    separator: '\n \n'
-                }
-            },
-            backendStaticView: {
-                src: ['templates/header.html', 'templates/static.html', 'templates/footer.html'],
-                dest: '../views/base_static.html',
-                options: {
-                    banner: "<!doctype html>\n <!--\n"+
-                            "<%= localpackage.name %> - <%= gitRevisionSHA %><%= gitRevisionDirty %>\n" +
-                            "<%= localpackage.description %>\n" +
-                            "Templates compiled on <%= grunt.template.today('dddd, mmmm dS, yyyy, h:MM:ss TT') %>\n" +
-                            "-->\n",
-                    separator: '\n \n'
-                }
             }
         },
         uglify: {
@@ -142,28 +109,21 @@ module.exports = function(grunt) {
             less: {
                 files: ['less/**/*.less'],
                 tasks: ['less:development']
-            },
-            partials: {
-                files: ['templates/header.html', 'templates/partials/*.html', 'templates/footer.html'],
-                tasks: ['getGitRevision', 'concat', 'ngtemplates']
             }
         },
-        ngtemplates: {
-            app:            {
-                src: '*.html',
-                cwd: 'templates/partials/',
-                dest: '../views/templates.js.html',
-                options:      {
-                    prefix: '',
-                    bootstrap(module, script) {
-                        script = script.replace("'use strict';", "");
-                        return "angular.module('" + localpackage.name + "').run(['$templateCache', function($templateCache){" + script + '}]);';
-                    },
-                    htmlmin: {
-                        collapseWhitespace: true,
-                        removeComments: true // Don't use Angular comment directives!
-                    }
-                }
+        htmlmin: {
+            dist: {
+                options: {
+                    removeComments: true,
+                    collapseWhitespace: true,
+                    conservativeCollapse: true,
+                    customAttrSurround: [[/\s*\{%\s*if\s.+?%\}\s*/, /\s*\{%\s*endif\s*%\}\s*/]], // Leave backend nunjucks tags in place
+                    minifyJS: true
+                },
+                expand: true,
+                cwd: '../views',
+                src: ['**/*.html'],
+                dest: '../viewsLive/'
             }
         }
     });
@@ -184,8 +144,8 @@ module.exports = function(grunt) {
             });
         });
     });
-    grunt.registerTask('default', ['getGitRevision', 'concat', 'ngtemplates', 'less:development', 'copy', 'watch']);
-    grunt.registerTask('start_app', ['getGitRevision', 'concat', 'ngtemplates', 'less:development', 'copy']);
-    grunt.registerTask('launch', ['getGitRevision', 'concat', 'ngtemplates', 'uglify', 'less', 'copy']);
-    grunt.registerTask('build', ['getGitRevision', 'concat', 'ngtemplates', 'uglify', 'less', 'copy']);
+    grunt.registerTask('default', ['getGitRevision', 'concat', 'htmlmin', 'less:development', 'copy', 'watch']);
+    grunt.registerTask('start_app', ['getGitRevision', 'concat', 'htmlmin', 'less:development', 'copy']);
+    grunt.registerTask('launch', ['getGitRevision', 'concat', 'htmlmin', 'uglify', 'less', 'copy']);
+    grunt.registerTask('build', ['getGitRevision', 'concat', 'htmlmin', 'uglify', 'less', 'copy']);
 };

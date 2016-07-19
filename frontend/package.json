@@ -8,29 +8,20 @@
   "main": "Gruntfile.js",
   "private": true,
   "devDependencies": {
-    "angular": "1.5.x",
-    "angular-animate": "1.5.x",
-    "angular-cookies": "1.5.x",
-    "angular-loader": "1.5.x",
-    "angular-moment": "0.10.x",
-    "angular-resource": "1.5.x",
-    "angular-route": "1.5.x",
-    "angular-sanitize": "1.5.x",
-    "angular-touch": "1.5.x",
     "bootstrap": "3.3.x",
+    "font-awesome": "4.6.x",
     "grunt": "1.0.x",
     "grunt-angular-templates": "1.0.x",
     "grunt-contrib-concat": "1.0.x",
     "grunt-contrib-copy": "1.0.x",
+    "grunt-contrib-htmlmin": "2.0.x",
     "grunt-contrib-jshint": "1.0.x",
     "grunt-contrib-less": "1.3.x",
     "grunt-contrib-uglify": "1.0.x",
     "grunt-contrib-watch": "1.0.x",
-    "grunt-inline-angular-templates": "0.1.x",
     "jquery": "1.12.x",
     "less-plugin-clean-css": "1.5.x",
     "lodash": "4.13.x",
-    "outdated-browser": "1.0.x",
-    "font-awesome": "4.6.x"
+    "outdated-browser": "1.0.x"
   }
 }

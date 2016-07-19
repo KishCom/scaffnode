@@ -1,10 +1,4 @@
 <!doctype html>
- <!--
-scaffnode - c619ce25c39773808fbb68ec9c019db68833e00b
-Dirty build:  7 files changed, 34 insertions(+), 29 deletions(-)
-My angular.js based frontend
-Templates compiled on Tuesday, July 19th, 2016, 12:59:47 AM
--->
 <html lang="{{__('html_locale')}}" data-ng-app="{{ config.appName }}">
 <head>
     <meta charset="UTF-8">
@@ -34,10 +28,11 @@ Templates compiled on Tuesday, July 19th, 2016, 12:59:47 AM
     #}
     {% if config.NODE_ENV == "dev" %}
     <link rel="stylesheet" href="/media/css/style.css">
+    <script src="/media/js/scripts.js"></script>
     {% else %}
     <link rel="stylesheet" href="/media/css/style.min.css">
+    <script src="/media/js/scripts.min.js"></script>
     {% endif %}
-    {# JavaScript is loaded in angular.html and static.html #}
     <!--[if lt IE 9]>
         <script src="/media/outdated-browser/outdatedbrowser.min.js"></script>
         <link rel="stylesheet" href="/media/outdated-browser/outdatedbrowser.min.css">
@@ -45,23 +40,10 @@ Templates compiled on Tuesday, July 19th, 2016, 12:59:47 AM
 </head>
 <body>
 
- 
-{% block angularContent %}
-    {% if config.NODE_ENV == 'dev' %}
-    <script src="/media/js/scripts.js"></script>
-    <script src="/media/js/templates.js"></script>
-    {% else %}
-    <script src="/media/js/scripts.min.js"></script>
-    <script src="/media/js/templates.js"></script>{# only a little smaller with way more problems if minified - see htmlmin options in the ngtemplates Gruntfile task #}
-    {% endif %}
-    {# Your angular app will render here#}
-    <div id="ContentPane" data-ng-view=""></div>
-{% endblock %}
-<script>
-    // {# Populated by swig on the backend. If you can read this comment rendered in your HTML ... you're looking at a static copy, not one served via the Node.js app #}
-    var appname = "{{ config.appName }}";
-</script>
- 
+<div id="ContentPane" class="container-fluid">
+    <div class="col-xs-12">{% block content %}{% endblock %}</div>
+</div>
+
 <!--[if lt IE 9]>
 <div id="outdated"></div>{# https://github.com/burocratik/outdated-browser - Not Gruntfile/bower integrated #}
 <script>
