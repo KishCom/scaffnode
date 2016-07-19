@@ -151,13 +151,6 @@ module.exports = function(grunt) {
                     prop: "gitInfo"
                 }
             }
-        },
-        jshint: {
-            files: ['Gruntfile.js', 'js/**/*.js'],
-            options: {
-                ignores: ["js/bootstrap.js"],
-                jshintrc: "../.jshint"
-            }
         }
     });
 
@@ -173,5 +166,4 @@ module.exports = function(grunt) {
     grunt.registerTask('start_app', ['getGitRevision', 'concat', 'ngtemplates', 'less:development', 'copy']);
     grunt.registerTask('launch', ['getGitRevision', 'concat', 'ngtemplates', 'uglify', 'less', 'copy']);
     grunt.registerTask('build', ['getGitRevision', 'concat', 'ngtemplates', 'uglify', 'less', 'copy']);
-    grunt.registerTask('test', ['jshint']);
 };

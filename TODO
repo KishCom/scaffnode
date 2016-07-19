@@ -1,2 +1,7 @@
-- Build automation scaffolding with grunt + jenknins
 - Remove extra whitespace (or post-process with htmlmin) from rendered nunjucks templates
+    - Take any other improvements from pummelblitz
+- remove bower/use frontend npm
+- get bootstrap from npm
+- deploy scripts: nginx, upstart
+    - systemd
+- Build automation scaffolding with grunt + jenknins
