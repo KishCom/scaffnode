@@ -9,7 +9,7 @@ module.exports = {
     "globals":{
         "inject": true,
         "chai": true
-    }
+    },
     "extends": "eslint:recommended",
     "parserOptions": {
         "sourceType": "module"

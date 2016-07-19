@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "start": "clear;cd frontend;grunt start_app;cd ..;NODE_ENV=dev nodemon app.js | bunyan",
+    "start.live": "clear;cd frontend;grunt build;cd ..;NODE_ENV=live nodemon app.js | bunyan",
     "postinstall": "cd frontend;npm install;cd ..;",
     "test": "cd frontend;grunt test;cd ..;NODE_ENV=test mocha tests/*_tests.js;karma start app_karma.conf.js --log-level debug --single-run"
   },
