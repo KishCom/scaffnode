@@ -122,6 +122,10 @@ module.exports = function(grunt) {
                     "node_modules/bootstrap/dist/fonts/*",
                 ],
                 dest: '../public/media/fonts/'
+            },
+            cssMap: {
+                src: ["node_modules/bootstrap/dist/css/bootstrap.css.map"],
+                dest: '../public/media/css/bootstrap.css.map'
             }
         },
         watch: {
