@@ -126,6 +126,12 @@ module.exports = function(grunt) {
             cssMap: {
                 src: ["node_modules/bootstrap/dist/css/bootstrap.css.map"],
                 dest: '../public/media/css/bootstrap.css.map'
+            },
+            outdatedBrowser: {
+                expand: true,
+                cwd: "node_modules/outdated-browser/outdatedbrowser/",
+                src: "**",
+                dest: "../public/media/outdated-browser/"
             }
         },
         watch: {

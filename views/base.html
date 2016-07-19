@@ -1,9 +1,9 @@
 <!doctype html>
  <!--
-scaffnode - 685d0be6fe3b92dedc9b7369b11c6436a5952c65
-Dirty build:  3 files changed, 10 insertions(+), 6 deletions(-)
+scaffnode - c619ce25c39773808fbb68ec9c019db68833e00b
+Dirty build:  7 files changed, 34 insertions(+), 29 deletions(-)
 My angular.js based frontend
-Templates compiled on Monday, July 18th, 2016, 11:34:23 PM
+Templates compiled on Tuesday, July 19th, 2016, 12:59:47 AM
 -->
 <html lang="{{__('html_locale')}}" data-ng-app="{{ config.appName }}">
 <head>
@@ -39,8 +39,8 @@ Templates compiled on Monday, July 18th, 2016, 11:34:23 PM
     {% endif %}
     {# JavaScript is loaded in angular.html and static.html #}
     <!--[if lt IE 9]>
-        <script src="/media/js/outdatedbrowser/outdatedbrowser.min.js"></script>
-        <link rel="stylesheet" href="/media/css/outdatedbrowser.min.css">
+        <script src="/media/outdated-browser/outdatedbrowser.min.js"></script>
+        <link rel="stylesheet" href="/media/outdated-browser/outdatedbrowser.min.css">
     <![endif]-->
 </head>
 <body>
@@ -71,7 +71,7 @@ addLoadEvent(function(){
         bgColor: '#f25648',
         color: '#ffffff',
         lowerThan: 'transform',
-        languagePath: '/media/js/outdatedbrowser/en.html'
+        languagePath: '/media/outdated-browser/lang/{{ __('locale') }}.html'
     });
 });
 </script>

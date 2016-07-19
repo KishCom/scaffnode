@@ -1,6 +1,6 @@
 {
   "name": "scaffnode",
-  "version": "0.16.7",
+  "version": "0.16.8",
   "authors": [
     "Andrew Kish <akish@kishcom.com>"
   ],
@@ -28,10 +28,9 @@
     "grunt-contrib-watch": "1.0.x",
     "grunt-inline-angular-templates": "0.1.x",
     "jquery": "1.12.x",
-    "less-plugin-clean-css": "^1.5.1",
-    "lodash": "4.13.x"
-  },
-  "dependencies": {
-    "font-awesome": "^4.6.3"
+    "less-plugin-clean-css": "1.5.x",
+    "lodash": "4.13.x",
+    "outdated-browser": "1.0.x",
+    "font-awesome": "4.6.x"
   }
 }

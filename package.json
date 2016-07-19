@@ -1,7 +1,7 @@
 {
   "name": "scaffnode",
   "author": "Andrew Kish",
-  "version": "0.16.7",
+  "version": "0.16.8",
   "private": true,
   "scripts": {
     "start": "clear;cd frontend;grunt start_app;cd ..;NODE_ENV=dev nodemon app.js | bunyan",
@@ -21,22 +21,22 @@
     "i18n": "0.8.x",
     "less": "2.7.x",
     "less-middleware": "2.2.x",
-    "lodash": "^4.0.0",
+    "lodash": "4.13.x",
     "multer": "1.1.x",
     "nodemon": "1.9.x",
     "nunjucks": "2.4.x",
     "validator": "5.4.x"
   },
   "devDependencies": {
-    "chai": "^3.4.x",
-    "eslint": "^3.1.1",
-    "karma": "^1.1.x",
+    "chai": "3.4.x",
+    "eslint": "3.1.1",
+    "karma": "1.1.x",
     "karma-chrome-launcher": "^1.0.x",
     "karma-firefox-launcher": "^1.0.x",
-    "karma-mocha": "^1.0.x",
-    "karma-phantomjs-launcher": "^1.0.0",
+    "karma-mocha": "1.0.x",
+    "karma-phantomjs-launcher": "1.0.x",
     "mocha": "2.5.x",
-    "phantomjs-prebuilt": "^2.1.7",
+    "phantomjs-prebuilt": "2.1.x",
     "supertest": "1.2.x"
   }
 }
