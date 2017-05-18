@@ -1,9 +1,9 @@
-var log, self, config;
+var log, app, config;
 var accepts = require('accepts');
 var escapeHtml = require('escape-html');
-var Utils = function(app, bunyan, appConfig){
+var Utils = function(appSetup, bunyan, appConfig){
     config = appConfig;
-    self = app;
+    app = appSetup;
     log = bunyan;
 };
 
@@ -71,26 +71,27 @@ Utils.prototype.errorHandler = function(err, req, res, next){
 
     // html
     if (type === 'html') {
-        if (res.statusCode == 404){
+        if (res.statusCode === 404){
             log.info("404 :", req.url, " UA: ", req.headers["user-agent"], "IP: ", req.ip);
             return res.render("errors/404.html", {
-                http_status: res.statusCode,
-                "env": env
-            });
-        }else{
-            var stack = (err.stack || '').split('\n').slice(1).map(function(v){ return '<li>' + escapeHtml(v).replace(/  /g, ' &nbsp;') + '</li>'; }).join('');
-            res.render('errors/500.html',{
-                http_status: res.statusCode,
-                error: String(err).replace(/  /g, ' &nbsp;').replace(/\n/g, '<br>'),
-                showStack: stack,
-                "env": env
+                "http_status": res.statusCode,
+                env
             });
         }
+        var stack = (err.stack || '').split('\n').slice(1).map(function(v){ return '<li>' + escapeHtml(v).replace(/  /g, ' &nbsp;') + '</li>'; }).join('');
+        res.render('errors/500.html', {
+            "http_status": res.statusCode,
+            error: String(err).replace(/  /g, ' &nbsp;').replace(/\n/g, '<br>'),
+            showStack: stack,
+            env
+        });
     // json
     } else if (type === 'json') {
-        var error = { error: true, message: err.message, stack: err.stack };
+        var error = {error: true, message: err.message, stack: err.stack};
         for (var prop in err){
-            error[prop] = err[prop];
+            if (err[prop]){
+                error[prop] = err[prop];
+            }
         }
         var json = JSON.stringify(error);
         res.setHeader('Content-Type', 'application/json');
@@ -100,6 +101,8 @@ Utils.prototype.errorHandler = function(err, req, res, next){
         res.setHeader('Content-Type', 'text/plain');
         res.end(err.stack || String(err));
     }
+    // Kill any Keep-Alive connections
+    req.connection.setTimeout(1);
 };
 
 module.exports = Utils;

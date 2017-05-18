@@ -3,10 +3,11 @@ module.exports = {
         "node": true,
         "es6": true,
         "mocha": true,
-        "phantomjs": true,
-        "jquery": true,
-        "browser": true
+        "phantomjs": true
     },
+    "plugins": [
+        "html"
+    ],
     "globals":{
         "inject": true,
         "chai": true
@@ -58,7 +59,7 @@ module.exports = {
         "new-parens": 2,
         "newline-after-var": 0,
         "newline-per-chained-call": 0,
-        "no-alert": 2,
+        "no-alert": 0,
         "no-array-constructor": 2,
         "no-bitwise": 2,
         "no-caller": 2,
@@ -128,7 +129,7 @@ module.exports = {
         "no-unmodified-loop-condition": 2,
         "no-unneeded-ternary": 2,
         "no-unused-expressions": 2,
-        "no-unused-vars": [2, {"args": "after-used"}],
+        "no-unused-vars": [2, {"args": "none"}],
         "no-use-before-define": [2, {"classes": false, "functions": false}],
         "no-useless-call": 2,
         "no-useless-concat": 2,

@@ -78,7 +78,8 @@ log = bunyan.createLogger({
         level: 'warn',
         stream: new utils(), // looks for 'write' method. https://github.com/trentm/node-bunyan
     }*/
-]});
+    ]}
+);
 
 // Initalize routes and a few utilities helpers
 utils = new Utils(site, log, config, redisClient);
@@ -104,12 +105,13 @@ site.use(cookieParser());
 site.use(expressSession({
     secret: config.sessionSecret,
     key: packagejson.name + ".sid",
-    saveUninitialized: false,
+    saveUninitialized: true,
     resave: false,
     store: new redisStore({client: redisClient}),
-    cookie: {maxAge: new Date(Date.now() + 604800*1000), path: '/', httpOnly: true, secure: false}
+    cookie: {maxAge: new Date(Date.now() + (52 * 604800 * 1000)), path: '/'},
+    rolling: true,
+    unset: "destroy"
 }));
-
 
 // Setup i18n for use with swig templates
 i18n.configure({
