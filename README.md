@@ -6,7 +6,7 @@ An ever changing personal preference Node.js web-app scaffolding.
 
 Use this if you're looking to hit the ground running with a project using Node.js, ExpressJS and some other fairly popular Node.js modules.
 
-To install, make sure you have Node.js (>0.12.x) installed on your system as well as NPM. Make sure your node_modules folder, or the NODE_PATH environment variable are setup properly as well.
+To install, make sure you have Node.js (>6.x) installed on your system as well as NPM. Make sure your node_modules folder, or the NODE_PATH environment variable are setup properly as well.
 
 If your Node.js and NPM are already configured, setup and installation is a breeze:
 
