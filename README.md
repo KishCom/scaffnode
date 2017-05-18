@@ -11,7 +11,7 @@ To install, make sure you have Node.js (>0.12.x) installed on your system as wel
 If your Node.js and NPM are already configured, setup and installation is a breeze:
 
     # Install nodemon and bunyan globally
-    npm install bunyan nodemon mocha karma-cli -g
+    npm install bunyan nodemon mocha -g
     # Get other dependencies
     npm install
     # Configure server details
@@ -44,23 +44,19 @@ You can re-minify the frontend:
 
 ## Tests
 
-Scaffnode aims to have full "end to end" testing. This includes backend API tests ([Mocha](http://mochajs.org/) + [superagent](http://visionmedia.github.io/superagent/)), frontend unit tests ([Mocha](http://mochajs.org/) + [Karma](http://karma-runner.github.io)). Frontend integration tests using ([Selenium](http://www.seleniumhq.org/)) are coming soon (see the `selenium` branch of this repo).
+Scaffnode is only setup for backend API tests ([Mocha](http://mochajs.org/) + [superagent](http://visionmedia.github.io/superagent/)).
 
-Run frontend unit tests, backend unit tests, and JSHint linter:
+Run tests:
 
     npm test
 
-Run just backend unit tests:
+Which is just an alias of:
 
     NODE_ENV=dev mocha tests/*_tests.js
 
-Run just frontend unit tests:
-
-    karma start app_karma.conf.js --log-level debug --single-run
-
 ###i18n Multi-language support
 
-Example language files are found in `locale` and example useage can be found in `frontend/templates/partials/home.html`. Currently all i18n translations must be done on the backend, frontend translation is coming soon (it's easily hacked in and I'd welcome a pull request -- I personally just try to avoid frontend i18n translation).
+Example language files are found in `locale` and example useage can be found in `views/index.html`.
 
 ###Build frontend for production
 

@@ -7,15 +7,16 @@
 description "Node.js App"
 author "Andrew Kish"
 
-env APP_NAME=myapp
-env APP_HOME=/home/ubuntu/myapp/
+env APP_NAME=scaffnode
+env APP_HOME=/home/ubuntu/scaffnode/
+
 #Node Environment is live
 env NODE_ENV=live
-# User to run as
+
+# User to run as same user NGINX runs as
 env RUN_AS_USER=www-data
-# This is where the chrislea ppa installs node to
 env NODE_PATH="/usr/bin/node" #`which node`
-env LOG="/var/log/nodeapp.log"
+env LOG="/var/log/scaffnode.log"
 
 # Make sure network and fs is up, and start in runlevels 2-5
 start on (net-device-up
@@ -37,5 +38,5 @@ end script
 # cd to code path and run node, with the right switches
 script
     chdir $APP_HOME
-    exec $NODE_PATH app.js -u $RUN_AS_USER >> $LOG
+    exec $NODE_PATH app.js -u $RUN_AS_USER 2>&1 $LOG
 end script
