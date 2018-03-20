@@ -24,13 +24,4 @@
     </ul>
     {# Frontend language conversion is not yet supported but easily hacked in #}
 </div>
-
-{# Don't like having per-view JS? Put your JS in the global scripts.js file instead: frontend/js/app.js #}
-<script>
-    $(document).ready(function(){
-        $("#index").on("keyup", "#name,#email", function(){
-            $("#FullEmail").html("<a href='mailto:" + $("#email").val() + "'>" + $("#name").val() + "</a>");
-        });
-    });
-</script>
 {% endblock %}

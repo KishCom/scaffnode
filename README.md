@@ -2,7 +2,7 @@
     [__  |    |__| |___ |___ |\ | |  | |  \ |___
     ___] |___ |  | |    |    | \| |__| |__/ |___
 
-An ever changing personal preference Node.js web-app scaffolding.
+An ever changing personal preference Node.js web-app scaffolding. This specific branch is an experimental branch implementing a React.js frontend.
 
 Use this if you're looking to hit the ground running with a project using Node.js, ExpressJS and some other fairly popular Node.js modules.
 

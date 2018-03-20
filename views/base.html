@@ -26,19 +26,18 @@
     <meta name="twitter:title" content="" />
     <meta name="twitter:description" content="" />
     #}
-    {% if config.NODE_ENV == "dev" %}
-    <link rel="stylesheet" href="/media/css/style.css">
-    <script src="/media/js/scripts.js"></script>
-    {% else %}
-    <link rel="stylesheet" href="/media/css/style.min.css">
-    <script src="/media/js/scripts.min.js"></script>
-    {% endif %}
     <!--[if lt IE 9]>
         <script src="/media/outdated-browser/outdatedbrowser.min.js"></script>
         <link rel="stylesheet" href="/media/outdated-browser/outdatedbrowser.min.css">
     <![endif]-->
+    {% for webpackedCSS in webpackAssets.css %}
+    <link rel="stylesheet" href="/dist/{{ webpackedCSS }}">
+    {% endfor %}
 </head>
 <body>
+{% for webpackedJS in webpackAssets.js %}
+<script src="/dist/{{ webpackedJS }}"></script>
+{% endfor %}
 
 <div id="ContentPane" class="container-fluid">
     <div class="col-xs-12">{% block content %}{% endblock %}</div>

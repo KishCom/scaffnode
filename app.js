@@ -6,6 +6,7 @@
 /**  Depends  **/
 var express = require("express"),
     nunjucks = require("nunjucks"),
+    fs = require("fs"),
     dateFilter = require('nunjucks-date-filter'),
     bunyan = require("bunyan"), log,
     cookieParser = require("cookie-parser"),
@@ -61,7 +62,17 @@ site.set("view engine", "html");
 site.set("views", __dirname + "/" + viewFolder);
 site.enable('trust proxy');
 site.disable('x-powered-by');
-
+// Webpack generates new filenames for our JS and CSS, let's get those
+site.locals.webpackAssets = {files: [], css: [], js: []};
+fs.readdirSync(__dirname + '/public/dist').forEach((file) => {
+    if (/\.js$/i.test(file)){
+        site.locals.webpackAssets.js.push(file);
+    } else if (/\.css$/i.test(file)) {
+        site.locals.webpackAssets.css.push(file);
+    } else {
+        site.locals.webpackAssets.files.push(file);
+    }
+});
 //The rest of our static-served files
 site.use(express.static(__dirname + "/public"));
 
