@@ -23,12 +23,17 @@ const webpacked = {
                 use: [
                     MiniCssExtractPlugin.loader, // We still save our CSS file and reference it in the template
                     //{loader: "style-loader"}, // ... however we could load it dynamically instead (comment line above, uncomment this line, and remove <link> in <head> of "views/base.html")
-                    {loader: "css-loader", options: {sourceMap: process.env.NODE_ENV === "dev"}},
                     {
+                        loader: "css-loader",
+                        options: {
+                            sourceMap: isRunningDevMode,
+                            minimize: true
+                        }
+                    }, {
                         loader: "sass-loader", options: {
                             sourceMap: isRunningDevMode,
-                            data: `$NODE_ENV: ${process.env.NODE_ENV || "not-set"};`
-                            //includePaths: ["somekinda/absolute/path"]
+                            data: `$NODE_ENV: ${process.env.NODE_ENV || "not-set"};`,
+                            includePaths: ["node_modules/bootstrap/scss"]
                         }
                     }
                 ]

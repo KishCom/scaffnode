@@ -11,7 +11,7 @@ To install, make sure you have Node.js (>6.x) installed on your system as well a
 If your Node.js and NPM are already configured, setup and installation is a breeze:
 
     # Install nodemon and bunyan globally
-    npm install bunyan nodemon mocha -g
+    npm install bunyan nodemon mocha webpack webpack-cli -g
     # Get other dependencies
     npm install
     # Configure server details
@@ -27,24 +27,11 @@ If your Node.js and NPM are already configured, setup and installation is a bree
 
 ## Frontend
 
-The front end of this app bundles jQuery, Bootstrap, and moment.js with a starter framework setup in the `frontend` folder. Assets are compiled and minified with Grunt and packages are managed by NPM.
-
-This app setup is probably a little different than you're used to, if you have any questions please feel free to [ask me](https://twitter.com/twitter) or open an issue in this repo.
-
-#### Traditional Node.js/Express App
-
-The rest of the Scaffnode project uses Angular.js 1.5 to create a single-page-app. This branch sets up a more "traditional" app that renders each view with a pageload.
-
-You can re-minify the frontend:
-
-    cd frontend
-    npm install
-    # Run grunt, it will watch for changes and rebuild automatically
-    grunt
+... rewrite coming soon
 
 ## Tests
 
-Scaffnode is only setup for backend API tests ([Mocha](http://mochajs.org/) + [superagent](http://visionmedia.github.io/superagent/)).
+Scaffnode is setup for backend API tests using ([Mocha](http://mochajs.org/) + [superagent](http://visionmedia.github.io/superagent/)) as well as frontend tests using [Jest](https://facebook.github.io/jest/).
 
 Run tests:
 

@@ -8,7 +8,7 @@ function component() {
     const element = document.createElement('div');
     //element.innerHTML = _.join(['Hello', 'webpack'], ' ', '5 cubed is equal to ' + cube(5));
     element.innerHTML = '5 cubed is equal to ' + cube(5);
-    element.classList.add('hello-webpack');
+    element.classList.add('hello-webpack', 'container-fluid');
 
     const TR = new Image();
     TR.src = TinyRick;
@@ -21,6 +21,7 @@ function component() {
 
     const aButton = document.createElement("button");
     aButton.innerHTML = "Error out";
+    aButton.classList.add("btn", "btn-primary");
     aButton.addEventListener("click", (evt) => {
         throw new Error();
     }, false);

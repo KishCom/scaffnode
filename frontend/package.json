@@ -17,6 +17,7 @@
     },
     "main": "src/app.js",
     "dependencies": {
+        "bootstrap": "^4.0.0",
         "lodash": "^4.17.5"
     },
     "devDependencies": {
