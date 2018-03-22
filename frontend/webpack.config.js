@@ -47,7 +47,9 @@ const webpacked = {
             {
                 test: /\.(woff|woff2|eot|ttf|otf)$/,
                 use: [{loader: 'file-loader'}]
-            }
+            },
+            // Transpile JS
+            {test: /\.js$/, exclude: /node_modules/, loader: "babel-loader"}
         ]
     },
     plugins: [

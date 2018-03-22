@@ -1,0 +1,6 @@
+{
+    "presets": [
+        ["env",{"targets": {"ie": 11}}],
+        "react"
+    ]
+}

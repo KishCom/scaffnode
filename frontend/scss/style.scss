@@ -4,9 +4,10 @@
     color: #FF0000;
 }
 
-@font-face{
-    font-family: "Open-Logos";
-    src: url('./../fonts/openlogos.ttf')
+@font-face {
+   font-family: 'Open-Logos';
+   src: url('../fonts/openlogos.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/openlogos.ttf')  format('truetype');
 }
 
 .open-logos{

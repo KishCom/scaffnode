@@ -2,13 +2,18 @@ import './../scss/style.scss';
 import TinyRick from './../images/tiny_rick.png';
 
 //import _ from 'lodash';
+import React from 'react';
+import ReactDOM from 'react-dom';
+
 import {cube} from './math.js';
+
 
 function component() {
     const element = document.createElement('div');
     //element.innerHTML = _.join(['Hello', 'webpack'], ' ', '5 cubed is equal to ' + cube(5));
     element.innerHTML = '5 cubed is equal to ' + cube(5);
-    element.classList.add('hello-webpack', 'container-fluid');
+    element.classList.add('hello-webpack');
+    element.classList.add('container-fluid');
 
     const TR = new Image();
     TR.src = TinyRick;
@@ -21,7 +26,8 @@ function component() {
 
     const aButton = document.createElement("button");
     aButton.innerHTML = "Error out";
-    aButton.classList.add("btn", "btn-primary");
+    aButton.classList.add("btn");
+    aButton.classList.add("btn-primary");
     aButton.addEventListener("click", (evt) => {
         throw new Error();
     }, false);
@@ -30,3 +36,9 @@ function component() {
     return element;
 }
 document.body.appendChild(component());
+
+
+ReactDOM.render(
+    <h1>Hello, world!</h1>,
+    document.getElementById('ReactHW')
+);

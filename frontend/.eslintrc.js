@@ -7,8 +7,13 @@ module.exports = {
     "globals": {
         "ga": true
     },
-    "extends": ["./../.eslintrc.js"],
+    "extends": [
+        "./../.eslintrc.js",
+        "plugin:react/recommended"
+    ],
+    "plugins": ["react"],
     "rules": {
         "object-shorthand": 0
     }
 };
+
