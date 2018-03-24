@@ -45,6 +45,9 @@ var redis = require("redis");
 var redisStore = require('connect-redis')(expressSession),
     redisClient = redis.createClient(config.redisPort, config.redisHost, {detect_buffers: true}); // eslint-disable-line camelcase
 site.set('redis', redisClient);
+redisClient.on("error", function (err) {
+    log.error("Redis Error", err);
+});
 
 //Setup views and nunjucks templates
 var viewFolder = (config.NODE_ENV === "live") ? "viewsLive" : "views";
@@ -152,5 +155,7 @@ site.use(utils.errorHandler);
 */
 // Get proper from from ENV variable for live mode, otherwise use port 8888
 var port = process.env.PORT || 8888;
-site.listen(port);
+site.listen(port, (server) => {
+    utils.setRunningServer(server);
+});
 log.info("Server listening on http://" + site.locals.config.domain + ":" + port + " in " + site.locals.config.NODE_ENV + " mode");
