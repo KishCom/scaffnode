@@ -5,40 +5,61 @@ import TinyRick from './../images/tiny_rick.png';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import nameEmail from './nameEmail/';
 import {cube} from './math.js';
 
+class Scaffnode extends React.Component{
+    constructor(props){
+        super(props);
+        this.state = {currentDatetime: new Date().toLocaleTimeString()};
 
-function component() {
-    const element = document.createElement('div');
-    //element.innerHTML = _.join(['Hello', 'webpack'], ' ', '5 cubed is equal to ' + cube(5));
-    element.innerHTML = '5 cubed is equal to ' + cube(5);
-    element.classList.add('hello-webpack');
-    element.classList.add('container-fluid');
+        // Attach this Scaffnode React Class "this" to tickTheClock defined below
+        this.tickTheClock = this.tickTheClock.bind(this);
+    }
 
-    const TR = new Image();
-    TR.src = TinyRick;
-    element.appendChild(TR);
+    componentDidMount(){
+        this.timer = setInterval(this.tickTheClock, 1000);
+    }
 
-    const OL = document.createElement('div');
-    OL.innerHTML = "Zgu";
-    OL.classList.add('open-logos');
-    element.appendChild(OL);
+    componentWillUnmount(){
+        clearInterval(this.timer);
+    }
 
-    const aButton = document.createElement("button");
-    aButton.innerHTML = "Error out";
-    aButton.classList.add("btn");
-    aButton.classList.add("btn-primary");
-    aButton.addEventListener("click", (evt) => {
-        throw new Error();
-    }, false);
-    element.appendChild(aButton);
+    tickTheClock() {
+        this.setState({currentDatetime: new Date().toLocaleTimeString()});
+    }
 
-    return element;
+    render(){
+        const self = this;
+        function HelloWorldName(props) {
+            return <h1>Hello, world {props.name}!</h1>
+        }
+        function ClockTime(props) {
+            return <h2>{self.state.currentDatetime}</h2>
+        }
+        function handleError(evt) {
+            try{
+                throw new Error("Whoah dude");
+            }catch(e){
+                console.error("An error!", e);
+            }
+        }
+        return(
+            <div className="hello-webpack container-fluid">
+                5 cubed is equal to {cube(5)}<br />
+                <img src={TinyRick} /><br />
+                <div className="open-logos">Zgu</div>
+                <button className="btn btn-primary errorOut" onClick={handleError}>Error out</button>
+                <HelloWorldName name="Doug" /><br />
+                <HelloWorldName name="Sam" /><br />
+                <HelloWorldName name="Frank" /><br />
+                <ClockTime />
+            </div>
+        )
+    }
 }
-document.body.appendChild(component());
-
 
 ReactDOM.render(
-    <h1>Hello, world!</h1>,
-    document.getElementById('ReactHW')
+    <Scaffnode />,
+    document.getElementById("ReactHW")
 );
