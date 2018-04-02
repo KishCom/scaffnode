@@ -13,7 +13,8 @@ module.exports = {
     ],
     "plugins": ["react"],
     "rules": {
-        "object-shorthand": 0
+        "object-shorthand": 0,
+        "sort-imports": 0
     }
 };
 
