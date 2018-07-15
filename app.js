@@ -63,7 +63,7 @@ env.addFilter('nl2br', function(str) {
 config.nunjucks = env;
 site.set("view engine", "html");
 site.set("views", __dirname + "/" + viewFolder);
-site.enable('trust proxy');
+site.enable('trust proxy'); // This app is meant to be run behind NGINX
 site.disable('x-powered-by');
 // Webpack generates new filenames for our JS and CSS, let's get those
 site.locals.webpackAssets = {files: [], css: [], js: []};
@@ -95,7 +95,7 @@ log = bunyan.createLogger({
     ]}
 );
 
-// Initalize routes and a few utilities helpers
+// Initalize routes and a few utilities helpers (i18n and error handling utils)
 utils = new Utils(site, log, config, redisClient);
 routes = new Routes(log, config, redisClient, utils);
 
@@ -111,7 +111,7 @@ routes = new Routes(log, config, redisClient, utils);
 });
 */
 
-/** Middlewares! **/
+// Middlewares!
 site.use(bodyParser.urlencoded({extended: true}));
 site.use(bodyParser.json());
 site.use(hpp()); // Protect against HTTP Parameter Pollution attacks
@@ -127,7 +127,7 @@ site.use(expressSession({
     unset: "destroy"
 }));
 
-// Setup i18n for use with swig templates
+// Setup i18n for use with templates
 i18n.configure({
     locales: config.supportedLocales,
     cookie: packagejson.name + "_lang.sid",
@@ -138,21 +138,16 @@ site.use(i18n.init);
 // Middleware helper, makes user language preferences sticky and watches for "lang" query variable
 site.use(utils.i18nHelper);
 
-/**  Routes/Views  **/
+////Routes/Views
 site.get("/", routes.base.index);
 site.get("/about", routes.base.aboutUs);
-
 //Catch all other attempted routes and throw them a 404!
 site.all("*", function(req, resp, next){
     next({name: "NotFound", "message": "Oops! The page you requested doesn't exist", "status": 404});
 });
-
-// Finally, user our errorHandler
+// Finally, if no other routes match, use our errorHandler
 site.use(utils.errorHandler);
 
-/*
-**  Server startup
-*/
 // Get proper from from ENV variable for live mode, otherwise use port 8888
 var port = process.env.PORT || 8888;
 site.listen(port, (server) => {

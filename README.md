@@ -6,7 +6,7 @@ An ever changing personal preference Node.js web-app scaffolding. This specific 
 
 Use this if you're looking to hit the ground running with a project using Node.js, ExpressJS and some other fairly popular Node.js modules.
 
-To install, make sure you have Node.js (>6.x) installed on your system as well as NPM. Make sure your node_modules folder, or the NODE_PATH environment variable are setup properly as well.
+To install, make sure you have Node.js (>6.x) installed on your system as well as NPM. Make sure your node_modules folder, or the NODE_PATH environment variable are setup properly as well. Tested on Linux and OSX only. Windows users will need to address the `NODE_ENV` environment variable (TODO: `dotenv`).
 
 If your Node.js and NPM are already configured, setup and installation is a breeze:
 
@@ -27,7 +27,20 @@ If your Node.js and NPM are already configured, setup and installation is a bree
 
 ## Frontend
 
-... rewrite coming soon
+(DOCUMENTATION IN PROGRESS) The scaffnode frontend is a React based SPA.
+
+    cd frontend
+    npm i
+    
+    #Build for development
+    npm run build #which runs: NODE_ENV=dev npx webpack --config webpack.config.js
+    
+    ##OR watch for changes and rebuild:
+    npm run watch #which runs: NODE_ENV=dev npx webpack --watch --config webpack.config.js
+
+    ##OR build for production
+    npm run build.live #which runs: NODE_ENV=live npx webpack --config webpack.config.js
+    
 
 ## Tests
 
