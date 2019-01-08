@@ -50,8 +50,7 @@ redisClient.on("error", function (err) {
 });
 
 //Setup views and nunjucks templates
-var viewFolder = (config.NODE_ENV === "live") ? "viewsLive" : "views";
-var env = nunjucks.configure(viewFolder, {
+var env = nunjucks.configure("views", {
     autoescape: true,
     noCache: config.NODE_ENV === "dev",
     express: site
@@ -62,15 +61,15 @@ env.addFilter('nl2br', function(str) {
 });
 config.nunjucks = env;
 site.set("view engine", "html");
-site.set("views", __dirname + "/" + viewFolder);
+site.set("views", __dirname + "/views");
 site.enable('trust proxy'); // This app is meant to be run behind NGINX
 site.disable('x-powered-by');
 // Webpack generates new filenames for our JS and CSS, let's get those
 site.locals.webpackAssets = {files: [], css: [], js: []};
 fs.readdirSync(__dirname + '/public/dist').forEach((file) => {
-    if (/\.js$/i.test(file)){
+    if ((/\.js$/i).test(file)){
         site.locals.webpackAssets.js.push(file);
-    } else if (/\.css$/i.test(file)) {
+    } else if ((/\.css$/i).test(file)) {
         site.locals.webpackAssets.css.push(file);
     } else {
         site.locals.webpackAssets.files.push(file);

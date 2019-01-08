@@ -48,6 +48,7 @@ class Scaffnode extends React.Component{
             <div className="hello-webpack container-fluid">
                 <CubePicker /><br />
                 <img src={TinyRick} /><br />
+                <i className="fa fa-spotify"></i>
                 <div className="open-logos">Zgu</div>
                 <button className="btn btn-primary errorOut" onClick={handleError}>Error out</button>
                 <HelloWorldName name="Doug" /><br />

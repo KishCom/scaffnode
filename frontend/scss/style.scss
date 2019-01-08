@@ -1,3 +1,8 @@
+$fa-font-path: "~font-awesome/fonts/";
+@import "~font-awesome/scss/font-awesome";
+@import "_variables.scss";
+@import "~bootstrap/scss/bootstrap";
+@import "_bootswatch.scss";
 
 .hello-webpack{
     color: #FF0000;
