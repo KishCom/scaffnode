@@ -8,7 +8,7 @@
   "main": "Gruntfile.js",
   "private": true,
   "devDependencies": {
-    "bootstrap": "3.3.x",
+    "bootstrap": ">=3.4.0",
     "font-awesome": "4.7.x",
     "grunt": "1.0.x",
     "grunt-contrib-concat": "1.0.x",
