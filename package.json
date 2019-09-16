@@ -13,7 +13,7 @@
     "accepts": "1.3.x",
     "body-parser": "1.19.x",
     "bunyan": "1.8.x",
-    "connect-redis": "3.4.x",
+    "connect-redis": "4.0.x",
     "cookie-parser": "1.4.x",
     "escape-html": "1.0.x",
     "express": "4.17.x",
@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "chai": "4.2.x",
-    "eslint": "6.2.2",
+    "eslint": "6.4.0",
     "mocha": "6.2.x",
     "eslint-plugin-html": "6.0.x",
     "supertest": "4.0.x"
