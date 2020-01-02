@@ -117,11 +117,20 @@ site.use(hpp()); // Protect against HTTP Parameter Pollution attacks
 site.use(cookieParser());
 site.use(expressSession({
     secret: config.sessionSecret,
-    key: packagejson.name + ".sid",
-    saveUninitialized: true,
+    key: "scaffnode-session.sid",
+    saveUninitialized: false,
     resave: false,
-    store: new redisStore({client: redisClient}),
-    cookie: {maxAge: new Date(Date.now() + (52 * 604800 * 1000)), path: '/'},
+    store: new redisStore({
+        client: redisClient,
+        logErrors: log.error,
+        ttl: 2592000 // 30 days in s
+    }),
+    cookie: {
+        maxAge: 2592000 * 1000, // 30 days in ms
+        path: "/",
+        secure: !isTestMode,
+        domain: ".example.com"
+    },
     rolling: true,
     unset: "destroy"
 }));

@@ -28,8 +28,7 @@ const webpacked = {
                         loader: "css-loader"
                     }, {
                         loader: "sass-loader", options: {
-                            sourceMap: isRunningDevMode,
-                            data: `$NODE_ENV: ${process.env.NODE_ENV || "not-set"};`
+                            sourceMap: isRunningDevMode
                         }
                     }
                 ]
