@@ -1,0 +1,35 @@
+{
+    "jsc": {
+        "parser": {
+            "syntax": "ecmascript",
+            "jsx": true,
+            "dynamicImport": false,
+            "numericSeparator": false,
+            "classPrivateProperty": false,
+            "privateMethod": false,
+            "classProperty": false,
+            "functionBind": false,
+            "exportDefaultFrom": false,
+            "exportNamespaceFrom": false,
+            "decorators": false,
+            "decoratorsBeforeExport": false,
+            "nullishCoalescing": false
+        },
+        "transform": {
+            "react": {
+                "pragma": "React.createElement",
+                "pragmaFrag": "React.Fragment",
+                "throwIfNamespace": true,
+                "development": false,
+                "useBuiltins": false
+            },
+            "optimizer": {
+                "globals": {
+                    "vars": {
+                        "__DEBUG__": "true"
+                    }
+                }
+            }
+        }
+    }
+}

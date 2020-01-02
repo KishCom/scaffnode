@@ -26,25 +26,20 @@
     <meta name="twitter:title" content="" />
     <meta name="twitter:description" content="" />
     #}
-    {% if config.NODE_ENV == "dev" %}
-    <link rel="stylesheet" href="/media/css/style.css">
-    <script src="/media/js/scripts.js"></script>
-    {% else %}
-    <link rel="stylesheet" href="/media/css/style.min.css">
-    <script src="/media/js/scripts.min.js"></script>
-    {% endif %}
-    <!--[if lt IE 9]>
-        <script src="/media/outdated-browser/outdatedbrowser.min.js"></script>
-        <link rel="stylesheet" href="/media/outdated-browser/outdatedbrowser.min.css">
+    <!--[if lte IE 9]>
+        <script src="/outdated-browser/outdatedbrowser.min.js"></script>
+        <link rel="stylesheet" href="/outdated-browser/outdatedbrowser.min.css">
     <![endif]-->
+    {% for webpackedCSS in webpackAssets.css %}
+    <link rel="stylesheet" href="/dist/{{ webpackedCSS }}">
+    {% endfor %}
 </head>
 <body>
-
 <div id="ContentPane" class="container-fluid">
     <div class="col-xs-12">{% block content %}{% endblock %}</div>
 </div>
 
-<!--[if lt IE 9]>
+<!--[if lte IE 9]>
 <div id="outdated"></div>{# https://github.com/burocratik/outdated-browser - Not Gruntfile/bower integrated #}
 <script>
 function addLoadEvent(func) { var oldonload = window.onload; if (typeof window.onload !== 'function') { window.onload = func; } else { window.onload = function() {if (oldonload) { oldonload(); }func();};} }
@@ -53,11 +48,15 @@ addLoadEvent(function(){
         bgColor: '#f25648',
         color: '#ffffff',
         lowerThan: 'transform',
-        languagePath: '/media/outdated-browser/lang/{{ __('locale') }}.html'
+        languagePath: '/outdated-browser/lang/{{ __('locale') }}.html'
     });
 });
 </script>
 <![endif]-->
+<div id="ReactHW"></h1>
+{% for webpackedJS in webpackAssets.js %}
+<script src="/dist/{{ webpackedJS }}"></script>
+{% endfor %}
 
 {# Place any 3rd-party tracking/analytic scripts here #}
 </body>

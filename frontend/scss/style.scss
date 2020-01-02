@@ -1,0 +1,20 @@
+$fa-font-path: "~font-awesome/fonts/";
+@import "~font-awesome/scss/font-awesome";
+@import "_variables.scss";
+@import "~bootstrap/scss/bootstrap";
+@import "_bootswatch.scss";
+
+.hello-webpack{
+    color: #FF0000;
+}
+
+@font-face {
+   font-family: 'Open-Logos';
+   src: url('../fonts/openlogos.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/openlogos.ttf')  format('truetype');
+}
+
+.open-logos{
+    font-family: "Open-Logos";
+    font-size: 54px;
+}

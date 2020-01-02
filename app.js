@@ -6,6 +6,7 @@
 /**  Depends  **/
 var express = require("express"),
     nunjucks = require("nunjucks"),
+    fs = require("fs"),
     dateFilter = require('nunjucks-date-filter'),
     bunyan = require("bunyan"), log,
     cookieParser = require("cookie-parser"),
@@ -44,10 +45,12 @@ var redis = require("redis");
 var redisStore = require('connect-redis')(expressSession),
     redisClient = redis.createClient(config.redisPort, config.redisHost, {detect_buffers: true}); // eslint-disable-line camelcase
 site.set('redis', redisClient);
+redisClient.on("error", function (err) {
+    log.error("Redis Error", err);
+});
 
 //Setup views and nunjucks templates
-var viewFolder = (config.NODE_ENV === "live") ? "viewsLive" : "views";
-var env = nunjucks.configure(viewFolder, {
+var env = nunjucks.configure("views", {
     autoescape: true,
     noCache: config.NODE_ENV === "dev",
     express: site
@@ -58,10 +61,20 @@ env.addFilter('nl2br', function(str) {
 });
 config.nunjucks = env;
 site.set("view engine", "html");
-site.set("views", __dirname + "/" + viewFolder);
-site.enable('trust proxy');
+site.set("views", __dirname + "/views");
+site.enable('trust proxy'); // This app is meant to be run behind NGINX
 site.disable('x-powered-by');
-
+// Webpack generates new filenames for our JS and CSS, let's get those
+site.locals.webpackAssets = {files: [], css: [], js: []};
+fs.readdirSync(__dirname + '/public/dist').forEach((file) => {
+    if ((/\.js$/i).test(file)){
+        site.locals.webpackAssets.js.push(file);
+    } else if ((/\.css$/i).test(file)) {
+        site.locals.webpackAssets.css.push(file);
+    } else {
+        site.locals.webpackAssets.files.push(file);
+    }
+});
 //The rest of our static-served files
 site.use(express.static(__dirname + "/public"));
 
@@ -81,7 +94,7 @@ log = bunyan.createLogger({
     ]}
 );
 
-// Initalize routes and a few utilities helpers
+// Initalize routes and a few utilities helpers (i18n and error handling utils)
 utils = new Utils(site, log, config, redisClient);
 routes = new Routes(log, config, redisClient, utils);
 
@@ -97,23 +110,32 @@ routes = new Routes(log, config, redisClient, utils);
 });
 */
 
-/** Middlewares! **/
+// Middlewares!
 site.use(bodyParser.urlencoded({extended: true}));
 site.use(bodyParser.json());
 site.use(hpp()); // Protect against HTTP Parameter Pollution attacks
 site.use(cookieParser());
 site.use(expressSession({
     secret: config.sessionSecret,
-    key: packagejson.name + ".sid",
-    saveUninitialized: true,
+    key: "scaffnode-session.sid",
+    saveUninitialized: false,
     resave: false,
-    store: new redisStore({client: redisClient}),
-    cookie: {maxAge: new Date(Date.now() + (52 * 604800 * 1000)), path: '/'},
+    store: new redisStore({
+        client: redisClient,
+        logErrors: log.error,
+        ttl: 2592000 // 30 days in s
+    }),
+    cookie: {
+        maxAge: 2592000 * 1000, // 30 days in ms
+        path: "/",
+        secure: !isTestMode,
+        domain: ".example.com"
+    },
     rolling: true,
     unset: "destroy"
 }));
 
-// Setup i18n for use with swig templates
+// Setup i18n for use with templates
 i18n.configure({
     locales: config.supportedLocales,
     cookie: packagejson.name + "_lang.sid",
@@ -124,22 +146,19 @@ site.use(i18n.init);
 // Middleware helper, makes user language preferences sticky and watches for "lang" query variable
 site.use(utils.i18nHelper);
 
-/**  Routes/Views  **/
+////Routes/Views
 site.get("/", routes.base.index);
 site.get("/about", routes.base.aboutUs);
-
 //Catch all other attempted routes and throw them a 404!
 site.all("*", function(req, resp, next){
     next({name: "NotFound", "message": "Oops! The page you requested doesn't exist", "status": 404});
 });
-
-// Finally, user our errorHandler
+// Finally, if no other routes match, use our errorHandler
 site.use(utils.errorHandler);
 
-/*
-**  Server startup
-*/
 // Get proper from from ENV variable for live mode, otherwise use port 8888
 var port = process.env.PORT || 8888;
-site.listen(port);
+site.listen(port, (server) => {
+    utils.setRunningServer(server);
+});
 log.info("Server listening on http://" + site.locals.config.domain + ":" + port + " in " + site.locals.config.NODE_ENV + " mode");
