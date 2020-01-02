@@ -24,11 +24,8 @@
         "react-dom": "^16.12.0"
     },
     "devDependencies": {
-        "babel-cli": "^6.26.0",
-        "babel-core": "6.x.x",
-        "babel-loader": "^7.x.x",
-        "babel-preset-env": "^1.7.0",
-        "babel-preset-react": "^6.24.1",
+        "@swc/cli": "^0.1.21",
+        "@swc/core": "^1.1.10",
         "clean-webpack-plugin": "^1.0.0",
         "css-loader": "^3.4.0",
         "eslint-plugin-react": "^7.17.0",
@@ -37,6 +34,7 @@
         "node-sass": "^4.13.0",
         "sass-loader": "^8.0.0",
         "style-loader": "^1.1.2",
+        "swc-loader": "^0.1.6",
         "webpack": "^4.41.5",
         "webpack-cli": "^3.3.10"
     },
