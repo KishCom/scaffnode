@@ -1,7 +1,7 @@
 {
   "name": "scaffnode",
   "author": "Andrew Kish",
-  "version": "0.18.3",
+  "version": "0.18.4",
   "private": true,
   "scripts": {
     "start": "NODE_ENV=dev nodemon app.js | bunyan",
@@ -15,18 +15,18 @@
     "connect-redis": "4.0.x",
     "cookie-parser": "1.4.x",
     "escape-html": "1.0.x",
-    "eslint-plugin-html": "^6.0.0",
+    "eslint-plugin-html": "^6.0.2",
     "express": "4.17.x",
     "express-session": "1.17.x",
     "hpp": "0.2.x",
-    "i18n": "0.8.x",
+    "i18n": "0.9.x",
     "lodash": "4.17.x",
     "multer": "1.4.x",
     "nodemon": "2.0.x",
     "nunjucks": "^3.2.1",
     "nunjucks-date-filter": "0.1.x",
     "redis": "3.0.x",
-    "validator": "12.2.x"
+    "validator": "13.0.x"
   },
   "devDependencies": {
     "chai": "4.2.x",
