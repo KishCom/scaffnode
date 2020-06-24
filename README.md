@@ -17,7 +17,8 @@ If your Node.js and NPM are already configured, setup and installation is a bree
     # Configure server details
     cp config.sample.js config.js
 
-    # Name the project. Replace "YourProjectsNameHere" in the next command with your project name (alpha-numeric only)
+    # Name the project. Replace "YourProjectsNameHere" and "yourproductiondomain.org" in the next commands with your project name and domain URL
+    find . -type f | xargs sed -i 's/scaffnode.example.com/yourproductiondomain.org/gi'
     find . -type f | xargs sed -i 's/scaffnode/YourProjectsNameHere/gi'
 
     # Edit config.js with your details
@@ -72,6 +73,16 @@ or run a live server (concats/minifies JS/CSS)
 
 ##Live Deploy Helpers
 
-You'll also find an app.upstart file that allows you to install this app as an upstart service for Linix systems that support [upstart](http://upstart.ubuntu.com/). Modify the contents of that file and copy it to `/etc/init` - you'll be able to start and stop your server with `sudo service appname start`
+There are several helpers inside of the `deploy` folder:
 
-There's now an NGINX config file too! Make sure you have your SSL crt and key path correctly set ([or generate your own](https://devcenter.heroku.com/articles/ssl-certificate-self))
+ - `app.nginx` - An nginx config file. Copy to your nginx sites-enabled folder `sudo cp deploy/app.nginx /etc/nginx/sites-enable/scaffnode`. You will have to change SSL certificate file locations "ssl_certificate" and "ssl_certificate_key". I use [acme.sh](https://acme.sh) and the default paths.
+ - `app.systemd.service` - A [systemD service file](https://www.devdungeon.com/content/creating-systemd-service-files). Copy, reload, restart, enjoy:
+    '''
+    sudo cp deploy/app.systemd.service /etc/systemd/system/scaffnode.service
+    sudo systemctl daemon-reload
+    sudo systemctl enable scaffnode
+    sudo systemctl start scaffnode
+    sudo systemctl status scaffnode
+    '''
+- `app.upstart` - An upstart file for older Ubuntu systems and other Linux distros that may still use Upstart instead of systemD.
+- `updateApi.sh` - A simple BASH script to bootstrap a really basic CI system: `ssh ubuntu@scaffnode.example.com -C "./scaffnode/deploy/updateApi.sh"`

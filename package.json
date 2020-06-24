@@ -1,12 +1,12 @@
 {
   "name": "scaffnode",
   "author": "Andrew Kish",
-  "version": "0.18.4",
+  "version": "0.19.0",
   "private": true,
   "scripts": {
-    "start": "NODE_ENV=dev nodemon app.js | bunyan",
-    "start.live": "NODE_ENV=live nodemon app.js | bunyan",
-    "test": "NODE_ENV=test mocha --exit tests/*_tests.js;"
+    "start": "cross-env NODE_ENV=dev nodemon app.js | bunyan",
+    "start.live": "cross-env NODE_ENV=live nodemon app.js | bunyan",
+    "test": "cross-env NODE_ENV=test mocha --exit tests/*_tests.js;"
   },
   "dependencies": {
     "accepts": "1.3.x",
@@ -19,20 +19,25 @@
     "express": "4.17.x",
     "express-session": "1.17.x",
     "hpp": "0.2.x",
-    "i18n": "0.9.x",
+    "i18n": "0.10.x",
     "lodash": "4.17.x",
+    "ms": "^2.1.2",
     "multer": "1.4.x",
     "nodemon": "2.0.x",
     "nunjucks": "^3.2.1",
     "nunjucks-date-filter": "0.1.x",
     "redis": "3.0.x",
-    "validator": "13.0.x"
+    "validator": "13.1.x"
   },
   "devDependencies": {
     "chai": "4.2.x",
-    "eslint": "6.8.0",
-    "eslint-plugin-react": "^7.19.0",
-    "mocha": "7.1.x",
+    "cross-env": "^7.0.2",
+    "eslint": "7.3.1",
+    "eslint-plugin-react": "^7.20.0",
+    "mocha": "8.0.x",
     "supertest": "4.0.x"
+  },
+  "nodemonConfig": {
+    "ignore": ["frontend/*"]
   }
 }

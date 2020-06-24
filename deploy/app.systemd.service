@@ -1,0 +1,23 @@
+[Unit]
+Description=scaffnode nodejs server
+
+[Service]
+ExecStart=/bin/bash -c 'exec /usr/bin/node /home/ubuntu/scaffnode/app.js 2>&1 >> /var/log/scaffnode.log'
+
+# Required on some systems
+# WorkingDirectory=/home/ubuntu/scaffnode
+Restart=always
+
+# Restart service after 3 seconds if node service crashes
+RestartSec=3
+User=ubuntu
+Group=ubuntu
+Environment=NODE_ENV=production PORT=8888
+
+# Output to syslog instead of /var/log/scaffnode? 
+# StandardOutput=syslog
+# StandardError=syslog
+# SyslogIdentifier=scaffnode
+
+[Install]
+WantedBy=multi-user.target

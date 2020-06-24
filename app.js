@@ -1,28 +1,29 @@
 /*
 *   Scaffnode
-*	TODO: Your project info here
+*   TODO: Your project info here
 */
 
 /**  Depends  **/
-var express = require("express"),
+const express = require("express"),
     nunjucks = require("nunjucks"),
+    ms = require("ms"),
     fs = require("fs"),
-    dateFilter = require('nunjucks-date-filter'),
-    bunyan = require("bunyan"), log,
+    dateFilter = require("nunjucks-date-filter"),
+    bunyan = require("bunyan"),
     cookieParser = require("cookie-parser"),
     bodyParser = require("body-parser"),
     expressSession = require("express-session"),
     //multer = require('multer'), // uncomment if using file-upload or other multi-part
-    i18n = require('i18n'),
-    hpp = require('hpp'),
-    Routes = require("./routes"), routes,
-    Utils = require("./utils"), utils,
+    i18n = require("i18n"),
+    hpp = require("hpp"),
+    Routes = require("./routes"),
+    Utils = require("./utils"),
     site = module.exports = express();
 
 // Load configuration details based on your environment
-var config;
-var packagejson = require('./package');
-var isTestMode = false;
+let config;
+const packagejson = require("./package");
+let isTestMode = false;
 if (process.env.NODE_ENV === "dev" || process.env.NODE_ENV === "live" || process.env.NODE_ENV === "test"){
     // If we're in test mode, just set a flag on the config object and switch the NODE_ENV to "dev"
     if (process.env.NODE_ENV === "test"){
@@ -40,46 +41,8 @@ if (process.env.NODE_ENV === "dev" || process.env.NODE_ENV === "live" || process
     process.exit();
 }
 
-// Setup redis
-var redis = require("redis");
-var redisStore = require('connect-redis')(expressSession),
-    redisClient = redis.createClient(config.redisPort, config.redisHost, {detect_buffers: true}); // eslint-disable-line camelcase
-site.set('redis', redisClient);
-redisClient.on("error", function (err) {
-    log.error("Redis Error", err);
-});
-
-//Setup views and nunjucks templates
-var env = nunjucks.configure("views", {
-    autoescape: true,
-    noCache: config.NODE_ENV === "dev",
-    express: site
-});
-env.addFilter('date', dateFilter);
-env.addFilter('nl2br', function(str) {
-    return str.replace(/\n/gi, "<br />");
-});
-config.nunjucks = env;
-site.set("view engine", "html");
-site.set("views", __dirname + "/views");
-site.enable('trust proxy'); // This app is meant to be run behind NGINX
-site.disable('x-powered-by');
-// Webpack generates new filenames for our JS and CSS, let's get those
-site.locals.webpackAssets = {files: [], css: [], js: []};
-fs.readdirSync(__dirname + '/public/dist').forEach((file) => {
-    if ((/\.js$/i).test(file)){
-        site.locals.webpackAssets.js.push(file);
-    } else if ((/\.css$/i).test(file)) {
-        site.locals.webpackAssets.css.push(file);
-    } else {
-        site.locals.webpackAssets.files.push(file);
-    }
-});
-//The rest of our static-served files
-site.use(express.static(__dirname + "/public"));
-
 // Configure logging
-log = bunyan.createLogger({
+const log = bunyan.createLogger({
     name: packagejson.name + " " + packagejson.version,
     streams:
     [{
@@ -93,10 +56,48 @@ log = bunyan.createLogger({
     }*/
     ]}
 );
+// Setup redis
+const redis = require("redis");
+const redisStore = require("connect-redis")(expressSession),
+    redisClient = redis.createClient(config.redisPort, config.redisHost, {detect_buffers: true}); // eslint-disable-line camelcase
+site.set("redis", redisClient);
+redisClient.on("error", function (err) {
+    log.error("Redis Error", err);
+});
+
+//Setup views and nunjucks templates
+const env = nunjucks.configure("views", {
+    autoescape: true,
+    noCache: config.NODE_ENV === "dev",
+    express: site
+});
+env.addFilter("date", dateFilter);
+env.addFilter("nl2br", function(str) {
+    return str.replace(/\n/gi, "<br />");
+});
+config.nunjucks = env;
+site.set("view engine", "html");
+site.set("views", __dirname + "/views");
+site.enable("trust proxy"); // This app is meant to be run behind NGINX
+site.disable("x-powered-by");
+// Webpack generates new filenames for our JS and CSS, let's get those
+site.locals.webpackAssets = {files: [], css: [], js: []};
+fs.readdirSync(__dirname + "/public/dist").forEach((file) => {
+    if ((/\.js$/i).test(file)){
+        site.locals.webpackAssets.js.push(file);
+    } else if ((/\.css$/i).test(file)) {
+        site.locals.webpackAssets.css.push(file);
+    } else {
+        site.locals.webpackAssets.files.push(file);
+    }
+});
+site.locals.webpackAssets.js.sort();
+//The rest of our static-served files
+site.use(express.static(__dirname + "/public"));
 
 // Initalize routes and a few utilities helpers (i18n and error handling utils)
-utils = new Utils(site, log, config, redisClient);
-routes = new Routes(log, config, redisClient, utils);
+const utils = new Utils(site, log, config, redisClient);
+const routes = new Routes(log, config, redisClient, utils);
 
 // Multipart upload handler
 // Enable multi-part uploads only on routes you need them on like this:
@@ -123,13 +124,13 @@ site.use(expressSession({
     store: new redisStore({
         client: redisClient,
         logErrors: log.error,
-        ttl: 2592000 // 30 days in s
+        ttl: ms("30 days") / 1000 // redis ttl in seconds
     }),
     cookie: {
-        maxAge: 2592000 * 1000, // 30 days in ms
+        maxAge: ms("30 days"),
         path: "/",
         secure: !isTestMode,
-        domain: ".example.com"
+        domain: config.domain === "localhost" ? config.domain : `.${config.domain}`
     },
     rolling: true,
     unset: "destroy"
@@ -139,7 +140,7 @@ site.use(expressSession({
 i18n.configure({
     locales: config.supportedLocales,
     cookie: packagejson.name + "_lang.sid",
-    directory: __dirname + '/locales'
+    directory: __dirname + "/locales"
 });
 // Express helper (makes '__' functions available in templates)
 site.use(i18n.init);
@@ -148,7 +149,7 @@ site.use(utils.i18nHelper);
 
 ////Routes/Views
 site.get("/", routes.base.index);
-site.get("/about", routes.base.aboutUs);
+// site.get("/about", routes.base.aboutUs);
 //Catch all other attempted routes and throw them a 404!
 site.all("*", function(req, resp, next){
     next({name: "NotFound", "message": "Oops! The page you requested doesn't exist", "status": 404});

@@ -1,20 +1,18 @@
 module.exports = {
     "env": {
-        "node": true,
-        "es6": true,
-        "mocha": true,
-        "phantomjs": true
+        "node": true
     },
-    "plugins": [
-        "html"
-    ],
     "globals":{
         "inject": true,
         "chai": true
     },
     "extends": "eslint:recommended",
     "parserOptions": {
-        "sourceType": "module"
+        "ecmaVersion": 9,
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "jsx": true
+        }
     },
     "rules": {
         "accessor-pairs": 2,
@@ -156,7 +154,7 @@ module.exports = {
         "prefer-spread": 2,
         "prefer-template": 0,
         "quote-props": 0,
-        "quotes": 0,
+        "quotes": [1, "double"],
         "radix": 2,
         "require-yield": 2,
         "semi": 2,

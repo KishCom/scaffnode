@@ -1,6 +1,6 @@
 var log, config;
-var accepts = require('accepts');
-var escapeHtml = require('escape-html');
+var accepts = require("accepts");
+var escapeHtml = require("escape-html");
 var Utils = function(appSetup, bunyan, appConfig){
     config = appConfig;
     log = bunyan;
@@ -32,7 +32,7 @@ Utils.prototype.i18nHelper = function (req, res, next) {
         }
     } else if (!setLang) {
         // Default to English if all else fails.
-        setLang = 'en';
+        setLang = "en";
     }
     res.header("Content-Language", setLang);
     res.locals.lang = setLang;
@@ -91,13 +91,13 @@ Utils.prototype.errorHandler = function (err, req, res, next) { //eslint-disable
 
     // Negotiate
     var accept = accepts(req);
-    var type = accept.types('json', 'html', 'text');
+    var type = accept.types("json", "html", "text");
 
     // Security header for content sniffing
-    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader("X-Content-Type-Options", "nosniff");
 
     // Return html
-    if (type === 'html') {
+    if (type === "html") {
         if (res.statusCode >= 400 && res.statusCode <= 499) {
             log.info("404 :", req.url, " UA: ", req.headers["user-agent"], "IP: ", req.ip);
             return res.render("errors/404.html", {
@@ -105,15 +105,15 @@ Utils.prototype.errorHandler = function (err, req, res, next) { //eslint-disable
                 httpStatus: res.statusCode
             });
         }
-        var stack = (err.stack || '').split('\n').slice(1).map(function (v) { return '<li>' + escapeHtml(v).replace(/  /g, ' &nbsp;') + '</li>'; }).join('');
-        res.render('errors/500.html', {
+        var stack = (err.stack || "").split("\n").slice(1).map(function (v) { return "<li>" + escapeHtml(v).replace(/  /g, " &nbsp;") + "</li>"; }).join("");
+        res.render("errors/500.html", {
             env,
             httpStatus: res.statusCode,
-            error: String(err.message).replace(/  /g, ' &nbsp;').replace(/\n/g, '<br>') || req.__("error500Message"),
+            error: String(err.message).replace(/  /g, " &nbsp;").replace(/\n/g, "<br>") || req.__("error500Message"),
             showStack: stack
         });
     // Return json
-    } else if (type === 'json') {
+    } else if (type === "json") {
         var error = {error: true, message: err.message, stack: err.stack};
         for (var prop in err) {
             if (err[prop]) {
@@ -121,11 +121,11 @@ Utils.prototype.errorHandler = function (err, req, res, next) { //eslint-disable
             }
         }
         var json = JSON.stringify(error);
-        res.setHeader('Content-Type', 'application/json');
+        res.setHeader("Content-Type", "application/json");
         res.end(json);
         // Return plain text
     } else {
-        res.setHeader('Content-Type', 'text/plain');
+        res.setHeader("Content-Type", "text/plain");
         res.end(err.stack || String(err));
         if (res.statusCode >= 500) {
             killServer();
@@ -133,6 +133,20 @@ Utils.prototype.errorHandler = function (err, req, res, next) { //eslint-disable
     }
     // Sorry Keep-Alive connections, but we need to part ways
     req.connection.setTimeout(1);
+};
+
+Utils.prototype.handleCORS = (req, res, next) => {
+    const whitelist = [];
+    if (whitelist.indexOf(req.header("Origin")) > -1){
+        res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,PATCH");
+        res.header("Access-Control-Allow-Headers", "headers, Content-Type, Authorization, x-client-secret, x-client-id");
+        res.header("Access-Control-Allow-Credentials", true);
+        res.header("Access-Control-Allow-Origin", req.header("Origin"));
+        if (req.method === "OPTIONS") {
+            return res.status(200).send("");
+        }
+    }
+    next();
 };
 
 module.exports = Utils;

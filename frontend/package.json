@@ -1,6 +1,6 @@
 {
     "name": "scaffnode-frontend",
-    "version": "0.18.4",
+    "version": "0.19.1",
     "description": "The React.js based frontend for scaffnode",
     "author": "Your Name <you.name@example.org>",
     "contributors": [
