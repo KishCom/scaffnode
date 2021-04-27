@@ -25,7 +25,7 @@
     "nodemon": "2.0.x",
     "nunjucks": "^3.2.2",
     "nunjucks-date-filter": "0.1.x",
-    "redis": "3.0.x",
+    "redis": "3.1.x",
     "validator": "13.1.x"
   },
   "devDependencies": {
