@@ -9,9 +9,9 @@ $fa-font-path: "~font-awesome/fonts/";
 }
 
 @font-face {
-   font-family: 'Open-Logos';
-   src: url('../fonts/openlogos.eot?#iefix') format('embedded-opentype'),
-        url('../fonts/openlogos.ttf')  format('truetype');
+   font-family: "Open-Logos";
+   src: url("../fonts/openlogos.eot?#iefix") format("embedded-opentype"),
+        url("../fonts/openlogos.ttf")  format("truetype");
 }
 
 .open-logos{

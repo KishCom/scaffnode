@@ -1,6 +1,6 @@
 {
     "name": "scaffnode-frontend",
-    "version": "0.18.6",
+    "version": "0.19.0",
     "description": "The React.js based frontend for scaffnode",
     "author": "Your Name <you.name@example.org>",
     "contributors": [
@@ -17,26 +17,27 @@
     },
     "main": "src/app.js",
     "dependencies": {
-        "bootstrap": "^4.x.x",
+        "bootstrap": "^5.x.x",
         "font-awesome": "^4.7.0",
         "lodash": "^4.17.21",
         "react": "^17.0.2",
         "react-dom": "^17.0.2"
     },
     "devDependencies": {
-        "@swc/cli": "^0.1.42",
-        "@swc/core": "^1.2.58",
-        "clean-webpack-plugin": "1.x.x",
-        "css-loader": "^4.2.2",
-        "eslint-plugin-react": "^7.23.2",
-        "file-loader": "^6.0.0",
-        "mini-css-extract-plugin": "^0.10.0",
-        "node-sass": "^4.14.1",
-        "sass-loader": "^10.0.1",
-        "style-loader": "^1.2.1",
+        "@swc/cli": "^0.1.46",
+        "@swc/core": "^1.2.66",
+        "clean-webpack-plugin": "3.x.x",
+        "css-loader": "^6.2.0",
+        "eslint-plugin-react": "^7.24.0",
+        "file-loader": "^6.2.0",
+        "git-revision-webpack-plugin": "^5.0.0",
+        "mini-css-extract-plugin": "^2.1.0",
+        "node-sass": "^6.0.1",
+        "sass-loader": "^12.1.0",
+        "style-loader": "^3.2.1",
         "swc-loader": "^0.1.14",
-        "webpack": "^4.x.x",
-        "webpack-cli": "^3.x.x"
+        "webpack": "^5.x.x",
+        "webpack-cli": "^4.x.x"
     },
     "private": true
 }
