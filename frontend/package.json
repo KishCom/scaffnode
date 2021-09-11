@@ -1,6 +1,6 @@
 {
     "name": "scaffnode-frontend",
-    "version": "0.19.0",
+    "version": "0.19.1",
     "description": "The React.js based frontend for scaffnode",
     "author": "Your Name <you.name@example.org>",
     "contributors": [
@@ -24,14 +24,14 @@
         "react-dom": "^17.0.2"
     },
     "devDependencies": {
-        "@swc/cli": "^0.1.46",
-        "@swc/core": "^1.2.66",
+        "@swc/cli": "^0.1.49",
+        "@swc/core": "^1.2.85",
         "clean-webpack-plugin": "3.x.x",
         "css-loader": "^6.2.0",
-        "eslint-plugin-react": "^7.24.0",
+        "eslint-plugin-react": "^7.25.1",
         "file-loader": "^6.2.0",
         "git-revision-webpack-plugin": "^5.0.0",
-        "mini-css-extract-plugin": "^2.1.0",
+        "mini-css-extract-plugin": "^2.2.2",
         "node-sass": "^6.0.1",
         "sass-loader": "^12.1.0",
         "style-loader": "^3.2.1",
