@@ -14,19 +14,19 @@ Utils.prototype.i18nHelper = function (req, res, next) {
     // this is the default language to use if req.query.lang is not set and req.session.lang does not exist
     var setLang = res.getLocale();
     // The lang query parameter always overrides all language settings
-    if (req.query.lang) {
-        for (var ii in config.supportedLocales) {
-            if (config.supportedLocales[ii] === req.query.lang) {
-                //log.debug("User switching language to", req.query.lang);
-                setLang = req.query.lang;
+    if (req.session.lang && !req.query.lang) {
+        for (var i in config.SUPPORTED_LOCALES) {
+            if (config.SUPPORTED_LOCALES[i] === req.session.lang) {
+                log.trace("User switched language to", req.session.lang);
+                setLang = req.session.lang;
                 break;
             }
         }
-    } else if (req.session.lang) {
-        for (var i in config.supportedLocales) {
-            if (config.supportedLocales[i] === req.session.lang) {
-                //log.debug("User switching language to", req.session.lang);
-                setLang = req.session.lang;
+    } else if (req.query.lang) {
+        for (var ii in config.SUPPORTED_LOCALES) {
+            if (config.SUPPORTED_LOCALES[ii] === req.query.lang) {
+                log.trace("User switching language by query param to", req.query.lang);
+                setLang = req.query.lang;
                 break;
             }
         }
@@ -39,7 +39,8 @@ Utils.prototype.i18nHelper = function (req, res, next) {
     req.setLocale(setLang);
     req.session.lang = setLang;
     // Allows our base html access to supported locales
-    res.locals.supportedLocales = config.supportedLocales;
+    res.locals.SUPPORTED_LOCALES = config.SUPPORTED_LOCALES;
+    log.trace("Lang is", setLang, req.session);
     next();
 };
 

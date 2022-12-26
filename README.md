@@ -2,11 +2,11 @@
     [__  |    |__| |___ |___ |\ | |  | |  \ |___
     ___] |___ |  | |    |    | \| |__| |__/ |___
 
-An ever changing personal preference Node.js web-app scaffolding. This specific branch is an experimental branch implementing a React.js frontend.
+An ever changing personal preference Node.js web-app scaffolding.
 
-Use this if you're looking to hit the ground running with a project using Node.js, ExpressJS and some other fairly popular Node.js modules.
+Use this if you're looking to hit the ground running with a project using Node.js, and popular Node.js modules (Express.js, Bunyan logs, Multer file uploads, Nunjucks HTML templates).
 
-To install, make sure you have Node.js (>6.x) installed on your system as well as NPM. Make sure your node_modules folder, or the NODE_PATH environment variable are setup properly as well. Tested on Linux and OSX only. Windows users will need to address the `NODE_ENV` environment variable (TODO: `dotenv`).
+To install, make sure you have Node.js (>16.x) installed on your system as well as NPM. Make sure your node_modules folder, or the NODE_PATH environment variable are setup properly as well. Tested on Linux and OSX only. Windows users will need to address the `NODE_ENV` environment variable.
 
 If your Node.js and NPM are already configured, setup and installation is a breeze:
 
@@ -14,7 +14,7 @@ If your Node.js and NPM are already configured, setup and installation is a bree
     npm install bunyan nodemon mocha webpack webpack-cli -g
     # Get other dependencies
     npm install
-    # Configure server details
+    # Configure server environment details
     cp config.sample.js config.js
 
     # Name the project. Replace "YourProjectsNameHere" in the next command with your project name (alpha-numeric only)
@@ -72,6 +72,4 @@ or run a live server (concats/minifies JS/CSS)
 
 ##Live Deploy Helpers
 
-You'll also find an app.upstart file that allows you to install this app as an upstart service for Linix systems that support [upstart](http://upstart.ubuntu.com/). Modify the contents of that file and copy it to `/etc/init` - you'll be able to start and stop your server with `sudo service appname start`
-
-There's now an NGINX config file too! Make sure you have your SSL crt and key path correctly set ([or generate your own](https://devcenter.heroku.com/articles/ssl-certificate-self))
+Find NGINX config and SystemD service in the `deploy` folder. You can also use pm2 if desired, a very basic pm2 ecosystem file is provided. The systemD file makes a few assumptions about your environment: You have a `www-data` user+group, and that you installed Node.js with [ASDF](https://asdf-vm.com).

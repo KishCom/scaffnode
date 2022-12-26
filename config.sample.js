@@ -1,18 +1,10 @@
 exports.config = {
-    "dev":{
-        domain: "localhost",
-        supportedLocales: ['en', 'fr', 'pirate'],
-        redisHost: "localhost",
-        redisPort: 6379,
-        logLevel: "trace",
-        sessionSecret: "Put a random secret here."
-    },
-    "live":{
-        domain: "productionurl.com",
-        supportedLocales: ['en', 'fr'],
-        redisHost: "redis.productionurl.com",
-        redisPort: 6379,
-        logLevel: "info",
-        sessionSecret: "Put a random secret here."
-    }
+    API_DOMAIN: "scaffnode.com",
+    CDN_DOMAIN: "cdn.scaffnode.com",
+    SUPPORTED_LOCALES: ['en', 'fr'],
+    REDIS_HOST: "redis.scaffnode.com",
+    REDIS_PASSWORD: "",
+    REDIS_PORT: 6379,
+    LOG_LEVEL: "trace",
+    SESSION_SECRET: "Put a random secret here."
 };

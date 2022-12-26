@@ -4,32 +4,30 @@
 */
 
 /**  Depends  **/
-var express = require("express"),
+const express = require("express"),
     nunjucks = require("nunjucks"),
-    fs = require("fs"),
     dateFilter = require('nunjucks-date-filter'),
-    bunyan = require("bunyan"), log,
-    cookieParser = require("cookie-parser"),
+    bunyan = require("bunyan"),
     bodyParser = require("body-parser"),
     expressSession = require("express-session"),
     //multer = require('multer'), // uncomment if using file-upload or other multi-part
     i18n = require('i18n'),
     hpp = require('hpp'),
-    Routes = require("./routes"), routes,
-    Utils = require("./utils"), utils,
+    Routes = require("./routes"),
+    Utils = require("./utils"),
     site = module.exports = express();
 
 // Load configuration details based on your environment
-var config;
-var packagejson = require('./package');
-var isTestMode = false;
+let config;
+const packagejson = require('./package');
+let isTestMode = false;
 if (process.env.NODE_ENV === "dev" || process.env.NODE_ENV === "live" || process.env.NODE_ENV === "test"){
     // If we're in test mode, just set a flag on the config object and switch the NODE_ENV to "dev"
     if (process.env.NODE_ENV === "test"){
         isTestMode = true;
         process.env.NODE_ENV = "dev";
     }
-    config = require("./config").config[process.env.NODE_ENV];
+    config = require("./config").config;
     config.isTestMode = isTestMode;
     config.NODE_ENV = process.env.NODE_ENV;
     config.appName = packagejson.name;
@@ -40,17 +38,8 @@ if (process.env.NODE_ENV === "dev" || process.env.NODE_ENV === "live" || process
     process.exit();
 }
 
-// Setup redis
-var redis = require("redis");
-var redisStore = require('connect-redis')(expressSession),
-    redisClient = redis.createClient(config.redisPort, config.redisHost, {detect_buffers: true}); // eslint-disable-line camelcase
-site.set('redis', redisClient);
-redisClient.on("error", function (err) {
-    log.error("Redis Error", err);
-});
-
 //Setup views and nunjucks templates
-var env = nunjucks.configure("views", {
+const env = nunjucks.configure("views", {
     autoescape: true,
     noCache: config.NODE_ENV === "dev",
     express: site
@@ -65,7 +54,7 @@ site.set("views", __dirname + "/views");
 site.enable('trust proxy'); // This app is meant to be run behind NGINX
 site.disable('x-powered-by');
 // Webpack generates new filenames for our JS and CSS, let's get those
-site.locals.webpackAssets = {files: [], css: [], js: []};
+/*site.locals.webpackAssets = {files: [], css: [], js: []};
 fs.readdirSync(__dirname + '/public/dist').forEach((file) => {
     if ((/\.js$/i).test(file)){
         site.locals.webpackAssets.js.push(file);
@@ -74,16 +63,16 @@ fs.readdirSync(__dirname + '/public/dist').forEach((file) => {
     } else {
         site.locals.webpackAssets.files.push(file);
     }
-});
+});*/
 //The rest of our static-served files
 site.use(express.static(__dirname + "/public"));
 
 // Configure logging
-log = bunyan.createLogger({
+const log = bunyan.createLogger({
     name: packagejson.name + " " + packagejson.version,
     streams:
     [{
-        level: isTestMode ? "fatal" : config.logLevel, // Priority of levels looks like this: Trace -> Debug -> Info -> Warn -> Error -> Fatal
+        level: isTestMode ? "fatal" : config.LOG_LEVEL, // Priority of levels looks like this: Trace -> Debug -> Info -> Warn -> Error -> Fatal
         stream: process.stdout
     }
     // Setup an addional logger with ease
@@ -94,9 +83,27 @@ log = bunyan.createLogger({
     ]}
 );
 
+// Setup redis
+const redis = require("ioredis");
+const redisStore = require('connect-redis')(expressSession);
+let redisReady = false;
+const redisClient = redis.createClient({"detect_buffers": true, port: config.REDIS_PORT, host: config.REDIS_HOST, "auth_pass": config.REDIS_PASSWORD || null});
+site.set('redis', redisClient);
+redisClient.on("error", (err) => {
+    log.error("Redis Client", err);
+});
+redisClient.on("end", (err) => {
+    log.error("Redis unavailable", err);
+    redisReady = true;
+});
+redisClient.on("ready", () => {
+    log.debug("✅ Connected to Redis");
+    redisReady = true;
+});
+
 // Initalize routes and a few utilities helpers (i18n and error handling utils)
-utils = new Utils(site, log, config, redisClient);
-routes = new Routes(log, config, redisClient, utils);
+const utils = new Utils(site, log, config, redisClient);
+const routes = new Routes(log, config, redisClient, utils);
 
 // Multipart upload handler
 // Enable multi-part uploads only on routes you need them on like this:
@@ -114,12 +121,10 @@ routes = new Routes(log, config, redisClient, utils);
 site.use(bodyParser.urlencoded({extended: true}));
 site.use(bodyParser.json());
 site.use(hpp()); // Protect against HTTP Parameter Pollution attacks
-site.use(cookieParser());
 site.use(expressSession({
-    secret: config.sessionSecret,
+    secret: config.SESSION_SECRET,
     key: "scaffnode-session.sid",
-    saveUninitialized: false,
-    resave: false,
+    resave: true,
     store: new redisStore({
         client: redisClient,
         logErrors: log.error,
@@ -128,8 +133,8 @@ site.use(expressSession({
     cookie: {
         maxAge: 2592000 * 1000, // 30 days in ms
         path: "/",
-        secure: !isTestMode,
-        domain: ".example.com"
+        //secure: config.NODE_ENV !== "dev", // Enable when you've got SSL setup
+        //domain: ".scaffnode.com" // Enable when you've got your domain setup
     },
     rolling: true,
     unset: "destroy"
@@ -137,7 +142,7 @@ site.use(expressSession({
 
 // Setup i18n for use with templates
 i18n.configure({
-    locales: config.supportedLocales,
+    locales: config.SUPPORTED_LOCALES,
     cookie: packagejson.name + "_lang.sid",
     directory: __dirname + '/locales'
 });
@@ -145,6 +150,13 @@ i18n.configure({
 site.use(i18n.init);
 // Middleware helper, makes user language preferences sticky and watches for "lang" query variable
 site.use(utils.i18nHelper);
+
+site.use((req, res, next) => {
+    if (!redisReady){
+        return res.json({error: true, message: "Waiting for Redis...", data: false});
+    }
+    next();
+});
 
 ////Routes/Views
 site.get("/", routes.base.index);
@@ -157,8 +169,8 @@ site.all("*", function(req, resp, next){
 site.use(utils.errorHandler);
 
 // Get proper from from ENV variable for live mode, otherwise use port 8888
-var port = process.env.PORT || 8888;
+const port = process.env.PORT || 8888;
 site.listen(port, (server) => {
     utils.setRunningServer(server);
+    log.info("Server listening on http://" + site.locals.config.API_DOMAIN + ":" + port + " in " + site.locals.config.NODE_ENV + " mode");
 });
-log.info("Server listening on http://" + site.locals.config.domain + ":" + port + " in " + site.locals.config.NODE_ENV + " mode");
