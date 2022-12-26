@@ -17,7 +17,7 @@ Utils.prototype.i18nHelper = function (req, res, next) {
     if (req.session.lang && !req.query.lang) {
         for (var i in config.SUPPORTED_LOCALES) {
             if (config.SUPPORTED_LOCALES[i] === req.session.lang) {
-                log.trace("User switched language to", req.session.lang);
+                // log.trace("User switched language to", req.session.lang);
                 setLang = req.session.lang;
                 break;
             }
@@ -25,7 +25,7 @@ Utils.prototype.i18nHelper = function (req, res, next) {
     } else if (req.query.lang) {
         for (var ii in config.SUPPORTED_LOCALES) {
             if (config.SUPPORTED_LOCALES[ii] === req.query.lang) {
-                log.trace("User switching language by query param to", req.query.lang);
+                // log.trace("User switching language by query param to", req.query.lang);
                 setLang = req.query.lang;
                 break;
             }
@@ -40,7 +40,7 @@ Utils.prototype.i18nHelper = function (req, res, next) {
     req.session.lang = setLang;
     // Allows our base html access to supported locales
     res.locals.SUPPORTED_LOCALES = config.SUPPORTED_LOCALES;
-    log.trace("Lang is", setLang, req.session);
+    // log.trace("Lang is", setLang, req.session);
     next();
 };
 

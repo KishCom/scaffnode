@@ -3,11 +3,7 @@ module.exports = {
         "node": true,
         "es6": true,
         "mocha": true,
-        "phantomjs": true
     },
-    "plugins": [
-        "html"
-    ],
     "globals":{
         "inject": true,
         "chai": true

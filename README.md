@@ -27,7 +27,7 @@ If your Node.js and NPM are already configured, setup and installation is a bree
 
 ## Frontend
 
-(DOCUMENTATION IN PROGRESS) The scaffnode frontend is a React based SPA.
+(DOCUMENTATION IN PROGRESS) The scaffnode frontend is a Svelte based SPA.
 
     cd frontend
     npm i

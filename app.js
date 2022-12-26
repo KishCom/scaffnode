@@ -6,6 +6,7 @@
 /**  Depends  **/
 const express = require("express"),
     nunjucks = require("nunjucks"),
+    fs = require("fs"),
     dateFilter = require('nunjucks-date-filter'),
     bunyan = require("bunyan"),
     bodyParser = require("body-parser"),
@@ -53,17 +54,6 @@ site.set("view engine", "html");
 site.set("views", __dirname + "/views");
 site.enable('trust proxy'); // This app is meant to be run behind NGINX
 site.disable('x-powered-by');
-// Webpack generates new filenames for our JS and CSS, let's get those
-/*site.locals.webpackAssets = {files: [], css: [], js: []};
-fs.readdirSync(__dirname + '/public/dist').forEach((file) => {
-    if ((/\.js$/i).test(file)){
-        site.locals.webpackAssets.js.push(file);
-    } else if ((/\.css$/i).test(file)) {
-        site.locals.webpackAssets.css.push(file);
-    } else {
-        site.locals.webpackAssets.files.push(file);
-    }
-});*/
 //The rest of our static-served files
 site.use(express.static(__dirname + "/public"));
 
@@ -116,8 +106,20 @@ const routes = new Routes(log, config, redisClient, utils);
     }
 });
 */
-
+site.locals.webpackAssets = {files: [], css: [], js: []};
+fs.readdirSync(__dirname + '/public/dist').forEach((file) => {
+    if ((/\.js$/i).test(file)){
+        site.locals.webpackAssets.js.push(file);
+    } else if ((/\.css$/i).test(file)) {
+        site.locals.webpackAssets.css.push(file);
+    } else {
+        site.locals.webpackAssets.files.push(file);
+    }
+});
 // Middlewares!
+if (config.NODE_ENV === "dev"){
+    log.info("Webpack HMR enabled");
+}
 site.use(bodyParser.urlencoded({extended: true}));
 site.use(bodyParser.json());
 site.use(hpp()); // Protect against HTTP Parameter Pollution attacks
@@ -125,6 +127,7 @@ site.use(expressSession({
     secret: config.SESSION_SECRET,
     key: "scaffnode-session.sid",
     resave: true,
+    saveUninitialized: false,
     store: new redisStore({
         client: redisClient,
         logErrors: log.error,

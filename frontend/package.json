@@ -1,7 +1,7 @@
 {
     "name": "scaffnode-frontend",
-    "version": "0.19.1",
-    "description": "The React.js based frontend for scaffnode",
+    "version": "0.100.0",
+    "description": "The Svelte.js based frontend for scaffnode",
     "author": "Your Name <you.name@example.org>",
     "contributors": [
         {
@@ -17,27 +17,30 @@
     },
     "main": "src/app.js",
     "dependencies": {
-        "bootstrap": "^5.x.x",
-        "font-awesome": "^4.7.0",
-        "lodash": "^4.17.21",
-        "react": "^17.0.2",
-        "react-dom": "^17.0.2"
+        "lodash": "^4.17.21"
     },
     "devDependencies": {
-        "@swc/cli": "^0.1.49",
-        "@swc/core": "^1.2.85",
-        "clean-webpack-plugin": "3.x.x",
-        "css-loader": "^6.2.0",
-        "eslint-plugin-react": "^7.25.1",
+        "@swc/cli": "^0.1.59",
+        "@swc/core": "^1.3.24",
+        "autoprefixer": "^10.4.13",
+        "bootstrap": "^5.x.x",
+        "clean-webpack-plugin": "4.x.x",
+        "css-loader": "^6.7.3",
+        "eslint-plugin-svelte": "^2.14.1",
         "file-loader": "^6.2.0",
+        "font-awesome": "^4.7.0",
         "git-revision-webpack-plugin": "^5.0.0",
-        "mini-css-extract-plugin": "^2.2.2",
-        "node-sass": "^6.0.1",
-        "sass-loader": "^12.1.0",
-        "style-loader": "^3.2.1",
-        "swc-loader": "^0.1.14",
+        "mini-css-extract-plugin": "^2.7.2",
+        "node-sass": "^8.0.0",
+        "sass-loader": "^13.2.0",
+        "style-loader": "^3.3.1",
+        "svelte": "^3.55.0",
+        "svelte-check-plugin": "^1.0.4",
+        "svelte-loader": "^3.1.4",
+        "svelte-preprocess": "^5.0.0",
+        "swc-loader": "^0.2.3",
         "webpack": "^5.x.x",
-        "webpack-cli": "^4.x.x"
+        "webpack-cli": "^5.x.x"
     },
     "private": true
 }
