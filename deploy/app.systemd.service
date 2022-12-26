@@ -1,0 +1,30 @@
+[Unit]
+Description=Scaffnode Node.js app
+
+[Service]
+Type=simple
+ExecStart=/bin/bash -c 'exec /home/ubuntu/.asdf/shims/node /home/ubuntu/scaffnode/app.js 2>&1 >> /var/log/scaffnode.log'
+WorkingDirectory=/home/ubuntu/scaffnode/
+
+# Assuming we're running NGINX/Ubuntu
+User=www-data
+Group=www-data
+
+# Environment variables:
+Environment=NODE_ENV=production
+Environment=ASDF_NODEJS_VERSION=18.4.0
+
+# Allow many incoming connections
+LimitNOFILE=infinity
+
+# Allow core dumps for debugging
+LimitCORE=infinity
+
+#StandardInput=null
+#StandardOutput=syslog
+#StandardError=syslog
+
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
