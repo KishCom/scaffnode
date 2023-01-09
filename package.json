@@ -20,7 +20,7 @@
     "i18n": "0.15.x",
     "ioredis": "^5.2.4",
     "lodash": "4.17.x",
-    "luxon": "^3.1.1",
+    "luxon": "^3.2.1",
     "multer": "1.4.x",
     "nodemon": "2.0.x",
     "nunjucks": "^3.2.3",
