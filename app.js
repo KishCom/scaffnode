@@ -13,6 +13,8 @@ const express = require("express"),
     expressSession = require("express-session"),
     //multer = require('multer'), // uncomment if using file-upload or other multi-part
     i18n = require('i18n'),
+    redis = require("ioredis"),
+    redisStore = require("connect-redis").default,
     hpp = require('hpp'),
     Routes = require("./routes"),
     Utils = require("./utils"),
@@ -52,8 +54,8 @@ env.addFilter('nl2br', function(str) {
 config.nunjucks = env;
 site.set("view engine", "html");
 site.set("views", __dirname + "/views");
-site.enable('trust proxy'); // This app is meant to be run behind NGINX
-site.disable('x-powered-by');
+site.enable("trust proxy"); // This app is meant to be run behind NGINX
+site.disable("x-powered-by");
 //The rest of our static-served files
 site.use(express.static(__dirname + "/public"));
 
@@ -74,10 +76,8 @@ const log = bunyan.createLogger({
 );
 
 // Setup redis
-const redis = require("ioredis");
-const redisStore = require('connect-redis')(expressSession);
 let redisReady = false;
-const redisClient = redis.createClient({"detect_buffers": true, port: config.REDIS_PORT, host: config.REDIS_HOST, "auth_pass": config.REDIS_PASSWORD || null});
+const redisClient = new redis({"detect_buffers": true, port: config.REDIS_PORT, host: config.REDIS_HOST, password: config.REDIS_PASSWORD || null});
 site.set('redis', redisClient);
 redisClient.on("error", (err) => {
     log.error("Redis Client", err);

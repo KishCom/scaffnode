@@ -1,24 +1,24 @@
-const {GitRevisionPlugin} = require('git-revision-webpack-plugin');
-const path = require('path');
-const webpack = require('webpack');
-const TerserPlugin = require('terser-webpack-plugin');
+const {GitRevisionPlugin} = require("git-revision-webpack-plugin");
+const path = require("path");
+const webpack = require("webpack");
+const TerserPlugin = require("terser-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
-const SveltePreprocess = require('svelte-preprocess');
-const Autoprefixer = require('autoprefixer');
+const {CleanWebpackPlugin} = require("clean-webpack-plugin");
+const SveltePreprocess = require("svelte-preprocess");
+const Autoprefixer = require("autoprefixer");
 
 const isRunningDevMode = process.env.NODE_ENV === "dev";
-const outputPath = path.resolve(__dirname, '../public/dist');
+const outputPath = path.resolve(__dirname, "../public/dist");
 
 const webpacked = {
     mode: isRunningDevMode ? "development" : "production",
     devtool: isRunningDevMode ? "eval-source-map" : false,
-    entry: './src/index.js',
+    entry: "./src/index.js",
     output: {
-        filename: 'bundle.[contenthash].js',
-        chunkFilename: '[name].[contenthash].bundle.js',
+        filename: "bundle.[contenthash].js",
+        chunkFilename: "[name].[contenthash].bundle.js",
         path: outputPath,
-        publicPath: '/',
+        publicPath: "/",
     },
     module: {
         rules: [
@@ -34,19 +34,19 @@ const webpacked = {
             // Handle Images
             {
                 test: /\.(png|svg|jpg|gif)$/,
-                use: [{loader: 'file-loader', options: {publicPath: "dist/"}}]
+                use: [{loader: "file-loader", options: {publicPath: "dist/"}}]
             },
             // Handle Fonts
             {
                 test: /\.(woff|woff2|eot|ttf|otf)$/,
-                type: 'asset/resource'
+                type: "asset/resource"
             },
             // Transpile JS
             {test: /\.js$/, exclude: /node_modules/, loader: "swc-loader"},
             // Svelte
             {test: /\.svelte$/,
                 use: {
-                    loader: 'svelte-loader',
+                    loader: "svelte-loader",
                     options: {
                         compilerOptions: {
                             // Dev mode must be enabled for HMR to work!
@@ -59,7 +59,7 @@ const webpacked = {
                             preserveLocalState: false,
                             // If this string appears anywhere in your component's code, then local
                             // state won't be preserved, even when noPreserveState is false
-                            noPreserveStateKey: '@!hmr',
+                            noPreserveStateKey: "@!hmr",
                             // Prevent doing a full reload on next HMR update after fatal error
                             noReload: false,
                             // Try to recover after runtime errors in component init
@@ -89,19 +89,25 @@ const webpacked = {
             {
                 test: /node_modules\/svelte\/.*\.mjs$/,
                 resolve: {
-                    fullySpecified: false
+                    fullySpecified: false,
+                    conditionNames: ["svelte", "browser", "import"]
                 }
             },
         ]
     },
     // leave off the extension when importing:
     resolve: {
-        extensions: ['.mjs', '.js', '.svelte'],
+        alias: {
+            svelte: path.resolve("node_modules", "svelte/src/runtime"),
+        },
+        mainFields: ["svelte", "browser", "module", "main"],
+        conditionNames: ["svelte", "browser", "import"],
+        extensions: [".mjs", ".js", ".svelte", ".ts"],
     },
     plugins: [
-        new GitRevisionPlugin(),
+        //new GitRevisionPlugin(),
         new webpack.BannerPlugin({
-            banner: "scaffnode - [name] [git-revision-hash]", // the banner as string or function, it will be wrapped in a comment
+            banner: "warden - [name]", // [git-revision-hash]", // the banner as string or function, it will be wrapped in a comment
             raw: false, // if true, banner will not be wrapped in a comment
             entryOnly: true, // if true, the banner will only be added to the entry chunks
             // test: string | RegExp | [string, RegExp], // Include all modules that pass test assertion.

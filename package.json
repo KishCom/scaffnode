@@ -1,7 +1,7 @@
 {
   "name": "scaffnode",
   "author": "Andrew Kish",
-  "version": "0.100.0",
+  "version": "0.101.0",
   "private": true,
   "scripts": {
     "start": "NODE_ENV=dev nodemon app.js | bunyan",
@@ -12,27 +12,27 @@
     "accepts": "1.3.x",
     "body-parser": "1.20.x",
     "bunyan": "1.8.x",
-    "connect-redis": "6.1.x",
+    "connect-redis": "7.1.x",
     "escape-html": "1.0.x",
-    "express": "4.18.x",
-    "express-session": "1.17.x",
+    "express": "4.21.x",
+    "express-session": "1.18.x",
     "hpp": "0.2.x",
     "i18n": "0.15.x",
-    "ioredis": "^5.2.4",
+    "ioredis": "^5.4.1",
     "lodash": "4.17.x",
-    "luxon": "^3.1.1",
+    "luxon": "^3.5.0",
     "multer": "1.4.x",
-    "nodemon": "2.0.x",
-    "nunjucks": "^3.2.3",
+    "nodemon": "3.1.x",
+    "nunjucks": "^3.2.4",
     "nunjucks-date-filter": "0.1.x",
-    "validator": "13.7.x"
+    "validator": "13.12.x"
   },
   "devDependencies": {
-    "chai": "4.3.x",
-    "eslint": "8.30.0",
-    "mocha": "10.2.x",
-    "supertest": "6.3.x",
-    "webpack-dev-middleware": "^6.0.1",
-    "webpack-hot-middleware": "^2.25.3"
+    "chai": "5.x.x",
+    "eslint": "8.x.x",
+    "mocha": "10.7.x",
+    "supertest": "7.x.x",
+    "webpack-dev-middleware": "^7.4.2",
+    "webpack-hot-middleware": "^2.26.1"
   }
 }

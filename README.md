@@ -63,7 +63,7 @@ Example language files are found in `locale` and example useage can be found in 
 We need tests, but until then:
 
     cd frontend
-    grunt build
+    npm run build.live
     cd ..
 
 or run a live server (concats/minifies JS/CSS)
