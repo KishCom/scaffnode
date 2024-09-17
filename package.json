@@ -15,6 +15,7 @@
     "connect-redis": "7.1.x",
     "escape-html": "1.0.x",
     "express": "4.21.x",
+    "eslint": "8.x.x",
     "express-session": "1.18.x",
     "hpp": "0.2.x",
     "i18n": "0.15.x",
@@ -29,7 +30,6 @@
   },
   "devDependencies": {
     "chai": "5.x.x",
-    "eslint": "8.x.x",
     "mocha": "10.7.x",
     "supertest": "7.x.x",
     "webpack-dev-middleware": "^7.4.2",

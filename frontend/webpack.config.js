@@ -13,12 +13,13 @@ const outputPath = path.resolve(__dirname, "../public/dist");
 const webpacked = {
     mode: isRunningDevMode ? "development" : "production",
     devtool: isRunningDevMode ? "eval-source-map" : false,
-    entry: "./src/index.js",
+    entry: "./src/App.svelte",
     output: {
         filename: "bundle.[contenthash].js",
         chunkFilename: "[name].[contenthash].bundle.js",
         path: outputPath,
-        publicPath: "/",
+        publicPath: "/dist/",
+        assetModuleFilename: "fonts/[name][ext]"
     },
     module: {
         rules: [
@@ -29,7 +30,9 @@ const webpacked = {
                     MiniCssExtractPlugin.loader, // We still save our CSS file and reference it in the template
                     //{loader: "style-loader"}, // ... however we could load it dynamically instead (comment line above, uncomment this line, and remove <link> in <head> of "views/base.html")
                     {loader: "css-loader"},
-                    {loader: "sass-loader", options: {sourceMap: isRunningDevMode}}]
+                    {loader: "sass-loader", options: {
+                        sourceMap: isRunningDevMode,
+                    }}]
             },
             // Handle Images
             {
@@ -39,7 +42,7 @@ const webpacked = {
             // Handle Fonts
             {
                 test: /\.(woff|woff2|eot|ttf|otf)$/,
-                type: "asset/resource"
+                type: "asset"
             },
             // Transpile JS
             {test: /\.js$/, exclude: /node_modules/, loader: "swc-loader"},
@@ -105,7 +108,7 @@ const webpacked = {
         extensions: [".mjs", ".js", ".svelte", ".ts"],
     },
     plugins: [
-        //new GitRevisionPlugin(),
+        new GitRevisionPlugin(),
         new webpack.BannerPlugin({
             banner: "warden - [name]", // [git-revision-hash]", // the banner as string or function, it will be wrapped in a comment
             raw: false, // if true, banner will not be wrapped in a comment

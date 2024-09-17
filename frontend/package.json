@@ -15,9 +15,10 @@
         "build.live": "NODE_ENV=live npx webpack --config webpack.config.js",
         "watch": "NODE_ENV=dev npx webpack --watch --config webpack.config.js"
     },
-    "main": "src/app.js",
+    "main": "src/App.svelte",
     "dependencies": {
-        "lodash": "^4.17.21"
+        "lodash": "^4.17.21",
+        "sass": "^1.78.0"
     },
     "devDependencies": {
         "@swc/cli": "^0.4.x",
@@ -26,18 +27,19 @@
         "bootstrap": "^5.x.x",
         "clean-webpack-plugin": "4.x.x",
         "css-loader": "^7.1.2",
+        "eslint": "8.x.x",
         "eslint-plugin-svelte": "^2.44.0",
         "file-loader": "^6.2.0",
-        "font-awesome": "^4.7.0",
+        "@fortawesome/fontawesome-free": "6.x.x",
         "git-revision-webpack-plugin": "^5.0.0",
         "mini-css-extract-plugin": "^2.9.1",
         "node-sass": "^9.0.0",
-        "sass-loader": "^16.0.1",
+        "sass-loader": "^14.x.x",
         "style-loader": "^4.0.0",
         "svelte": "^4.2.19",
         "svelte-check-plugin": "^1.0.4",
         "svelte-loader": "^3.2.3",
-        "svelte-preprocess": "^6.0.2",
+        "svelte-preprocess": "^5.x.x",
         "swc-loader": "^0.2.6",
         "webpack": "^5.x.x",
         "webpack-cli": "^5.x.x"
