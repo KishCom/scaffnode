@@ -54,11 +54,11 @@ Which is just an alias of:
 
     NODE_ENV=dev mocha tests/*_tests.js
 
-###i18n Multi-language support
+### i18n Multi-language support
 
 Example language files are found in `locale` and example useage can be found in `views/index.html`.
 
-###Build frontend for production
+### Build frontend for production
 
 We need tests, but until then:
 
@@ -70,6 +70,6 @@ or run a live server (concats/minifies JS/CSS)
 
     npm run start.live
 
-##Live Deploy Helpers
+## Live Deploy Helpers
 
 Find NGINX config and SystemD service in the `deploy` folder. You can also use pm2 if desired, a very basic pm2 ecosystem file is provided. The systemD file makes a few assumptions about your environment: You have a `www-data` user+group, and that you installed Node.js with [ASDF](https://asdf-vm.com).
