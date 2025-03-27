@@ -14,7 +14,7 @@ const express = require("express"),
     //multer = require('multer'), // uncomment if using file-upload or other multi-part
     i18n = require('i18n'),
     redis = require("ioredis"),
-    redisStore = require("connect-redis").default,
+    {RedisStore} = require("connect-redis"),
     hpp = require('hpp'),
     Routes = require("./routes"),
     Utils = require("./utils"),
@@ -128,7 +128,7 @@ site.use(expressSession({
     key: "scaffnode-session.sid",
     resave: true,
     saveUninitialized: false,
-    store: new redisStore({
+    store: new RedisStore({
         client: redisClient,
         logErrors: log.error,
         ttl: 2592000 // 30 days in s

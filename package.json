@@ -14,8 +14,8 @@
     "bunyan": "1.8.x",
     "connect-redis": "8.0.x",
     "escape-html": "1.0.x",
-    "express": "4.21.x",
     "eslint": "9.x.x",
+    "express": "4.21.x",
     "express-session": "1.18.x",
     "hpp": "0.2.x",
     "i18n": "0.15.x",
@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "chai": "5.x.x",
+    "eslint-plugin-jsdoc": "^50.6.9",
     "mocha": "11.1.x",
     "supertest": "7.x.x",
     "webpack-dev-middleware": "^7.4.2",
