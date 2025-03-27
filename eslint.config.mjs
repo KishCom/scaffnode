@@ -1,40 +1,74 @@
-module.exports = {
-    "env": {
-        "node": true,
-        "es6": true,
-        "mocha": true,
+import { defineConfig } from "eslint/config";
+import globals from "globals";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import js from "@eslint/js";
+import { FlatCompat } from "@eslint/eslintrc";
+import jsdoc from "eslint-plugin-jsdoc";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const compat = new FlatCompat({
+    baseDirectory: __dirname,
+    recommendedConfig: js.configs.recommended,
+    allConfig: js.configs.all
+});
+
+export default defineConfig([{
+    extends: compat.extends("eslint:recommended"),
+
+    languageOptions: {
+        globals: {
+            ...globals.node,
+            ...globals.mocha,
+            inject: true,
+            chai: true,
+        },
+
+        ecmaVersion: 2015,
     },
-    "globals":{
-        "inject": true,
-        "chai": true
-    },
-    "extends": "eslint:recommended",
-    "parserOptions": {
-        "sourceType": "module"
-    },
-    "rules": {
+
+    rules: {
         "accessor-pairs": 2,
         "array-bracket-spacing": [2, "never"],
         "array-callback-return": 2,
         "arrow-body-style": [2, "as-needed"],
         "arrow-parens": 2,
-        "arrow-spacing": [2, {"before": true, "after": true}],
+
+        "arrow-spacing": [2, {
+            before: true,
+            after: true,
+        }],
+
         "block-scoped-var": 2,
         "block-spacing": [2, "always"],
-        "brace-style": [2, "1tbs", {"allowSingleLine": true}],
+
+        "brace-style": [2, "1tbs", {
+            allowSingleLine: true,
+        }],
+
         "callback-return": 2,
-        "camelcase": 2,
-        "comma-spacing": [2, {"before": false, "after": true}],
+        camelcase: 2,
+
+        "comma-spacing": [2, {
+            before: false,
+            after: true,
+        }],
+
         "comma-style": [2, "last"],
         "computed-property-spacing": [2, "never"],
         "consistent-return": 0,
         "consistent-this": [2, "that", "self"],
-        "curly": 2,
+        curly: 2,
         "default-case": 2,
         "dot-location": [2, "property"],
-        "dot-notation": [2, {"allowKeywords": true}],
+
+        "dot-notation": [2, {
+            allowKeywords: true,
+        }],
+
         "eol-last": 2,
-        "eqeqeq": 2,
+        eqeqeq: 2,
         "func-names": 0,
         "func-style": 0,
         "generator-star-spacing": 2,
@@ -44,7 +78,7 @@ module.exports = {
         "id-blacklist": 2,
         "id-length": 0,
         "id-match": 0,
-        "indent": 2,
+        indent: 2,
         "init-declarations": 0,
         "key-spacing": 0,
         "keyword-spacing": 0,
@@ -99,7 +133,11 @@ module.exports = {
         "no-new-require": 2,
         "no-new-wrappers": 2,
         "no-octal-escape": 2,
-        "no-param-reassign": [0, {"props": false}],
+
+        "no-param-reassign": [0, {
+            props: false,
+        }],
+
         "no-path-concat": 0,
         "no-plusplus": 0,
         "no-process-env": 0,
@@ -125,8 +163,16 @@ module.exports = {
         "no-unmodified-loop-condition": 2,
         "no-unneeded-ternary": 2,
         "no-unused-expressions": 2,
-        "no-unused-vars": [2, {"args": "none"}],
-        "no-use-before-define": [2, {"classes": false, "functions": false}],
+
+        "no-unused-vars": [2, {
+            args: "none",
+        }],
+
+        "no-use-before-define": [2, {
+            classes: false,
+            functions: false,
+        }],
+
         "no-useless-call": 2,
         "no-useless-concat": 2,
         "no-useless-constructor": 2,
@@ -135,10 +181,12 @@ module.exports = {
         "no-warning-comments": 0,
         "no-whitespace-before-property": 2,
         "no-with": 2,
+
         "object-curly-spacing": [2, "never", {
-            "objectsInObjects": false,
-            "arraysInObjects": false
+            objectsInObjects: false,
+            arraysInObjects: false,
         }],
+
         "object-shorthand": 2,
         "one-var": 0,
         "one-var-declaration-per-line": 0,
@@ -152,10 +200,10 @@ module.exports = {
         "prefer-spread": 2,
         "prefer-template": 0,
         "quote-props": 0,
-        "quotes": 0,
-        "radix": 2,
+        quotes: 0,
+        radix: 2,
         "require-yield": 2,
-        "semi": 2,
+        semi: 2,
         "semi-spacing": 2,
         "sort-imports": 2,
         "sort-vars": 0,
@@ -165,13 +213,12 @@ module.exports = {
         "space-infix-ops": 0,
         "space-unary-ops": 2,
         "spaced-comment": 0,
-        "strict": 2,
+        strict: 2,
         "template-curly-spacing": 2,
-        "valid-jsdoc": 2,
         "vars-on-top": 0,
         "wrap-iife": 2,
         "wrap-regex": 2,
         "yield-star-spacing": 2,
-        "yoda": [2, "never"]
-    }
-};
+        yoda: [2, "never"],
+    },
+}]);
