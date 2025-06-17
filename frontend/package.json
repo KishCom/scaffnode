@@ -1,6 +1,6 @@
 {
     "name": "scaffnode-frontend",
-    "version": "0.101.0",
+    "version": "0.103.0",
     "description": "The Svelte.js based frontend for scaffnode",
     "author": "Your Name <you.name@example.org>",
     "contributors": [
@@ -18,12 +18,12 @@
     "main": "src/App.svelte",
     "dependencies": {
         "lodash": "^4.17.21",
-        "sass": "^1.78.0"
+        "sass": "^1.89.2"
     },
     "devDependencies": {
-        "@swc/cli": "^0.4.x",
-        "@swc/core": "^1.7.26",
-        "autoprefixer": "^10.4.20",
+        "@swc/cli": "^0.7.x",
+        "@swc/core": "^1.12.1",
+        "autoprefixer": "^10.4.21",
         "bootstrap": "^5.x.x",
         "clean-webpack-plugin": "4.x.x",
         "css-loader": "^7.1.2",
@@ -32,14 +32,14 @@
         "file-loader": "^6.2.0",
         "@fortawesome/fontawesome-free": "6.x.x",
         "git-revision-webpack-plugin": "^5.0.0",
-        "mini-css-extract-plugin": "^2.9.1",
+        "mini-css-extract-plugin": "^2.9.2",
         "node-sass": "^9.0.0",
-        "sass-loader": "^14.x.x",
+        "sass-loader": "^16.x.x",
         "style-loader": "^4.0.0",
-        "svelte": "^4.2.19",
+        "svelte": "^4.x.x",
         "svelte-check-plugin": "^1.0.4",
-        "svelte-loader": "^3.2.3",
-        "svelte-preprocess": "^5.x.x",
+        "svelte-loader": "^3.2.4",
+        "svelte-preprocess": "^6.x.x",
         "swc-loader": "^0.2.6",
         "webpack": "^5.x.x",
         "webpack-cli": "^5.x.x"

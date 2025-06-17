@@ -7,22 +7,22 @@
 const express = require("express"),
     nunjucks = require("nunjucks"),
     fs = require("fs"),
-    dateFilter = require('nunjucks-date-filter'),
+    dateFilter = require("nunjucks-date-filter"),
     bunyan = require("bunyan"),
     bodyParser = require("body-parser"),
     expressSession = require("express-session"),
     //multer = require('multer'), // uncomment if using file-upload or other multi-part
-    i18n = require('i18n'),
+    i18n = require("i18n"),
     redis = require("ioredis"),
     {RedisStore} = require("connect-redis"),
-    hpp = require('hpp'),
+    hpp = require("hpp"),
     Routes = require("./routes"),
     Utils = require("./utils"),
     site = module.exports = express();
 
 // Load configuration details based on your environment
 let config;
-const packagejson = require('./package');
+const packagejson = require("./package");
 let isTestMode = false;
 if (process.env.NODE_ENV === "dev" || process.env.NODE_ENV === "live" || process.env.NODE_ENV === "test"){
     // If we're in test mode, just set a flag on the config object and switch the NODE_ENV to "dev"
@@ -47,8 +47,8 @@ const env = nunjucks.configure("views", {
     noCache: config.NODE_ENV === "dev",
     express: site
 });
-env.addFilter('date', dateFilter);
-env.addFilter('nl2br', function(str) {
+env.addFilter("date", dateFilter);
+env.addFilter("nl2br", function(str) {
     return str.replace(/\n/gi, "<br />");
 });
 config.nunjucks = env;
@@ -128,18 +128,13 @@ site.use(expressSession({
     key: "scaffnode-session.sid",
     resave: true,
     saveUninitialized: false,
-    store: new RedisStore({
-        client: redisClient,
-        logErrors: log.error,
-        ttl: 2592000 // 30 days in s
-    }),
+    
     cookie: {
-        maxAge: 2592000 * 1000, // 30 days in ms
+        expires: 604800 * 1000, // 7 days in s
         path: "/",
-        //secure: config.NODE_ENV !== "dev", // Enable when you've got SSL setup
-        //domain: ".scaffnode.com" // Enable when you've got your domain setup
+        secure: false,
+        domain: `.${config.API_DOMAIN}`
     },
-    rolling: true,
     unset: "destroy"
 }));
 
