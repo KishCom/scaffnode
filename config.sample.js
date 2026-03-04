@@ -1,4 +1,5 @@
 exports.config = {
+    APP_NAME: "scaffnode",
     API_DOMAIN: "scaffnode.com",
     CDN_DOMAIN: "cdn.scaffnode.com",
     SUPPORTED_LOCALES: ['en', 'fr'],

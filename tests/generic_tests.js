@@ -2,7 +2,7 @@ const request = require('supertest'),
     app = require('./../app.js'),
     bunyan = require('bunyan'),
     chai = require('chai'),
-    config = require("./../config").config.dev;
+    config = require("./../config").config;
 
 chai.should();
 
@@ -73,7 +73,7 @@ describe('A test that requires the session cookie', function(){
                 // Maybe your response is a JSON response with a `user` object from the database:
                 //res.body.user.should.not.have.property('password');
                 //res.body.user.should.have.property('username');
-                var findCookie = String(res.request.cookies).split(config.appName + ".sid");
+                var findCookie = String(res.request.cookies).split(config.APP_NAME + "-session.sid");
                 findCookie.length.should.equal(2);
                 done();
             });
