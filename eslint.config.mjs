@@ -1,10 +1,9 @@
-import { defineConfig } from "eslint/config";
+import {FlatCompat} from "@eslint/eslintrc";
+import {defineConfig} from "eslint/config";
+import {fileURLToPath} from "node:url";
 import globals from "globals";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
 import js from "@eslint/js";
-import { FlatCompat } from "@eslint/eslintrc";
-import jsdoc from "eslint-plugin-jsdoc";
+import path from "node:path";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -25,7 +24,7 @@ export default defineConfig([{
             chai: true,
         },
 
-        ecmaVersion: 2015,
+        ecmaVersion: 2022,
     },
 
     rules: {
@@ -48,7 +47,7 @@ export default defineConfig([{
         }],
 
         "callback-return": 2,
-        camelcase: 2,
+        camelcase: 0,
 
         "comma-spacing": [2, {
             before: false,

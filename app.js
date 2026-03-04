@@ -128,7 +128,7 @@ site.use(expressSession({
     key: "scaffnode-session.sid",
     resave: true,
     saveUninitialized: false,
-    
+
     cookie: {
         expires: 604800 * 1000, // 7 days in s
         path: "/",
@@ -160,7 +160,7 @@ site.use((req, res, next) => {
 site.get("/", routes.base.index);
 site.get("/about", routes.base.aboutUs);
 //Catch all other attempted routes and throw them a 404!
-site.all("*", function(req, resp, next){
+site.all("{*splat}", function(req, resp, next){
     next({name: "NotFound", "message": "Oops! The page you requested doesn't exist", "status": 404});
 });
 // Finally, if no other routes match, use our errorHandler

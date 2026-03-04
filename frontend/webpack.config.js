@@ -1,4 +1,3 @@
-const {GitRevisionPlugin} = require("git-revision-webpack-plugin");
 const path = require("path");
 const webpack = require("webpack");
 const TerserPlugin = require("terser-webpack-plugin");
@@ -8,18 +7,22 @@ const SveltePreprocess = require("svelte-preprocess");
 const Autoprefixer = require("autoprefixer");
 
 const isRunningDevMode = process.env.NODE_ENV === "dev";
-const outputPath = path.resolve(__dirname, "../public/dist");
+
+const srcPath = "../public/dist";
+const entryPoint = "./src/index.js";
+const publicPath = "dist/";
+
+const outputPath = path.resolve(__dirname, srcPath);
 
 const webpacked = {
     mode: isRunningDevMode ? "development" : "production",
-    devtool: isRunningDevMode ? "eval-source-map" : false,
-    entry: "./src/App.svelte",
+    devtool: "source-map",
+    entry: entryPoint,
     output: {
         filename: "bundle.[contenthash].js",
         chunkFilename: "[name].[contenthash].bundle.js",
         path: outputPath,
         publicPath: "/dist/",
-        assetModuleFilename: "fonts/[name][ext]"
     },
     module: {
         rules: [
@@ -30,22 +33,27 @@ const webpacked = {
                     MiniCssExtractPlugin.loader, // We still save our CSS file and reference it in the template
                     //{loader: "style-loader"}, // ... however we could load it dynamically instead (comment line above, uncomment this line, and remove <link> in <head> of "views/base.html")
                     {loader: "css-loader"},
-                    {loader: "sass-loader", options: {
-                        sourceMap: isRunningDevMode,
-                    }}]
+                    {loader: "sass-loader", options: {sourceMap: isRunningDevMode}}]
             },
-            // Handle Images
+            // Handle Images and sounds
             {
-                test: /\.(png|svg|jpg|gif)$/,
-                use: [{loader: "file-loader", options: {publicPath: "dist/"}}]
+                test: /\.(png|svg|jpg|gif|wav|mp3)$/,
+                use: [{loader: "file-loader", options: {publicPath}}]
             },
             // Handle Fonts
             {
                 test: /\.(woff|woff2|eot|ttf|otf)$/,
-                type: "asset"
+                type: "asset/resource",
             },
             // Transpile JS
-            {test: /\.js$/, exclude: /node_modules/, loader: "swc-loader"},
+            {test: /\.js$/, exclude: /node_modules/, loader: "swc-loader",  options: {
+                "sourceMaps": true,
+                "inlineSourcesContent": true
+            }},
+            {
+                test: /\.glsl$/,
+                type: 'asset/source'
+            },
             // Svelte
             {test: /\.svelte$/,
                 use: {
@@ -57,27 +65,6 @@ const webpacked = {
                         },
                         emitCss: true,
                         hotReload: isRunningDevMode,
-                        hotOptions: {
-                            // Prevent preserving local component state
-                            preserveLocalState: false,
-                            // If this string appears anywhere in your component's code, then local
-                            // state won't be preserved, even when noPreserveState is false
-                            noPreserveStateKey: "@!hmr",
-                            // Prevent doing a full reload on next HMR update after fatal error
-                            noReload: false,
-                            // Try to recover after runtime errors in component init
-                            optimistic: false,
-                            // --- Advanced ---
-                            // Prevent adding an HMR accept handler to components with
-                            // accessors option to true, or to components with named exports
-                            // (from <script context="module">). This have the effect of
-                            // recreating the consumer of those components, instead of the
-                            // component themselves, on HMR updates. This might be needed to
-                            // reflect changes to accessors / named exports in the parents,
-                            // depending on how you use them.
-                            acceptAccessors: true,
-                            acceptNamedExports: true,
-                        },
                         preprocess: SveltePreprocess({
                             scss: true,
                             sass: true,
@@ -92,8 +79,14 @@ const webpacked = {
             {
                 test: /node_modules\/svelte\/.*\.mjs$/,
                 resolve: {
-                    fullySpecified: false,
-                    conditionNames: ["svelte", "browser", "import"]
+                    fullySpecified: false
+                }
+            },
+            // Fix for third-party packages with module resolution issues in Svelte 5
+            {
+                test: /node_modules\/.*\.js$/,
+                resolve: {
+                    fullySpecified: false
                 }
             },
         ]
@@ -101,16 +94,17 @@ const webpacked = {
     // leave off the extension when importing:
     resolve: {
         alias: {
-            svelte: path.resolve("node_modules", "svelte/src/runtime"),
+            "lodash-es": "lodash"
         },
         mainFields: ["svelte", "browser", "module", "main"],
         conditionNames: ["svelte", "browser", "import"],
         extensions: [".mjs", ".js", ".svelte", ".ts"],
+        fullySpecified: false
     },
     plugins: [
-        new GitRevisionPlugin(),
+        //new GitRevisionPlugin(),
         new webpack.BannerPlugin({
-            banner: "warden - [name]", // [git-revision-hash]", // the banner as string or function, it will be wrapped in a comment
+            banner: "scaffnode - [name]", // [git-revision-hash]", // the banner as string or function, it will be wrapped in a comment
             raw: false, // if true, banner will not be wrapped in a comment
             entryOnly: true, // if true, the banner will only be added to the entry chunks
             // test: string | RegExp | [string, RegExp], // Include all modules that pass test assertion.
@@ -130,7 +124,11 @@ const webpacked = {
     }
 };
 if (!isRunningDevMode){
-    webpacked.optimization.minimizer = [new TerserPlugin()];
+    webpacked.optimization.minimizer = [new TerserPlugin({terserOptions: {
+        compress: true,
+        mangle: true,
+        sourceMap: true,
+    }})];
 }
 
 module.exports = webpacked;
