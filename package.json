@@ -23,7 +23,7 @@
     "hpp": "0.2.x",
     "i18n": "0.15.x",
     "ioredis": "^5.10.0",
-    "lodash": "4.17.x",
+    "lodash": "4.18.x",
     "luxon": "^3.7.2",
     "nodemon": "3.1.x",
     "nunjucks": "^3.2.4",
