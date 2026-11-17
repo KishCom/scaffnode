@@ -14,7 +14,7 @@ const express = require("express"),
     //multer = require('multer'), // uncomment if using file-upload or other multi-part
     i18n = require("i18n"),
     redis = require("ioredis"),
-    {RedisStore} = require("connect-redis"),
+    {default: RedisStore} = require("connect-redis"),
     hpp = require("hpp"),
     Routes = require("./routes"),
     Utils = require("./utils"),
@@ -77,14 +77,14 @@ const log = bunyan.createLogger({
 
 // Setup redis
 let redisReady = false;
-const redisClient = new redis({"detect_buffers": true, port: config.REDIS_PORT, host: config.REDIS_HOST, password: config.REDIS_PASSWORD || null});
+const redisClient = new redis({port: config.REDIS_PORT, host: config.REDIS_HOST, password: config.REDIS_PASSWORD || null});
 site.set('redis', redisClient);
 redisClient.on("error", (err) => {
     log.error("Redis Client", err);
 });
-redisClient.on("end", (err) => {
-    log.error("Redis unavailable", err);
-    redisReady = true;
+redisClient.on("end", () => {
+    log.error("Redis unavailable");
+    redisReady = false;
 });
 redisClient.on("ready", () => {
     log.debug("✅ Connected to Redis");
@@ -92,7 +92,7 @@ redisClient.on("ready", () => {
 });
 
 // Initalize routes and a few utilities helpers (i18n and error handling utils)
-const utils = new Utils(site, log, config, redisClient);
+const utils = new Utils(site, log, config);
 const routes = new Routes(log, config, redisClient, utils);
 
 // Multipart upload handler
@@ -107,33 +107,45 @@ const routes = new Routes(log, config, redisClient, utils);
 });
 */
 site.locals.webpackAssets = {files: [], css: [], js: []};
-fs.readdirSync(__dirname + '/public/dist').forEach((file) => {
-    if ((/\.js$/i).test(file)){
-        site.locals.webpackAssets.js.push(file);
-    } else if ((/\.css$/i).test(file)) {
-        site.locals.webpackAssets.css.push(file);
-    } else {
-        site.locals.webpackAssets.files.push(file);
-    }
-});
-// Middlewares!
-if (config.NODE_ENV === "dev"){
-    log.info("Webpack HMR enabled");
+const distPath = __dirname + "/public/dist";
+if (fs.existsSync(distPath)){
+    fs.readdirSync(distPath).forEach((file) => {
+        if ((/\.js$/i).test(file)){
+            site.locals.webpackAssets.js.push(file);
+        } else if ((/\.css$/i).test(file)) {
+            site.locals.webpackAssets.css.push(file);
+        } else {
+            site.locals.webpackAssets.files.push(file);
+        }
+    });
+    // The webpack runtime chunk must load before the main bundle
+    site.locals.webpackAssets.js.sort((a, b) => {
+        if (a.startsWith("runtime.")){ return -1; }
+        if (b.startsWith("runtime.")){ return 1; }
+        return 0;
+    });
+}else{
+    log.warn("public/dist not found - build the frontend first: cd frontend && npm run build");
 }
+// Middlewares!
 site.use(bodyParser.urlencoded({extended: true}));
 site.use(bodyParser.json());
 site.use(hpp()); // Protect against HTTP Parameter Pollution attacks
 site.use(expressSession({
+    // Namespaced prefix so multiple apps can safely share one Redis instance
+    store: new RedisStore({client: redisClient, prefix: packagejson.name + ":sess:"}),
     secret: config.SESSION_SECRET,
-    key: "scaffnode-session.sid",
-    resave: true,
+    name: "scaffnode-session.sid",
+    resave: false,
     saveUninitialized: false,
 
     cookie: {
-        expires: 604800 * 1000, // 7 days in s
+        maxAge: 604800 * 1000, // 7 days in ms
         path: "/",
-        secure: false,
-        domain: `.${config.API_DOMAIN}`
+        // Secure cookies and the site domain only apply in live mode (HTTPS behind NGINX);
+        // in dev the cookie defaults to the current host so localhost sessions work
+        secure: config.NODE_ENV === "live",
+        ...(config.NODE_ENV === "live" ? {domain: `.${config.API_DOMAIN}`} : {})
     },
     unset: "destroy"
 }));
@@ -151,7 +163,7 @@ site.use(utils.i18nHelper);
 
 site.use((req, res, next) => {
     if (!redisReady){
-        return res.json({error: true, message: "Waiting for Redis...", data: false});
+        return res.status(503).json({error: true, message: "Waiting for Redis...", data: false});
     }
     next();
 });
@@ -166,9 +178,9 @@ site.all("{*splat}", function(req, resp, next){
 // Finally, if no other routes match, use our errorHandler
 site.use(utils.errorHandler);
 
-// Get proper from from ENV variable for live mode, otherwise use port 8888
+// Get port from ENV variable, otherwise use port 8888
 const port = process.env.PORT || 8888;
-site.listen(port, (server) => {
+const server = site.listen(port, () => {
     utils.setRunningServer(server);
     log.info("Server listening on http://" + site.locals.config.API_DOMAIN + ":" + port + " in " + site.locals.config.NODE_ENV + " mode");
 });

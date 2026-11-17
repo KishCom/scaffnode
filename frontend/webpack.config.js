@@ -1,10 +1,13 @@
-const path = require("path");
-const webpack = require("webpack");
-const TerserPlugin = require("terser-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const {CleanWebpackPlugin} = require("clean-webpack-plugin");
-const SveltePreprocess = require("svelte-preprocess");
-const Autoprefixer = require("autoprefixer");
+import path from "node:path";
+import {fileURLToPath} from "node:url";
+import webpack from "webpack";
+import TerserPlugin from "terser-webpack-plugin";
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
+import {CleanWebpackPlugin} from "clean-webpack-plugin";
+import SveltePreprocess from "svelte-preprocess";
+import Autoprefixer from "autoprefixer";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const isRunningDevMode = process.env.NODE_ENV === "dev";
 
@@ -19,7 +22,7 @@ const webpacked = {
     devtool: "source-map",
     entry: entryPoint,
     output: {
-        filename: "bundle.[contenthash].js",
+        filename: "[name].bundle.[contenthash].js",
         chunkFilename: "[name].[contenthash].bundle.js",
         path: outputPath,
         publicPath: "/dist/",
@@ -60,11 +63,9 @@ const webpacked = {
                     loader: "svelte-loader",
                     options: {
                         compilerOptions: {
-                            // Dev mode must be enabled for HMR to work!
                             dev: isRunningDevMode,
                         },
                         emitCss: true,
-                        hotReload: isRunningDevMode,
                         preprocess: SveltePreprocess({
                             scss: true,
                             sass: true,
@@ -116,7 +117,6 @@ const webpacked = {
             chunkFilename: "bundle.[contenthash].[id].css"
         }),
         new webpack.ProgressPlugin(),
-        new webpack.HotModuleReplacementPlugin(),
         new CleanWebpackPlugin(),
     ],
     optimization: {
@@ -131,4 +131,4 @@ if (!isRunningDevMode){
     }})];
 }
 
-module.exports = webpacked;
+export default webpacked;

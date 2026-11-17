@@ -15,7 +15,7 @@
     "body-parser": "2.4.x",
     "brace-expansion": "^5.0.13",
     "bunyan": "1.8.x",
-    "connect-redis": "10.0.x",
+    "connect-redis": "^7.1.1",
     "escape-html": "1.0.x",
     "eslint": "10.x.x",
     "express": "5.x.x",
@@ -40,16 +40,13 @@
     "chai": "6.x.x",
     "eslint-plugin-jsdoc": "^65.4.7",
     "mocha": "12.0.x",
-    "supertest": "7.x.x",
-    "webpack-dev-middleware": "^8.6.1",
-    "webpack-hot-middleware": "^2.26.1"
+    "supertest": "7.x.x"
   },
   "overrides": {
     "picomatch": "^4.0.7",
     "qs": "^6.17.1",
     "brace-expansion": "^5.0.13",
     "fast-uri": "^4.2.3",
-    "minimatch": "^11.0.9",
     "glob": "^14.0.6"
   }
 }

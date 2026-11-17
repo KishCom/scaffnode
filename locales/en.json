@@ -11,5 +11,6 @@
 	"English": "English",
 	"French": "French",
 	"Pirate": "Pirate",
-	"Welcome!": "Welcome!"
+	"Welcome!": "Welcome!",
+	"error500Message": "Something went wrong on our end."
 }

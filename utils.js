@@ -50,7 +50,7 @@ Utils.prototype.setRunningServer = function(runningServer){
 };
 
 /* Error handler */
-Utils.prototype.errorHandler = function (err, req, res, next) { //eslint-disable-line no-unused-vars
+Utils.prototype.errorHandler = function (err, req, res, next) {
     var env = process.env.NODE_ENV;
     // Respect err.status
     if (err.status) {
@@ -61,20 +61,20 @@ Utils.prototype.errorHandler = function (err, req, res, next) { //eslint-disable
         res.statusCode = 500;
     }
 
-    // Write error to log and log to opbeat
+    // Write error to log
     if (res.statusCode !== 404) {
         log.fatal(err.stack || "", JSON.stringify(err));
     }
 
     // Cannot actually respond
-    if (res._header) {
+    if (res.headersSent) {
         return req.socket.destroy();
     }
 
-    // Properly kill server if there's an unhandled exception
+    // Properly kill the server if there's an unhandled exception in live mode, so the
+    // process manager (systemd/pm2) can restart it fresh. Dev/test processes are left alone.
     var killServer = function () {
-        if (process.env.NODE_ENV !== "live") { // We only need to do this on production
-            process.exit(-1);
+        if (process.env.NODE_ENV !== "live" || !server) {
             return;
         }
         var suicideTimeout = 30000; // Wait for connections to close for 30 seconds
@@ -100,7 +100,7 @@ Utils.prototype.errorHandler = function (err, req, res, next) { //eslint-disable
     // Return html
     if (type === 'html') {
         if (res.statusCode >= 400 && res.statusCode <= 499) {
-            log.info("404 :", req.url, " UA: ", req.headers["user-agent"], "IP: ", req.ip);
+            log.info(res.statusCode + " :", req.url, " UA: ", req.headers["user-agent"], "IP: ", req.ip);
             return res.render("errors/404.html", {
                 env,
                 httpStatus: res.statusCode
@@ -115,7 +115,11 @@ Utils.prototype.errorHandler = function (err, req, res, next) { //eslint-disable
         });
     // Return json
     } else if (type === 'json') {
-        var error = {error: true, message: err.message, stack: err.stack};
+        var error = {error: true, message: err.message};
+        // Never leak stack traces to clients in live mode
+        if (env === "dev") {
+            error.stack = err.stack;
+        }
         for (var prop in err) {
             if (err[prop]) {
                 error[prop] = err[prop];
@@ -127,13 +131,15 @@ Utils.prototype.errorHandler = function (err, req, res, next) { //eslint-disable
         // Return plain text
     } else {
         res.setHeader('Content-Type', 'text/plain');
-        res.end(err.stack || String(err));
-        if (res.statusCode >= 500) {
-            killServer();
-        }
+        res.end(env === "dev" ? (err.stack || String(err)) : String(err.message));
+    }
+    // In live mode, gracefully restart after an unhandled 5xx so we don't keep
+    // serving requests in a potentially corrupt state
+    if (res.statusCode >= 500) {
+        killServer();
     }
     // Sorry Keep-Alive connections, but we need to part ways
-    req.connection.setTimeout(1);
+    req.socket.setTimeout(1);
 };
 
 module.exports = Utils;

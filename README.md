@@ -18,7 +18,8 @@ If your Node.js and NPM are already configured, setup and installation is a bree
     cp config.sample.js config.js
 
     # Name the project. Replace "YourProjectsNameHere" in the next command with your project name (alpha-numeric only)
-    find . -type f | xargs sed -i 's/scaffnode/YourProjectsNameHere/gi'
+    # IMPORTANT: run this BEFORE npm install - it excludes .git and node_modules so it doesn't corrupt them
+    find . -type f -not -path "./.git/*" -not -path "./node_modules/*" -not -path "./frontend/node_modules/*" | xargs sed -i 's/scaffnode/YourProjectsNameHere/gi'
 
     # Edit config.js with your details
 
@@ -52,7 +53,12 @@ Run tests:
 
 Which is just an alias of:
 
-    NODE_ENV=dev mocha tests/*_tests.js
+    NODE_ENV=test mocha --exit tests/*_tests.js
+
+Frontend tests (Jest) live in `frontend/`:
+
+    cd frontend
+    npm test
 
 ### i18n Multi-language support
 

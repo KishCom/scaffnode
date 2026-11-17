@@ -11,5 +11,6 @@
 	"English": "anglais",
 	"French": "Français",
 	"Pirate": "pirate",
-	"Welcome!": "accueil."
+	"Welcome!": "accueil.",
+	"error500Message": "Une erreur s'est produite de notre côté."
 }

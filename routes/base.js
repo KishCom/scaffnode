@@ -1,4 +1,5 @@
-var log, config, redis, utils;
+// Assigned in the constructor and used by route handlers as you add them
+var log, config, redis, utils; //eslint-disable-line no-unused-vars
 var BaseRoutes = function(bunyan, appConfig, redisSetup, appUtils){
     log = bunyan;
     config = appConfig;

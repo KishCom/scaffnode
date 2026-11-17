@@ -2,7 +2,6 @@
     "jsc": {
         "parser": {
             "syntax": "ecmascript",
-            "jsx": true,
             "dynamicImport": false,
             "numericSeparator": false,
             "classPrivateProperty": false,
@@ -16,13 +15,6 @@
             "nullishCoalescing": false
         },
         "transform": {
-            "react": {
-                "pragma": "React.createElement",
-                "pragmaFrag": "React.Fragment",
-                "throwIfNamespace": true,
-                "development": false,
-                "useBuiltins": false
-            },
             "optimizer": {
                 "globals": {
                     "vars": {

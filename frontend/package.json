@@ -2,6 +2,7 @@
     "name": "scaffnode-frontend",
     "version": "0.106.0",
     "description": "The Svelte.js based frontend for scaffnode",
+    "type": "module",
     "author": "Your Name <you.name@example.org>",
     "contributors": [
         {
@@ -10,12 +11,11 @@
         }
     ],
     "scripts": {
-        "test": "jest",
+        "test": "NODE_OPTIONS=--experimental-vm-modules jest",
         "build": "NODE_ENV=dev npx webpack --config webpack.config.js",
         "build.live": "NODE_ENV=live npx webpack --config webpack.config.js",
         "watch": "NODE_ENV=dev npx webpack --watch --config webpack.config.js"
     },
-    "main": "src/app.js",
     "devDependencies": {
         "lodash": "^4.18.1",
         "sass": "^1.108.2",
@@ -31,8 +31,9 @@
         "eslint-plugin-svelte": "^3.24.1",
         "file-loader": "^6.2.0",
         "git-revision-webpack-plugin": "^5.0.0",
+        "jest": "^30.5.2",
+        "jest-environment-jsdom": "^30.5.2",
         "mini-css-extract-plugin": "^2.10.2",
-        "node-sass": "^9.0.0",
         "sass-loader": "^17.x.x",
         "style-loader": "^4.0.0",
         "svelte": "^5.x.x",
@@ -49,7 +50,17 @@
     "private": true,
     "allowScripts": {
         "nice-napi@1.0.2": true,
-        "node-sass@9.0.0": true,
         "@swc/core@1.16.22": true
+    },
+    "jest": {
+        "testEnvironment": "jsdom",
+        "extensionsToTreatAsEsm": [".svelte"],
+        "moduleFileExtensions": ["js", "mjs", "svelte"],
+        "transform": {
+            "^.+\\.svelte$": "<rootDir>/tests/svelteJestTransformer.mjs"
+        },
+        "moduleNameMapper": {
+            "\\.(css|scss|sass)$": "<rootDir>/tests/styleMock.js"
+        }
     }
 }
